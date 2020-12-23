@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 **相关系数(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="方差、协方差和相关系数">
+<meta property="og:url" content="https://njuferret.github.io/2019/07/26/2019-07-26-covariance/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 **相关系数(">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-26T10:30:02.000Z">
+<meta property="article:modified_time" content="2020-08-31T11:15:33.573Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="协方差矩阵">
+<meta property="article:tag" content="PCA">
+<meta property="article:tag" content="numpy">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://njuferret.github.io/2019/07/26/2019-07-26-covariance/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>方差、协方差和相关系数 | 有点博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有点博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2019/07/26/2019-07-26-covariance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          方差、协方差和相关系数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-26 18:30:02" itemprop="dateCreated datePublished" datetime="2019-07-26T18:30:02+08:00">2019-07-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-31 19:15:33" itemprop="dateModified" datetime="2020-08-31T19:15:33+08:00">2020-08-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>　　一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。</p>
+<h3 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h3><p>　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。</p>
+<p>　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。</p>
+<p>　　 **相关系数(Coefficient)**，统计学上常用是皮尔森相关系数(Pearson correlation coefficient)，定义为两个维度（特征）之间的协方差和标准差之比，用于度量两个维度之间的(线性)相关程度，其值介于$[-1,1]$之间。</p>
+<a id="more"></a>
+
+<p>　　当协方差为正时，两个维度呈正相关（同增同减）；当协方差为负时，两个维度负相关（一增一减）。将所有将所有维度之间的协方差关系以矩阵的形式表现，即为协方差矩阵。</p>
+<p>　　<strong>几点说明</strong>：</p>
+<ol>
+<li>无论是方差、协方差还是相关系数，针对的对象始终是<strong>随机变量的各个维度</strong>，而非针对样本。所以在实际使用时，切记注意目标矩阵中，哪些是特征，哪些是样本。</li>
+<li>方差，是协方差的一个特例，即两个维度相同时的情况。</li>
+<li>协方差，反映随机变量各个维度之间的统计特性。如果协方差趋近于 $0$ ，则该随机变量的 $x_i$ 维度和 $x_j$ 维度相关性很弱。极端情况下，协方差为 $ 0 $，则这两个维度无关。</li>
+<li>协方差矩阵是一个方阵，其大小由随机变量的维度决定。如果该随机变量维度为 $ N $ ，则协方差矩阵的大小为 $(N \times N )$ 。</li>
+<li>相关系数，也可以看成协方差：一种剔除了两个变量量纲影响、标准化后的特殊协方差（其值为$[-1,1]$之间）。</li>
+</ol>
+<p>　　另外提一下**标准差(Standard Deviation)**。标准差定义为方差的算术平方根（习惯使用$\sigma$表示），由于方差在量纲上与被测物理量不同，因此，标准差可以消除量纲带来的差异。</p>
+<h3 id="2、数学定义"><a href="#2、数学定义" class="headerlink" title="2、数学定义"></a>2、数学定义</h3><p>　　设样本集 $S$ 由 $m$ 个 $n$ 维随机变量构成， $S = { s_1,s_2,\cdots,s_m }$ ，其中 $s_k=[x_{k1}, x_{k2},…,x_{kn}]$ $; (1\le k \le m)$ 。则样本矩阵为：<br>$$<br>S<br>=\begin{bmatrix}<br>S_{1}\<br>S_{2}\<br>\vdots\<br>S_{m}\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>x_{11}  &amp;x_{12}  &amp; \cdots\ &amp;x_{1n}\<br>x_{21}  &amp;x_{22}  &amp; \cdots\ &amp;x_{2n}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>x_{m1}  &amp;x_{m2}  &amp; \cdots\ &amp;x_{mn}\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>X_{1}&amp; X_{2}&amp; \cdots &amp; X_{n}\<br>\end{bmatrix}<br>$$<br>　　<strong>注意</strong>：$m$是样本数，$n$是随机变量的维度（特征），<font color="#dd00dd">$S_k$为行向量，针对行（样本），$X_k$为列向量，针对列（特征）</font>。第1下标表示样本编号，第2个下标表示维度编号，例如$x_{34}$表示第$3$个样本的第$4$个维度。</p>
+<ul>
+<li><strong>方差</strong>：（针对维度，纵向）<br>$$<br>Var(S)=\begin{bmatrix}<br>Var(X_{1})&amp; Var(X_{2})&amp; \cdots &amp; Var(X_{n})\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>\sigma^{2}(X_{1})&amp; \sigma^{2}(X_{2})&amp; \cdots &amp; \sigma^{2}(X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Var(X_{i})=\sigma^{2}(X_{i})=\frac{1}{m-1} {(X_{i}-\overline X_{i})^{T} \cdot {(X_{i}-\overline X_{i})}};;;;; (1\le i \le n)<br>$$</li>
+</ul>
+<p>　　使用统计学符号表示<br>$$<br>Var(X_{i})=\sigma^{2}(X_{i})=E \left ( [X-E(X)]^T [X-E(X)] \right )<br>$$</p>
+<ul>
+<li><strong>协方差</strong>：（同样针对维度）</li>
+</ul>
+<p>$$<br>Cov(S)<br>=\begin{bmatrix}<br>Cov(X_{1},X_{1})  &amp;Cov(X_{1},X_{2})  &amp; \cdots\ &amp;Cov(X_{1},X_{n})\<br>Cov(X_{2},X_{1})  &amp;Cov(X_{2},X_{2})  &amp; \cdots\ &amp;Cov(X_{2},X_{n})\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>Cov(X_{n},X_{1})  &amp;Cov(X_{n},X_{2})  &amp; \cdots\ &amp;Cov(X_{n},X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Cov(X_{i},X_{j})=\frac{1}{m-1}{(X_{i} - \overline X_{i})^{T} \cdot { (X_{j}-\overline X_{j})}};;;;; (1\le i,j \le n)<br>$$<br>　　使用统计学符号表示<br>$$<br>Cov(X_{i},X_{j})=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right );;;;; (1\le i,j \le n)<br>$$</p>
+<p>　　当$i=j$时，即协方差矩阵的对角矩阵，就是方差。</p>
+<ul>
+<li><strong>(Pearson)相关系数</strong>：</li>
+</ul>
+<p>　　考虑样本矩阵$S$由各列向量构成：$S=[X_1,X_2,\cdots,X_n]$ ，则各列标准差 $\sigma=[\sigma_{X_1},\sigma_{X_2},\cdots,\sigma_{X_n}]$，<br>记 $\sigma_S \equiv \sigma^T \cdot \sigma$，同时记 $\sigma_{X_i,X_j} \equiv \sigma_{X_i}\cdot \sigma_{X_j}$，则：<br>$$<br>\sigma_S \equiv \sigma^T \cdot \sigma =\begin{bmatrix}<br>\sigma_{X_1} \cdot \sigma_{X_1} &amp; \sigma_{X_1} \cdot \sigma_{X_2}&amp; \cdots&amp; \sigma_{X_1} \cdot \sigma_{X_n} \<br>\sigma_{X_2} \cdot \sigma_{X_1} &amp; \sigma_{X_2} \cdot \sigma_{X_2}&amp; \cdots&amp; \sigma_{X_2} \cdot \sigma_{X_n} \<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>\sigma_{X_n} \cdot \sigma_{X_1} &amp; \sigma_{X_n} \cdot \sigma_{X_2}&amp; \cdots&amp; \sigma_{X_n} \cdot \sigma_{X_n} \<br>\end{bmatrix}<br>=\begin{bmatrix}<br>\sigma_{X_{1},X_{1}}  &amp;\sigma_{X_{1},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{1},X_{n}}\<br>\sigma_{X_{2},X_{1}}  &amp;\sigma_{X_{2},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{2},X_{n}}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>\sigma_{X_{n},X_{1}}  &amp;\sigma_{X_{n},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{n},X_{n}}\<br>\end{bmatrix}<br>$$</p>
+<p>对样本空间$S$，其相关系数矩阵$\rho$定义为：<br>$$<br>\rho = \frac{Cov(S)}{\sigma_{S}} =\frac{Cov(S)}{\sigma^T \cdot \sigma}<br>$$<br>　　代入协方差矩阵和$\sigma_S$：<br>$$<br>\begin{align*}<br>\rho &amp;=\frac{\begin{bmatrix}<br>Cov(X_{1},X_{1})  &amp;Cov(X_{1},X_{2})  &amp; \cdots\ &amp;Cov(X_{1},X_{n})\<br>Cov(X_{2},X_{1})  &amp;Cov(X_{2},X_{2})  &amp; \cdots\ &amp;Cov(X_{2},X_{n})\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>Cov(X_{n},X_{1})  &amp;Cov(X_{n},X_{2})  &amp; \cdots\ &amp;Cov(X_{n},X_{n})\<br>\end{bmatrix}<br>}{\begin{bmatrix}<br>\sigma_{X_{1},X_{1}}  &amp;\sigma_{X_{1},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{1},X_{n}}\<br>\sigma_{X_{2},X_{1}}  &amp;\sigma_{X_{2},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{2},X_{n}}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>\sigma_{X_{n},X_{1}}  &amp;\sigma_{X_{n},X_{2}}  &amp; \cdots\ &amp;\sigma_{X_{n},X_{n}}\<br>\end{bmatrix}<br>}<br>\end{align*}<br>$$<br>　　上述矩阵除法，指的是对应元素相除。其中：<br>$$<br>\rho_{X_{i},X_{j}} = \frac{Cov(X_{i},X_{j})}{\sigma_{X{i},X_{j}}} = \frac{Cov(X_{i},X_{j})}{\sigma_{X{i}} \cdot \sigma_{X_{j}}}<br>$$<br>　　完整表达式：<br>$$<br>\rho = \begin{bmatrix}<br>\rho_{X_{1},X_{1}}  &amp;\rho_{X_{1},X_{2}}  &amp; \cdots\ &amp;\rho_{X_{1},X_{n}}\<br>\rho_{X_{2},X_{1}}  &amp;\rho_{X_{2},X_{2}}  &amp; \cdots\ &amp;\rho_{X_{2},X_{n}}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>\rho_{X_{n},X_{1}}  &amp;\rho_{X_{n},X_{2}}  &amp; \cdots\ &amp;\rho_{X_{n},X_{n}}\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>\frac{Cov(X_{1},X_{1})}{\sigma_{X_{1}} \cdot \sigma_{X_{1}}}  &amp;\frac{Cov(X_{1},X_{2})}{\sigma_{X_{1}} \cdot \sigma_{X_{2}}}  &amp; \cdots\ &amp;\frac{Cov(X_{1},X_{n})}{\sigma_{X_{1}} \cdot \sigma_{X_{n}}}\<br>\frac{Cov(X_{2},X_{1})}{\sigma_{X_{2}} \cdot \sigma_{X_{1}}}  &amp;\frac{Cov(X_{2},X_{2})}{\sigma_{X_{2}} \cdot \sigma_{X_{2}}}  &amp; \cdots\ &amp;\frac{Cov(X_{2},X_{n})}{\sigma_{X_{2}} \cdot \sigma_{X_{n}}}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>\frac{Cov(X_{n},X_{1})}{\sigma_{X_{n}} \cdot \sigma_{X_{1}}}  &amp;\frac{Cov(X_{n},X_{2})}{\sigma_{X_{n}} \cdot \sigma_{X_{2}}}  &amp; \cdots\ &amp;\frac{Cov(X_{n},X_{n})}{\sigma_{X_{n}} \cdot \sigma_{X_{n}}}\<br>\end{bmatrix}<br>$$<br>　　由$Cov(X_i,X_i)=\sigma^2_{X_i}$可得，相关系数矩阵$\rho$对角线元素的值均为$1$。</p>
+<h3 id="3、协方差矩阵的计算"><a href="#3、协方差矩阵的计算" class="headerlink" title="3、协方差矩阵的计算"></a>3、协方差矩阵的计算</h3><h4 id="1-2-维随机变量的协方差矩阵"><a href="#1-2-维随机变量的协方差矩阵" class="headerlink" title="1) $2$维随机变量的协方差矩阵"></a>1) $2$维随机变量的协方差矩阵</h4><p>　　设$4$个二维随机变量样本，$S = { s_1,s_2,s_3,s_4 }$，其中：$s_1=(1,2)$，$s_2=(3,6)$，$s_3=(4,2)$，$s_4=(5,2)$。矩阵表示为：</p>
+<p>$$<br>S=\begin{bmatrix}<br>s_1 \<br>s_2 \<br>s_3 \<br>s_4<br>\end{bmatrix}<br>=\begin{bmatrix}<br>1 &amp; 2 \<br>3 &amp; 6 \<br>4 &amp; 2 \<br>5 &amp; 2<br>\end{bmatrix}<br>=\begin{bmatrix}<br>X_1 &amp; X_2 \<br>\end{bmatrix}<br>$$</p>
+<p>　　二维随机变量的两个特征分别用$X_1$，$X_2$：<br>$$<br>X_1=\begin{bmatrix} 1 \ 3 \ 4 \ 5 \end{bmatrix},  \ \ \    X_2=\begin{bmatrix} 2 \ 6 \ 2 \ 2 \end{bmatrix}<br>$$</p>
+<p>　　(1) 手算</p>
+<p>　　两个特征的平均值分别为：$\overline X_1=3.25$，$\overline X_2=3$。</p>
+<p>$Cov(X_1,X_1)=\frac{1}{4-1}[(1-3.25)^2+(3-3.25)^2+(4-3.25)^2+(5-3.25)^2]=2.9167$</p>
+<p>$Cov(X_1,X_2)=\frac{1}{4-1}[(1-3.25)(2-3)+(3-3.25)(6-3)+(4-3.25)(2-3)+(5-3.25)(2-3)]=-0.3333$</p>
+<p>$Cov(X_2,X_1)=\frac{1}{4-1}[(2-3)(1-3.25)+(6-3)(3-3.25)+(2-3)(4-3.25)+(2-3)(5-3.25)]=-0.3333$</p>
+<p>$Cov(X_2,X_2)=\frac{1}{4-1}[(2-3)^2+(6-3)^2+(2-3)^2+(2-3)^2]=4$</p>
+<p>所以，协方差矩阵 $Cov(S)=\begin{bmatrix} 2.9167 &amp; -0.3333 \ -0.3333 &amp; 4.000 \end{bmatrix}$</p>
+<p>　　(2) <code>numpy</code>计算</p>
+<p>　　<code>numpy</code>中，使用<code>np.cov</code>用来计算协方差，函数原型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">numpy.cov(m, y=<span class="literal">None</span>, rowvar=<span class="literal">True</span>, bias=<span class="literal">False</span>, ddof=<span class="literal">None</span>, fweights=<span class="literal">None</span>, aweights=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+<p>　　首先厘清两个概念：</p>
+<p>　　<code>variable</code>：变量，也就是特征</p>
+<p>　　<code>observation</code>：观测，也就是样本</p>
+<p>参数说明：</p>
+<ul>
+<li><code>m</code>:一维向量或者二维矩阵，当<code>m</code>为一个向量时，它相当于一个1行n列的矩阵，最终输出的协方差矩阵为 $1 \times 1$ 的矩阵（也就是一个标量）。当<code>m</code>是一个二维矩阵时，它的每一行表示一个特征（<code>numpy</code>文档称之为<code>variable</code>），每一列表示一个样本（<code>observation</code>）。</li>
+<li><code>y</code>和<code>m</code>一样，可以是一维向量，也可以是二维矩阵。<code>y</code>相当于给<code>m</code>添加了若干个新行，也就是<code>m=np.hstack(m,y)</code>。<code>y</code>的列数必须和<code>m</code>一致，否则没法把<code>m</code>和<code>y</code>的行拼起来。这个参数基本可以不用。</li>
+<li><code>rowvar</code>:默认值为<code>True</code>，用来描述矩阵<code>m</code>和<code>y</code>使用行作为特征，还是列作为特征。默认情况下，矩阵的行对应特征，列对应样本。由于在机器学习中，习惯上行表示样本，列表示特征，因此在计算时需要将<code>rowvar</code>置为<code>False</code>。</li>
+<li><code>bias</code>：默认值<code>False</code>，表示在计算协方差时是否为有偏估计，<code>True</code>表示有偏估计，分母为N（N表示样本数，也就是观测个数）；默认情况下，表示分母为<code>N-1</code>的无偏估计。一般来说，无偏估计要优于有偏估计。关于有偏估计和无偏估计的问题，详见<a target="_blank" rel="noopener" href="https://www.matongxue.com/madocs/607.html">这篇文章</a></li>
+<li><code>ddof</code>:表示自由度，当此值不为<code>None</code>，分母为<code>N-ddof</code>，同时<code>bias</code>参数失效。</li>
+<li><code>fweights</code>：一个一维整型数组，表示每个观测出现的次数。提供此参数的目的是，防止m矩阵过大。</li>
+<li><code>aweights</code>：一个一维浮点数组，表示每个观测的权重。权重大表明这个观测准确，权重小表明这个权重不太重要。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">np.set_printoptions(precision=<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cov</span>(<span class="params">m</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">       使用公式计算协方差矩阵，行向量为样本数，列向量为特征数</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 对每列数据，减去该列均值</span></span><br><span class="line">    dm  = m - m.mean(axis=<span class="number">0</span>)</span><br><span class="line">    <span class="comment"># 点乘，求内积</span></span><br><span class="line">    c = dm.T.dot(dm)/(m.shape[<span class="number">0</span>]-<span class="number">1</span>)   </span><br><span class="line">    <span class="keyword">return</span> c</span><br><span class="line"></span><br><span class="line">t1 = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">2</span>]).reshape(-<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">t1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out[14]: </span></span><br><span class="line"><span class="comment"># array([[1, 2],</span></span><br><span class="line"><span class="comment">#        [3, 6],</span></span><br><span class="line"><span class="comment">#        [4, 2],</span></span><br><span class="line"><span class="comment">#        [5, 2]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 根据公式计算</span></span><br><span class="line">cov(t1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out[15]: </span></span><br><span class="line"><span class="comment"># array([[ 2.9167, -0.3333],</span></span><br><span class="line"><span class="comment">#        [-0.3333,  4.    ]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 使用内置协方差函数计算</span></span><br><span class="line">np.cov(t1,rowvar=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out[16]: </span></span><br><span class="line"><span class="comment"># array([[ 2.9167, -0.3333],</span></span><br><span class="line"><span class="comment">#        [-0.3333,  4.    ]])</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-n-维随机变量的协方差矩阵"><a href="#2-n-维随机变量的协方差矩阵" class="headerlink" title="2) $n$维随机变量的协方差矩阵"></a>2) $n$维随机变量的协方差矩阵</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">t2 = np.random.randint(-<span class="number">10</span>,<span class="number">10</span>,size=(<span class="number">10</span>,<span class="number">6</span>))</span><br><span class="line">t2</span><br><span class="line"><span class="comment"># Out[17]: </span></span><br><span class="line"><span class="comment"># array([[  1,   4,  -9,   8,  -4,  -3],</span></span><br><span class="line"><span class="comment">#        [  6,  -9,  -2,   8,   4,  -4],</span></span><br><span class="line"><span class="comment">#        [ -5,   9,  -1,  -4,   7,   4],</span></span><br><span class="line"><span class="comment">#        [ -5, -10,  -9,   2, -10,   6],</span></span><br><span class="line"><span class="comment">#        [  5,   4,  -3,   3,  -9,  -9],</span></span><br><span class="line"><span class="comment">#        [  3,  -8,  -2,   1,  -6,  -1],</span></span><br><span class="line"><span class="comment">#        [  3,   7,   0,  -7,   3,   5],</span></span><br><span class="line"><span class="comment">#        [  9,   8,   2,  -5,   1,  -4],</span></span><br><span class="line"><span class="comment">#        [ -2,  -7,   6,   2,   5,  -2],</span></span><br><span class="line"><span class="comment">#        [ -9,   2,   2,   1,  -2, -10]])</span></span><br><span class="line"></span><br><span class="line">cov(t2)</span><br><span class="line"><span class="comment"># Out[18]: </span></span><br><span class="line"><span class="comment"># array([[ 3.2489e+01,  4.4444e+00,  6.2222e-01, -4.4444e-02,  5.1111e-01,  -4.5778e+00],</span></span><br><span class="line"><span class="comment">#        [ 4.4444e+00,  5.8222e+01,  5.0000e+00, -2.1444e+01,  1.2556e+01,  -3.4444e+00],</span></span><br><span class="line"><span class="comment">#        [ 6.2222e-01,  5.0000e+00,  2.2044e+01, -1.0511e+01,  1.7822e+01,  -6.9778e+00],</span></span><br><span class="line"><span class="comment">#        [-4.4444e-02, -2.1444e+01, -1.0511e+01,  2.5433e+01, -9.9000e+00,  -1.1200e+01],</span></span><br><span class="line"><span class="comment">#        [ 5.1111e-01,  1.2556e+01,  1.7822e+01, -9.9000e+00,  3.6100e+01,   5.8000e+00],</span></span><br><span class="line"><span class="comment">#        [-4.5778e+00, -3.4444e+00, -6.9778e+00, -1.1200e+01,  5.8000e+00,   3.0178e+01]])</span></span><br><span class="line"></span><br><span class="line">np.cov(t2, rowvar=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># Out[19]: </span></span><br><span class="line"><span class="comment"># array([[ 3.2489e+01,  4.4444e+00,  6.2222e-01, -4.4444e-02,  5.1111e-01,  -4.5778e+00],</span></span><br><span class="line"><span class="comment">#        [ 4.4444e+00,  5.8222e+01,  5.0000e+00, -2.1444e+01,  1.2556e+01,  -3.4444e+00],</span></span><br><span class="line"><span class="comment">#        [ 6.2222e-01,  5.0000e+00,  2.2044e+01, -1.0511e+01,  1.7822e+01,  -6.9778e+00],</span></span><br><span class="line"><span class="comment">#        [-4.4444e-02, -2.1444e+01, -1.0511e+01,  2.5433e+01, -9.9000e+00,  -1.1200e+01],</span></span><br><span class="line"><span class="comment">#        [ 5.1111e-01,  1.2556e+01,  1.7822e+01, -9.9000e+00,  3.6100e+01,   5.8000e+00],</span></span><br><span class="line"><span class="comment">#        [-4.5778e+00, -3.4444e+00, -6.9778e+00, -1.1200e+01,  5.8000e+00,   3.0178e+01]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有的矩阵元均小于1e-10?</span></span><br><span class="line">(np.<span class="built_in">abs</span>(cov(t2)-np.cov(t2, rowvar=<span class="literal">False</span>)) &lt; <span class="number">1e-10</span>).<span class="built_in">all</span>()</span><br><span class="line"><span class="comment"># Out[20]: True</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="4、方差的计算"><a href="#4、方差的计算" class="headerlink" title="4、方差的计算"></a>4、方差的计算</h3><p>　　方差的计算实际上用的是协方差计算取对角矩阵方法，但是内置的<code>np.var</code>函数有个坑，默认参数计算的是有偏估计(<code>ddof</code>=0)，如果计算无偏估计，那么需要<code>ddof=1</code>。</p>
+<p>　　首先还是二维情况：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">t1</span><br><span class="line"><span class="comment"># Out[21]: </span></span><br><span class="line"><span class="comment"># array([[1, 2],</span></span><br><span class="line"><span class="comment">#        [3, 6],</span></span><br><span class="line"><span class="comment">#        [4, 2],</span></span><br><span class="line"><span class="comment">#        [5, 2]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取出对角矩阵</span></span><br><span class="line">np.diag(cov(t1))</span><br><span class="line"><span class="comment"># Out[22]: array([2.9167, 4.    ])	&lt;== 无偏估计</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再来一次，创建对角矩阵</span></span><br><span class="line">np.diag(np.diag(cov(t1)))</span><br><span class="line"><span class="comment"># Out[23]: </span></span><br><span class="line"><span class="comment"># array([[2.9167, 0.    ],</span></span><br><span class="line"><span class="comment">#        [0.    , 4.    ]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 内置函数计算方差（有偏估计）</span></span><br><span class="line">np.var(t1,axis=<span class="number">0</span>)	<span class="comment"># 或 t1.var(axis=0,ddof=0)</span></span><br><span class="line"><span class="comment"># Out[24]: array([2.1875, 3.    ])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 内置函数计算方差（无偏估计）</span></span><br><span class="line">np.var(t1,axis=<span class="number">0</span>,ddof=<span class="number">1</span>)	<span class="comment"># 或 t1.var(axis=0,ddof=1)</span></span><br><span class="line"><span class="comment"># Out[25]: array([2.9167, 4.    ])	&lt;== 无偏估计</span></span><br></pre></td></tr></table></figure>
+<p>　　再来多维情况：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">t2</span><br><span class="line"><span class="comment"># Out[26]: </span></span><br><span class="line"><span class="comment"># array([[  1,   4,  -9,   8,  -4,  -3],</span></span><br><span class="line"><span class="comment">#        [  6,  -9,  -2,   8,   4,  -4],</span></span><br><span class="line"><span class="comment">#        [ -5,   9,  -1,  -4,   7,   4],</span></span><br><span class="line"><span class="comment">#        [ -5, -10,  -9,   2, -10,   6],</span></span><br><span class="line"><span class="comment">#        [  5,   4,  -3,   3,  -9,  -9],</span></span><br><span class="line"><span class="comment">#        [  3,  -8,  -2,   1,  -6,  -1],</span></span><br><span class="line"><span class="comment">#        [  3,   7,   0,  -7,   3,   5],</span></span><br><span class="line"><span class="comment">#        [  9,   8,   2,  -5,   1,  -4],</span></span><br><span class="line"><span class="comment">#        [ -2,  -7,   6,   2,   5,  -2],</span></span><br><span class="line"><span class="comment">#        [ -9,   2,   2,   1,  -2, -10]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取出对角矩阵</span></span><br><span class="line">np.diag(cov(t2))</span><br><span class="line"><span class="comment"># Out[27]: array([32.4889, 58.2222, 22.0444, 25.4333, 36.1   , 30.1778])	&lt;== 无偏估计</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 内置函数计算方差（无偏估计）</span></span><br><span class="line">np.var(t2,axis=<span class="number">0</span>,ddof=<span class="number">1</span>)	<span class="comment"># 或 t2.var(axis=0,ddof=1)</span></span><br><span class="line"><span class="comment"># Out[27]: array([32.4889, 58.2222, 22.0444, 25.4333, 36.1   , 30.1778])	&lt;== 无偏估计</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 顺便计算一下标准差</span></span><br><span class="line">t2.std(axis=<span class="number">0</span>,ddof=<span class="number">1</span>)		<span class="comment"># 或 np.sqrt(t2.var(axis=0,ddof=1))</span></span><br><span class="line"><span class="comment"># Out[263]: array([5.6999, 7.6303, 4.6952, 5.0431, 6.0083, 5.4934])</span></span><br></pre></td></tr></table></figure>
+<h3 id="5、相关系数的计算"><a href="#5、相关系数的计算" class="headerlink" title="5、相关系数的计算"></a>5、相关系数的计算</h3><p>　　计算过程基本类似，按照公式来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">t3=t2.copy()</span><br><span class="line">t3</span><br><span class="line"><span class="comment"># Out[26]: </span></span><br><span class="line"><span class="comment"># array([[  1,   4,  -9,   8,  -4,  -3],</span></span><br><span class="line"><span class="comment">#        [  6,  -9,  -2,   8,   4,  -4],</span></span><br><span class="line"><span class="comment">#        [ -5,   9,  -1,  -4,   7,   4],</span></span><br><span class="line"><span class="comment">#        [ -5, -10,  -9,   2, -10,   6],</span></span><br><span class="line"><span class="comment">#        [  5,   4,  -3,   3,  -9,  -9],</span></span><br><span class="line"><span class="comment">#        [  3,  -8,  -2,   1,  -6,  -1],</span></span><br><span class="line"><span class="comment">#        [  3,   7,   0,  -7,   3,   5],</span></span><br><span class="line"><span class="comment">#        [  9,   8,   2,  -5,   1,  -4],</span></span><br><span class="line"><span class="comment">#        [ -2,  -7,   6,   2,   5,  -2],</span></span><br><span class="line"><span class="comment">#        [ -9,   2,   2,   1,  -2, -10]])</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coef</span>(<span class="params">m</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">       使用公式计算相关系数，行向量为样本数，列向量为特征数</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    c = np.cov(m,rowvar=<span class="literal">False</span>)					<span class="comment"># 分子协方差矩阵</span></span><br><span class="line">    sigma =  m.std(axis=<span class="number">0</span>,ddof=<span class="number">1</span>,keepdims=<span class="literal">True</span>)			<span class="comment"># 注意ddof...坑</span></span><br><span class="line">    sigma = sigma.T.dot(sigma)					<span class="comment"># 分母标准差矩阵</span></span><br><span class="line">    <span class="keyword">return</span> c/sigma</span><br><span class="line"></span><br><span class="line">coef(t3)</span><br><span class="line"><span class="comment"># Out[24]: </span></span><br><span class="line"><span class="comment"># array([[ 1.    ,  0.1022,  0.0233, -0.0015,  0.0149, -0.1462],</span></span><br><span class="line"><span class="comment">#        [ 0.1022,  1.    ,  0.1396, -0.5573,  0.2739, -0.0822],</span></span><br><span class="line"><span class="comment">#        [ 0.0233,  0.1396,  1.    , -0.4439,  0.6318, -0.2705],</span></span><br><span class="line"><span class="comment">#        [-0.0015, -0.5573, -0.4439,  1.    , -0.3267, -0.4043],</span></span><br><span class="line"><span class="comment">#        [ 0.0149,  0.2739,  0.6318, -0.3267,  1.    ,  0.1757],</span></span><br><span class="line"><span class="comment">#        [-0.1462, -0.0822, -0.2705, -0.4043,  0.1757,  1.    ]])</span></span><br><span class="line"></span><br><span class="line">np.corrcoef(t3,rowvar=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># Out[25]: </span></span><br><span class="line"><span class="comment"># array([[ 1.    ,  0.1022,  0.0233, -0.0015,  0.0149, -0.1462],</span></span><br><span class="line"><span class="comment">#        [ 0.1022,  1.    ,  0.1396, -0.5573,  0.2739, -0.0822],</span></span><br><span class="line"><span class="comment">#        [ 0.0233,  0.1396,  1.    , -0.4439,  0.6318, -0.2705],</span></span><br><span class="line"><span class="comment">#        [-0.0015, -0.5573, -0.4439,  1.    , -0.3267, -0.4043],</span></span><br><span class="line"><span class="comment">#        [ 0.0149,  0.2739,  0.6318, -0.3267,  1.    ,  0.1757],</span></span><br><span class="line"><span class="comment">#        [-0.1462, -0.0822, -0.2705, -0.4043,  0.1757,  1.    ]])</span></span><br></pre></td></tr></table></figure>
+<h3 id="6、各维度相互独立（也称独立变量）的协方差"><a href="#6、各维度相互独立（也称独立变量）的协方差" class="headerlink" title="6、各维度相互独立（也称独立变量）的协方差"></a>6、各维度相互独立（也称独立变量）的协方差</h3><p>　　机器学习中，经常采用主成分分析（PCA）和独立成分分析（ICA）方法进行数据预处理。使用PCA方法的目的，是为了降低运算量而对原始数据进行降维处理；使用ICA方法的目的，则主要是去除不相关的噪声和干扰。无论是PCA还是ICA，协方差矩阵都是一个重要衡量工具。理想情况下，当协方差矩阵退化为纯对角矩阵时，各个维度之间相互独立，即独立变量情况，这种情况属于珍稀品种，比较少见，以下为推导。</p>
+<p>根据协方差公式，利用矩阵的结合律和转置性质：<br>$$<br>\begin{align*}<br>Cov(X_{i},X_{j})&amp;=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right ) \<br> &amp;= E \left ([X_{i} - E(X_{i})]^{T} X_{j} - [X_{i} - E(X_{i})]^{T} E(X_{j}) \right )\<br> &amp;= E \left ([X^T_{i} - E(X_{i})] X_{j} - [X^T_{i} - E(X_{i})] E(X_{j}) \right ) \<br> &amp;= E \left (X^T_{i} X_{j} - E(X_{i}) X_{j} - X^T_{i} E(X_{j}) + E(X_{i}) E(X_{j}) \right ) \<br> &amp;= E (X^T_{i} X_{j})- E(X_{i}) E(X_{j}) - E(X^T_{i}) E(X_{j}) + E(X_{i}) E(X_{j})  \<br> &amp;= E (X^T_{i} X_{j}) - E(X^T_{i}) E(X_{j})  \<br> &amp;= E (X^T_{i} X_{j}) - E(X_{i}) E(X_{j})<br>\end{align*}<br>$$<br>由于 $X_{i}, X_{j}$ 独立时：$E(X^T_{i} X_{j})=E(X^T_{i})E(X_{j})=E(X_{i})E(X_{j})$ （证明请参考其他资料）。故 $Cov(X_{i},X_{j})=0$ 。</p>
+<p>这时，协方差矩阵就变成一个对角矩阵了：<br>$$<br>Cov(X)=\begin{bmatrix} Cov(X_{1},X_{1}) &amp; 0\ 0 &amp; Cov(X_{n},X_{n}) \end{bmatrix}<br>$$</p>
+<p>　　如果觉得符号比较乱，可以简单的令 $ A=X_{i}, B=X_{j} $，上述公式可以写为：<br>$$<br>Cov(A,B)=E \left ([A - E(B)]^{T} [B - E(B)] \right ) = E (A^T B) - E(A) E(B)<br>$$<br>　　推导中应用的矩阵性质：</p>
+<p>　　矩阵转置性质：$ (A+B)^{T} = A^T + B^T $</p>
+<p>　　矩阵乘法分配率：$ (A+B)C =  AC + BC $</p>
+<p>　　矩阵转置的期望值（$E(A^T)$ 实数）与其本身期望值（$E(A)$）相等：$ E(A^T) = E(A) $ 。</p>
+<p>　　期望值（实数）的期望值仍然是一个实数：$ E[E(A)] = E(A) $</p>
+<p>　　随机变量和的期望值（实数）等于期望值的和：$ E[A+B] = E(A) + E(B) $</p>
+<h3 id="7、协方差矩阵的应用"><a href="#7、协方差矩阵的应用" class="headerlink" title="7、协方差矩阵的应用"></a>7、协方差矩阵的应用</h3><p>　　参见：<a href="/2019/07/31/2019-07-31_pca-ica/" title="主成分分析与独立成分分析">主成分分析与独立成分分析</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.var.html">numpy文档：np.var</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.cov.html">numpy文档：np.cov</a></li>
+<li><a target="_blank" rel="noopener" href="http://jermmy.xyz/2017/03/19/2017-3-19-covariance-matrix/">协方差矩阵</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/weiyinfu/p/10693445.html">numpy中的方差、协方差、相关系数</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://njuferret.github.io/2019/07/26/2019-07-26-covariance/" title="方差、协方差和相关系数">https://njuferret.github.io/2019/07/26/2019-07-26-covariance/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5/" rel="tag"><i class="fa fa-tag"></i> 协方差矩阵</a>
+              <a href="/tags/PCA/" rel="tag"><i class="fa fa-tag"></i> PCA</a>
+              <a href="/tags/numpy/" rel="tag"><i class="fa fa-tag"></i> numpy</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/06/17/ubuntu_rsync/" rel="prev" title="使用rsync进行同步备份">
+      <i class="fa fa-chevron-left"></i> 使用rsync进行同步备份
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/" rel="next" title="翻译：协方差矩阵的几何解释">
+      翻译：协方差矩阵的几何解释 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%A6%82%E5%BF%B5"><span class="nav-text">1、概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%95%B0%E5%AD%A6%E5%AE%9A%E4%B9%89"><span class="nav-text">2、数学定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-text">3、协方差矩阵的计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5"><span class="nav-text">1) $2$维随机变量的协方差矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-n-%E7%BB%B4%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5"><span class="nav-text">2) $n$维随机变量的协方差矩阵</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E6%96%B9%E5%B7%AE%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-text">4、方差的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-text">5、相关系数的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6%E3%80%81%E5%90%84%E7%BB%B4%E5%BA%A6%E7%9B%B8%E4%BA%92%E7%8B%AC%E7%AB%8B%EF%BC%88%E4%B9%9F%E7%A7%B0%E7%8B%AC%E7%AB%8B%E5%8F%98%E9%87%8F%EF%BC%89%E7%9A%84%E5%8D%8F%E6%96%B9%E5%B7%AE"><span class="nav-text">6、各维度相互独立（也称独立变量）的协方差</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7%E3%80%81%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-text">7、协方差矩阵的应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

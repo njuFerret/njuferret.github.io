@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文为转载，记录一下在使用TensorFlow的过程中，遇到的较为困扰的问题及最终的解决方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow中遇到的问题及解决方法">
+<meta property="og:url" content="https://njuferret.github.io/2017/08/25/problems-with-solution-in-tensorflow/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="本文为转载，记录一下在使用TensorFlow的过程中，遇到的较为困扰的问题及最终的解决方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-08-25T08:26:06.000Z">
+<meta property="article:modified_time" content="2017-09-05T11:22:08.496Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="TensorFlow">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://njuferret.github.io/2017/08/25/problems-with-solution-in-tensorflow/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>TensorFlow中遇到的问题及解决方法 | 有点博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有点博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2017/08/25/problems-with-solution-in-tensorflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TensorFlow中遇到的问题及解决方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-25 16:26:06" itemprop="dateCreated datePublished" datetime="2017-08-25T16:26:06+08:00">2017-08-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-09-05 19:22:08" itemprop="dateModified" datetime="2017-09-05T19:22:08+08:00">2017-09-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">神经网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/Tensorflow/" itemprop="url" rel="index"><span itemprop="name">Tensorflow</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文为转载，记录一下在使用TensorFlow的过程中，遇到的较为困扰的问题及最终的解决方法。</p>
+<a id="more"></a>
+
+<h1 id="Q1-如何查看TensorFlow中Tensor-Variable-Constant的值？"><a href="#Q1-如何查看TensorFlow中Tensor-Variable-Constant的值？" class="headerlink" title="Q1. 如何查看TensorFlow中Tensor, Variable, Constant的值？"></a>Q1. 如何查看TensorFlow中Tensor, Variable, Constant的值？</h1><p>TensorFlow中的许多方法返回的都是一个Tensor对象。在Debug的过程中，我们发现只能看到Tensor对象的一些属性信息，无法查看Tensor具体的输出值；而对于Variable和Constant，我们很容易对其进行创建操作，但是如何得到它们的值呢？</p>
+<p>假设<code>ts</code>是我们想要查看的对象(Variable / Constant / 0输入的Tensor)，运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ts_res = sess.run(ts)</span><br><span class="line">print(ts_res)</span><br></pre></td></tr></table></figure>
+<p>其中，<code>sess</code>为之前创建或默认的<code>session</code>.<br>运行后将得到一个<code>narray</code>格式的<code>ts_res</code>对象，通过<code>print</code>函数我们可以很方便的查看其中的内容。</p>
+<p>但是，如果<code>ts</code>是一个有输入要求的Tensor，需要在查看其输出值前，填充(feed)输入数据。如下（假设ts只有一种输入）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">input</span> = ××××××  <span class="comment"># the input data need to feed</span></span><br><span class="line">ts_res = sess.run(ts, feed_dict=<span class="built_in">input</span>)</span><br><span class="line">print(ts_res)</span><br></pre></td></tr></table></figure>
+<p>其他要求多种输入的<code>Tensor</code>类似处理即可。</p>
+<h1 id="Q2-模型训练完成后，如何获取模型的参数？"><a href="#Q2-模型训练完成后，如何获取模型的参数？" class="headerlink" title="Q2. 模型训练完成后，如何获取模型的参数？"></a>Q2. 模型训练完成后，如何获取模型的参数？</h1><p>模型训练完成后，通常会将模型参数存储于<code>/checkpoint/×××.model</code>文件(当然文件路径和文件名都可以更改，许多基于TensorFlow的开源包习惯将模型参数存储为model或者model.ckpt文件)。那么，在模型训练完成后，如何得到这些模型参数呢？</p>
+<p>需要以下两个步骤：</p>
+<p><strong>Step 1: 通过tf.train.Saver()恢复模型参数</strong></p>
+<p>运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">saver = tf.train.Saver()</span><br></pre></td></tr></table></figure>
+<p>通过<code>saver</code>的<code>restore()</code>方法可以从本地的模型文件中恢复模型参数。大致做法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># your model&#x27;s params</span></span><br><span class="line"><span class="comment"># you don&#x27;t have to initialize them</span></span><br><span class="line"></span><br><span class="line">x = tf.placeholder(tf.float32)</span><br><span class="line">y = tf.placeholder(tf.float32)</span><br><span class="line">W = tf.Variable(...)</span><br><span class="line">b = tf.Variable(...)</span><br><span class="line"></span><br><span class="line">y_ = tf.add(b, tf.matmul(x, w))</span><br><span class="line"></span><br><span class="line"><span class="comment"># create the saver</span></span><br><span class="line"></span><br><span class="line">saver = tf.train.Saver()</span><br><span class="line"></span><br><span class="line"><span class="comment"># creat the session you used in the training processing</span></span><br><span class="line"><span class="comment"># launch the model</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">  <span class="comment"># Restore variables from disk.</span></span><br><span class="line">  saver.restore(sess, <span class="string">&quot;/your/path/model.ckpt&quot;</span>)</span><br><span class="line">  print(<span class="string">&quot;Model restored.&quot;</span>)</span><br><span class="line">  <span class="comment"># Do some work with the model, such as do a prediction</span></span><br><span class="line">  pred = sess.run(y_, feed_dict=&#123;batch_x&#125;)</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+<p>有关TensorFlow中变量的创建、存储及恢复操作，详细见<a target="_blank" rel="noopener" href="http://tensorflow.org/how_tos/variables/index.md">API文档</a>.</p>
+<p><strong>Step 2: 通过<code>tf.trainable\_variables()</code>得到训练参数</strong></p>
+<p><code>tf.trainable\_variables()</code>方法将返回模型中所有可训练的参数，详细见<a target="_blank" rel="noopener" href="https://www.tensorflow.org/versions/r0.7/api_docs/python/state_ops.html#trainable_variables">API文档</a>。类似于以下的变量参数不会被返回：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf_var = tf.Variable(<span class="number">0</span>, name=<span class="string">&quot;××××××&quot;</span>, trainable=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>还可以通过<code>Variable</code>的<code>name</code>属性过滤出需要查看的参数，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var = [v <span class="keyword">for</span> v <span class="keyword">in</span> t_vars <span class="keyword">if</span> v.name == <span class="string">&quot;W&quot;</span>]</span><br></pre></td></tr></table></figure>
+<p>本文来自：<a target="_blank" rel="noopener" href="http://www.jeyzhang.com/problems-with-solution-in-tensorflow.html" title="TensorFlow中遇到的问题及解决方法">TensorFlow中遇到的问题及解决方法</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://njuferret.github.io/2017/08/25/problems-with-solution-in-tensorflow/" title="TensorFlow中遇到的问题及解决方法">https://njuferret.github.io/2017/08/25/problems-with-solution-in-tensorflow/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+              <a href="/tags/TensorFlow/" rel="tag"><i class="fa fa-tag"></i> TensorFlow</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/08/24/Gradient-Descent/" rel="prev" title="转载：线性回归与梯度下降法">
+      <i class="fa fa-chevron-left"></i> 转载：线性回归与梯度下降法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/27/matrix_differential_rules/" rel="next" title="转载：矩阵求导法则">
+      转载：矩阵求导法则 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Q1-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8BTensorFlow%E4%B8%ADTensor-Variable-Constant%E7%9A%84%E5%80%BC%EF%BC%9F"><span class="nav-text">Q1. 如何查看TensorFlow中Tensor, Variable, Constant的值？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q2-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%AE%8C%E6%88%90%E5%90%8E%EF%BC%8C%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8F%82%E6%95%B0%EF%BC%9F"><span class="nav-text">Q2. 模型训练完成后，如何获取模型的参数？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

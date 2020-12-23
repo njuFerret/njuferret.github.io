@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="0、译序　　Google时，发现了这一篇文章的译文，然而完全看不懂译文的意思，遂找到原文对照阅读，最后有了重新翻译一遍的想法。 　　本文结合直观的图形解释，说明了协方差矩阵实质上是一个线性变换，主要思想有如下几点：  协方差矩阵是怎么来的：方差表征了沿特征轴方向的离散度，但无法表征特征间的相关性，因此引入协方差来进行描述这种相关性； 线性变换由旋转和缩放组成，通过特征值分解的方法可以导出，协方差矩">
+<meta property="og:type" content="article">
+<meta property="og:title" content="翻译：协方差矩阵的几何解释">
+<meta property="og:url" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="0、译序　　Google时，发现了这一篇文章的译文，然而完全看不懂译文的意思，遂找到原文对照阅读，最后有了重新翻译一遍的想法。 　　本文结合直观的图形解释，说明了协方差矩阵实质上是一个线性变换，主要思想有如下几点：  协方差矩阵是怎么来的：方差表征了沿特征轴方向的离散度，但无法表征特征间的相关性，因此引入协方差来进行描述这种相关性； 线性变换由旋转和缩放组成，通过特征值分解的方法可以导出，协方差矩">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig02.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig03.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png">
+<meta property="article:published_time" content="2019-07-28T14:58:02.000Z">
+<meta property="article:modified_time" content="2020-08-31T10:55:28.416Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="协方差矩阵">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png">
+
+<link rel="canonical" href="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>翻译：协方差矩阵的几何解释 | 有点博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有点博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          翻译：协方差矩阵的几何解释
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-28 22:58:02" itemprop="dateCreated datePublished" datetime="2019-07-28T22:58:02+08:00">2019-07-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-31 18:55:28" itemprop="dateModified" datetime="2020-08-31T18:55:28+08:00">2020-08-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="0、译序"><a href="#0、译序" class="headerlink" title="0、译序"></a>0、译序</h2><p>　　Google时，发现了这一篇文章的译文，然而完全看不懂译文的意思，遂找到原文对照阅读，最后有了重新翻译一遍的想法。</p>
+<p>　　本文结合直观的图形解释，说明了协方差矩阵实质上是一个线性变换，主要思想有如下几点：</p>
+<ol>
+<li>协方差矩阵是怎么来的：方差表征了沿特征轴方向的离散度，但无法表征特征间的相关性，因此引入协方差来进行描述这种相关性；</li>
+<li>线性变换由旋转和缩放组成，通过特征值分解的方法可以导出，协方差矩阵等价于对原特征空间的白数据做了一个线性变换；</li>
+<li>协方差矩阵的最大特征值对应的特征向量，总是指向方差最大的方向；次最大特征值对应的特征向量，正交于最大特征值对应的特征向量，并指向次最大方差指向的方向。</li>
+</ol>
+<a id="more"></a>
+
+<h2 id="1、引言"><a href="#1、引言" class="headerlink" title="1、引言"></a>1、引言</h2><p>　　本文通过研究线性变换，及变换后得到数据的协方差(Covariance)之间的关系，给出了协方差矩阵的一个直观图形解释。大部分教材是根据协方差矩阵的概念解释数据的形状。我们反其道而行之，通过数据的形状来阐述协方差矩阵的概念。</p>
+<p>　　在<a target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/divide-variance-n-1/">《为什么样本方差除以N-1？》</a>文章中，我们讨论了方差(Variance)的概念，给出了著名的样本方差估算公式的推导和证明。如图1所示，标准差（方差的平方根）表明了数据在特征空间中的离散度。 </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png" class="">
+<p>　　式 $(\ref{Unbiased})$ 给出了样本方差的无偏估计：<br>$$<br>\begin{equation}<br>\begin{split}<br>\sigma^2_x &amp;= \frac{1}{N-1}\sum^N_{i=1}(x_i-\mu)^2    \<br>&amp;=E[(x-E(x))(x-E(x))]    \<br>&amp;=\sigma(x,x)    \<br>\end{split}<br>\label{Unbiased} \end{equation}<br>$$<br>　　不过，方差只能说明数据在平行于特征空间坐标轴方向上的离散度。考虑如图2所示的二维特征空间： </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig02.png" class="">
+
+<p>　　对图2中的数据，我们可以计算 $x$ 轴方向上的方差 $\sigma(x,x)$，和 $y$ 轴方向上的方差$\sigma(y,y)$。但是，数据在水平和垂直方向上的离散度，无法解释数据呈对角线分布的特点。图2中可以很清楚地看到，总体来说，数据点 $x$ 值增加，其 $y$ 值也增加，即正相关性。这种相关性，可通过推广方差的概念，得到所谓的“协方差”：<br>$$<br>\sigma(x,y)=E[(x-E(x))(y-E(y))]<br>$$<br>　　对二维数据，可以得到 $\sigma(x,x)$ 、 $\sigma(y,y)$ 、 $\sigma(x,y)$ 和 $\sigma(y,x)$ 。这四个值构成的矩阵，称为协方差矩阵：<br>$$<br>\Sigma =<br>\begin{bmatrix}<br>\sigma(x,x)&amp;  \sigma(x,y) \<br>\sigma(y,x)&amp;  \sigma(y,y) \<br>\end{bmatrix}<br>$$</p>
+<p>　　由于 $x$ 与 $y$ 的相关性，等价于 $y$ 与 $x$ 的相关性。也就是说，$\sigma(x,y) = \sigma(y,x)$。因此，协方差矩阵，始终是一个由位于对角线上的方差和非对角线上的协方差构成的对称矩阵。二维的正态分布特性，可以用均值及 $2 \times 2$ 协方差矩阵完整描述。同样， $3 \times 3$ 协方差矩阵，可用于描述三维数据， $N \times N$ 协方差矩阵可以描述 $N$ 维数据。</p>
+<p>　　图3展示了数据的整体形状和协方差矩阵的关系： </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig03.png" class="">
+
+<h2 id="2、协方差矩阵的特征值分解"><a href="#2、协方差矩阵的特征值分解" class="headerlink" title="2、协方差矩阵的特征值分解"></a>2、协方差矩阵的特征值分解</h2><p>　　下一节，讨论协方差矩阵是如何作为一个线性算子，将白数据(white data)转换为观测数据。不过，在进入技术细节前，直观理解特征向量和特征值如何唯一地定义协方差矩阵和数据形状，非常重要。</p>
+<p>　　如图3所示，协方差矩阵定义了数据的离散程度（方差）和走向（orientation）（协方差）。因此，可以简单的使用指向最大离散度方向的向量和其值（该值等于这个方向上的方差），表示协方差矩阵。</p>
+<p>　　定义向量 $\vec{v}$ ，将数据$D$投影到该向量后得到 $\vec{v}^T D$ ，投影后数据的方差为 $\vec{v}^T  \Sigma \vec{v}$ 。为了获得指向最大方差方向的向量 $\vec{v}$，需要找到使投影后数据的协方差矩阵 $\vec{v}^T  \Sigma \vec{v}$ 最大的成分。当 $\vec{v}$ 为归一化单位向量时，求解关于向量 $\vec{v}$ 的函数 $\vec{v}^T  \Sigma \vec{v}$ 的最大值，可以用使用最大化<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rayleigh_quotient">瑞利熵</a>方法。当$\vec{v}$等于协方差矩阵$\Sigma$的最大特征向量时，瑞利熵最大。</p>
+<blockquote>
+<p>　　<strong>说明1</strong>，数学习惯上使用列向量表示一个基向量，例如平面坐标系的两个基向量$\vec{x}$和$\vec{y}$分别表示为$[1,0]^T$和$[0,1]^T$。机器学习中则习惯使用行向量表示一个样本（行数即为样本数），即基向量是一个行向量，如：$[1,0]$。</p>
+</blockquote>
+<blockquote>
+<p>　　<strong>说明2</strong>，向量$\vec{d_1}$在向量$\vec {v_1}$上的投影，就是两个向量的内积$\vec{v_1}^T \cdot \vec{d_1}$，向量均使用列向量形式表示。如果是向量$\vec{d_1}$分别在向量$\vec {v_1}$和$\vec {v_2}$上投影，那么只需要简单的将两个向量组成一个矩阵，$V = [v_1, v_2]$，然后继续点乘： $V^T d_1$。再推广下，如果是$n$个向量构成的样本$D$：$D = [d_1,d_2,\cdots, d_n]$，则数据集$D$在向量空间$V$的投影可以表示为：<br>$$<br>D^{‘} =  V^T D<br>$$<br>　　因此，协方差矩阵$\Sigma$向量空间$V$中的投影矩阵为$\Sigma^{‘}=V^T \Sigma$，对角线元素为方差。则对应于$\vec{v_1}$的方差为$\Sigma^{‘} v_1=V^T \Sigma v_1$</p>
+</blockquote>
+<p>　　换句话说，协方差矩阵的最大特征值对应的特征向量，总是指向方差最大的方向。第二大特征值对应的特征向量，正交于最大特征值对应的特征向量，并指向第二大方差指向的方向。</p>
+<p>　　现在，让我们来看一些例子。在《特征值和特征向量》(<a target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/eigenvalues-eigenvectors/">原文</a>，<a target="_blank" rel="noopener" href="http://blog.csdn.net/u010182633/article/details/45921929">译文</a>)中，线性变换矩阵 $T$ 仅由特征向量和特征值确定。将其应用于协方差矩阵（注：协方差矩阵相当于两个特征向量之间的线性变换，可以通过特征方程求出特征向量和特征值）：<br>$$<br>\begin{equation}<br>\Sigma \vec{v}=\lambda \vec{v}  \qquad \qquad （\vec{v} 为 \Sigma 的属于特征值 \lambda 的特征向量）<br>\label {CovMatrix}<br>\end{equation}<br>$$</p>
+<p>　　如果协方差矩阵是对角矩阵，即协方差部分为零，则方差必然等于特征值 $\lambda$。如图4所示，特征向量用绿色和红色表示，特征值明显等于协方差矩阵的方差分量。 </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png" class="">
+
+<p>　　如果协方差矩阵是非对角矩阵，即协方差部分不为零，则情况稍微复杂一些。特征值仍是最大离散方向的方差，协方差矩阵的对角线（方差）分量，仍然是 $x$ 轴和 $y$ 轴方向的方差大小。但因为数据是非轴对齐（最大方差对应的向量与x/ $y$ 轴有一个夹角），所以协方差矩阵对角线上的值不再与图5所示的相同。 </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png" class="">
+
+<p>　　比较图5与图4，可以清楚地看到，特征值表示沿特征向量方向的方差，而协方差矩阵的方差分量表示沿轴的方差。如果协方差为0，则两个值相等。</p>
+<h2 id="3、使用协方差矩阵作线性变换"><a href="#3、使用协方差矩阵作线性变换" class="headerlink" title="3、使用协方差矩阵作线性变换"></a>3、使用协方差矩阵作线性变换</h2><p>　　现在，暂时放一放协方差矩阵。图3中的例子，可以简单地认为是图6的一个线性变换： </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png" class="">
+
+<p>　　令图6中数据为 $D$ ，则图3中的各示例可以通过对 $D$ 做线性变换得到：<br>$$<br>D^{‘}=TD<br>$$<br>　　其中，$T$ 是含有旋转矩阵 $R$ 和缩放矩阵 $S$ 的变换矩阵：<br>$$<br>\begin{equation}<br>T=RS<br>\label {matrixT}<br>\end {equation}<br>$$</p>
+<p>　　矩阵 $R$ 和 $S$ 的定义如式 $(\ref{matrixR})$ 和式  $(\ref{matrixS})$：<br>$$<br>\begin{align}<br>R &amp;= \begin{bmatrix}<br>cos(\theta) &amp; -sin(\theta) \<br>sin(\theta) &amp; cos(\theta)<br>\end{bmatrix}<br>\label {matrixR} \<br>S &amp;= \begin{bmatrix}<br>s_x &amp; 0 \<br>0 &amp; s_y \<br>\end{bmatrix}<br>\label {matrixS}<br>\end{align}<br>$$<br>　　式 $(\ref{matrixR})$ 中， $\theta$ 为旋转角度。式  $(\ref{matrixS})$ 中， $s_x$ 、 $s_y$ 分别是 $x$ 方向和 $y$ 方向的缩放比例因子。</p>
+<p>　　接下来讨论，协方差矩阵 $\Sigma$ 和线性变换矩阵 $T$ 之间的关系。</p>
+<p>　　先从无缩放（缩放比例为1）、无旋转数据开始。此类样本服从标准正态分布，对应于白（非相关）噪声，统计学习惯称之为“白数据”： </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png" class="">
+
+<p>　　“白”数据的协方差矩阵，等于单位矩阵，因此方差和标准差为1，协方差等于0：<br>$$<br>\Sigma=<br>\begin{bmatrix}<br>\sigma^2_x &amp; 0        \<br>0       &amp; \sigma^2_y \<br>\end{bmatrix}<br>=\begin{bmatrix}<br>1 &amp; 0 \<br>0 &amp; 1 \<br>\end{bmatrix}<br>$$</p>
+<p>　　现在，对 $x$ 方向乘4：<br>$$<br>D^{‘}=<br>\begin{bmatrix}<br>4 &amp; 0 \<br>0 &amp; 1 \<br>\end{bmatrix}<br>D<br>$$</p>
+<p>　　则变换后的数据 $D^{‘}$ 如图8所示： </p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png" class="">
+
+<p>　　 $D^{‘}$ 的协方差矩阵  $\Sigma^{‘}$ 为：<br>$$<br>\Sigma^{‘}=<br>\begin{bmatrix}<br>\sigma^2_x &amp; 0 \<br>0 &amp; \sigma^2_y \<br>\end{bmatrix}<br>=\begin{bmatrix}<br>16 &amp; 0 \<br>0 &amp; 1 \<br>\end{bmatrix}<br>$$</p>
+<p>　　故 $D^{‘}$ 的协方差矩阵 $\Sigma^{‘}$ ，与作用在原始数据上的线性变换矩阵$T$的关系为 $D^{‘}=TD$，这里:<br>$$<br>\begin{equation}<br>T=\sqrt{\Sigma^{‘}}=<br>\begin{bmatrix}<br>4 &amp; 0 \<br>0 &amp; 1 \<br>\end{bmatrix}<br>\label {transformMatrix}<br>\end{equation}<br>$$</p>
+<p>　　式 $(\ref {transformMatrix})$ 在 $x$ 和 $y$ 方向上进行缩放变换时成立，但该式是否可用于旋转变换？考虑一般情况下，线性变换矩阵 $T$ 和协方差矩阵 $\Sigma^{‘}$ 之间的关系，我们将协方差矩阵分解为旋转和缩放矩阵的乘积。</p>
+<p>　　如前所述，协方差矩阵可以用特征向量和特征值表示，式 $(\ref {CovMatrix})$ 包括了矩阵 $\Sigma$ 的每一个“特征向量-特征值”对。在二维情况下，有2个特征向量和2个特征值。矩阵可以有效的描述式 $(\ref {CovMatrix})$ 定义的两个等式关系：<br>$$<br>\begin{equation}<br>\Sigma V = VL<br>\label {eigenvectors}<br>\end{equation}<br>$$<br>　　式 $(\ref {eigenvectors})$ 中， $V$ 是由 $\Sigma$ 的各特征向量构成的矩阵，$L$ 为相应特征向量对应的非0特征值组成的对角矩阵。</p>
+<p>　　解得协方差矩阵：<br>$$<br>\begin{equation}<br>\Sigma = VLV^{-1}<br>\label {Eigendecomposition}<br>\end{equation}<br>$$</p>
+<p>　　式 $(\ref {Eigendecomposition})$ 称为协方差矩阵的特征值分解，可通过**<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition">奇异值分解(SVD)</a>**算法求解。由于特征向量表示了最大方差的方向，特征值表示该方向上方差的值。也就是说，$V$ 就是旋转矩阵，而 $\sqrt{L}$ 就是缩放矩阵。协方差矩阵可进一步分解为：<br>$$<br>\begin{equation}<br>\Sigma = RSSR^{-1}<br>\label {cov_decompose}<br>\end{equation}<br>$$<br>　　式中，$R=V$ 为旋转矩阵，$S=\sqrt{L}$为缩放矩阵。式$(\ref {matrixT})$ 定义了线性变换 $T$ ( $T=RS$ ) 。因为 $S$ 为对角缩放矩阵，故 $S=S^T$。另外， $R$ 为正交矩阵，所以 $R^{-1}=R^T$ 。从而，协方差矩阵可以写为：<br>$$<br>\Sigma=RSSR^{-1}=(RS)(SR^{-1})=(RS)(S^{T}R^{T})=(RS)(RS)^{T}=TT^T<br>$$</p>
+<p>　　也就是说，对图7中的原始“白”数据 $D$ 使用线性变换 $T$ ( $T=RS$ )，即可得到旋转和缩放后的数据 $D^{‘}$及其协方差矩阵 $\Sigma^{‘}$ （ $\Sigma^{‘}=TT^{T}=RSSR^{-1}$ ），如图10所示：</p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png" class="">
+
+<p>　　图10中彩色箭头表示特征向量。与最大特征值对应的特征向量，总是指向数据最大方差的方向，并规定了其走向（orientation）。由旋转矩阵的正交性，次最大特征值对应的特征向量，总是与最大特征值对应的特征向量正交。</p>
+<h2 id="4、总结"><a href="#4、总结" class="headerlink" title="4、总结"></a>4、总结</h2><p>　　本文说明了，被观测数据的协方差矩阵，直接与针对白（非相关）数据的线性变换有关。该线性变换完全由特征向量和特征值定义。特征向量表示了矩阵的旋转，特征值对应于每个维度上缩放因子的平方。</p>
+<h2 id="5、补充说明"><a href="#5、补充说明" class="headerlink" title="5、补充说明"></a>5、补充说明</h2><h3 id="线性变换、特征值和特征向量"><a href="#线性变换、特征值和特征向量" class="headerlink" title="线性变换、特征值和特征向量"></a>线性变换、特征值和特征向量</h3><p>　　<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_map">线性变换(线性映射)</a>，表征了向量在两个向量空间之间变换的一种映射关系，它保持向量加法和标量乘法的运算，向量加法对应于旋转矩阵，标量乘法对应于缩放矩阵。</p>
+<p>　　<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">特征值和特征向量</a>是一体的概念：</p>
+<blockquote>
+<p>对于一个给定的线性变换，其特征向量 $\xi$ 经过该线性变换之后，得到的新向量仍然与原来的 $\xi$ 保持在同一条直线上，但其长度可能会改变。一个特征向量的长度在该线性变换下的缩放比例，称为其特征值（本征值）。</p>
+</blockquote>
+<p>　　数学描述如下：<br>$$<br>A \xi=\lambda \xi<br>$$<br>　　在线性变换 $A$ 的作用下，向量 $\xi$ 仅仅在尺度上变为原来的 $\lambda$ 倍。$\lambda$称为特征值，$\xi$称为线性变换$A$的属于特征值$\lambda$的特征向量。</p>
+<p>　　矩阵 $A$ 的非零特征值最大数目是该矩阵的秩 $rank(A)$ 。对于每个特征值 $\lambda_i$ 均满足特征方程(Characteristic equation) $(A−\lambda_{i}I)\xi=0$ 。</p>
+<p>　　简言之，特征向量和特征值表达了线性变换的针对的对象和大小，两者一一对应，成对出现。在物理上，特征值表明线性变换对基向量的缩放程度，特征向量表明线性变换针对的基向量方向，同时特征向量之间是线性无关的。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.visiondummy.com/2014/04/geometric-interpretation-covariance-matrix/">A geometric interpretation of the covariance matrix</a></li>
+<li><a target="_blank" rel="noopener" href="http://demo.netfoucs.com/u010182633/article/details/45937051">协方差矩阵的几何解释</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.jqian.net/post/pca.html">特征值分解和主成份分析</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/" title="翻译：协方差矩阵的几何解释">https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5/" rel="tag"><i class="fa fa-tag"></i> 协方差矩阵</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/07/26/2019-07-26-covariance/" rel="prev" title="方差、协方差和相关系数">
+      <i class="fa fa-chevron-left"></i> 方差、协方差和相关系数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/07/31/2019-07-31_pca-ica/" rel="next" title="主成分分析与独立成分分析">
+      主成分分析与独立成分分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0%E3%80%81%E8%AF%91%E5%BA%8F"><span class="nav-text">0、译序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%BC%95%E8%A8%80"><span class="nav-text">1、引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5%E7%9A%84%E7%89%B9%E5%BE%81%E5%80%BC%E5%88%86%E8%A7%A3"><span class="nav-text">2、协方差矩阵的特征值分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E4%BD%BF%E7%94%A8%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5%E4%BD%9C%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2"><span class="nav-text">3、使用协方差矩阵作线性变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-text">4、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E"><span class="nav-text">5、补充说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2%E3%80%81%E7%89%B9%E5%BE%81%E5%80%BC%E5%92%8C%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F"><span class="nav-text">线性变换、特征值和特征向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

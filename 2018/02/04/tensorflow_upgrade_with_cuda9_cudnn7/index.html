@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="使用pip升级TensorFlow时，发现TF已经升级至1.5版本。以下记录更新步骤系统信息： 12Ubuntu 16.04 LTS x86_64Python 3.5.4 :: Anaconda custom (64-bit)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 16.04下1.5版TensorFlow-gpu升级记录">
+<meta property="og:url" content="https://njuferret.github.io/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="使用pip升级TensorFlow时，发现TF已经升级至1.5版本。以下记录更新步骤系统信息： 12Ubuntu 16.04 LTS x86_64Python 3.5.4 :: Anaconda custom (64-bit)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-02-04T05:28:40.000Z">
+<meta property="article:modified_time" content="2018-07-22T10:03:57.241Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="tensorflow">
+<meta property="article:tag" content="cuda">
+<meta property="article:tag" content="cudnn">
+<meta property="article:tag" content="ubuntu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://njuferret.github.io/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Ubuntu 16.04下1.5版TensorFlow-gpu升级记录 | 有点博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有点博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu 16.04下1.5版TensorFlow-gpu升级记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-02-04 13:28:40" itemprop="dateCreated datePublished" datetime="2018-02-04T13:28:40+08:00">2018-02-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-07-22 18:03:57" itemprop="dateModified" datetime="2018-07-22T18:03:57+08:00">2018-07-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/skill/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>使用pip升级TensorFlow时，发现TF已经升级至1.5版本。以下记录更新步骤<br>系统信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ubuntu 16.04 LTS x86_64</span><br><span class="line">Python 3.5.4 :: Anaconda custom (64-bit)</span><br></pre></td></tr></table></figure>
+<a id="more"></a> 
+<h1 id="1、更新TensorFlow"><a href="#1、更新TensorFlow" class="headerlink" title="1、更新TensorFlow"></a>1、更新TensorFlow</h1><p>如果直接使用<code>pip install -U</code>升级，会出现futures的错误：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Collecting futures&gt;=3.1.1 (from tensorflow-tensorboard&lt;1.6.0,&gt;=1.5.0-&gt;tensorflow)</span><br><span class="line">  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/1f/9e/7b2ff7e965fc654592269f2906ade1c7d705f1bf25b7d469fa153f7d19eb/futures-3.2.0.tar.gz</span><br><span class="line">Unknown requires Python <span class="string">&#x27;&gt;=2.6, &lt;3&#x27;</span> but the running Python is 3.5.4</span><br></pre></td></tr></table></figure>
+<p>解决办法先安装futures的3.1.1版本，然后安装TensorFlow 1.5。注意不能使用’-U’参数更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install futures==3.1.1</span><br><span class="line">pip install tensorflow-gpu==1.5.0</span><br></pre></td></tr></table></figure>
+<p>安装完成执行以下测试语句，报错说找不到<code>libcublas.so.9.0</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">print(tf.__version__)</span><br></pre></td></tr></table></figure>
+<p>错误：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ImportError: libcublas.so.9.0: cannot open shared object file: </span><br><span class="line">             No such file or directory</span><br></pre></td></tr></table></figure>
+<h1 id="2、更新cuda-9和cudnn-7"><a href="#2、更新cuda-9和cudnn-7" class="headerlink" title="2、更新cuda 9和cudnn 7"></a>2、更新<code>cuda 9</code>和<code>cudnn 7</code></h1><h2 id="1-下载以下两个文件至本地："><a href="#1-下载以下两个文件至本地：" class="headerlink" title="(1) 下载以下两个文件至本地："></a>(1) 下载以下两个文件至本地：</h2><p><a target="_blank" rel="noopener" href="http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb">cuda-repo-ubuntu1604_9.0.176-1_amd64.deb</a><br><a target="_blank" rel="noopener" href="http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub">7fa2af80.pub</a></p>
+<h2 id="2-执行以下两个命令："><a href="#2-执行以下两个命令：" class="headerlink" title="(2) 执行以下两个命令："></a>(2) 执行以下两个命令：</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i cuda-repo-ubuntu1604_9.0.176-1_amd64.deb</span><br><span class="line">sudo apt-key add ./7fa2af80.pub</span><br></pre></td></tr></table></figure>
+<p>nvidia文档说明如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i cuda-repo-&lt;distro&gt;_&lt;version&gt;_&lt;architecture&gt;.deb</span><br><span class="line">sudo apt-key add /var/cuda-repo-&lt;version&gt;/7fa2af80.pub</span><br></pre></td></tr></table></figure>
+<h2 id="3-给apt-get设置代理："><a href="#3-给apt-get设置代理：" class="headerlink" title="(3) 给apt-get设置代理："></a>(3) 给apt-get设置代理：</h2><p>网址<code>http://developer.download.nvidia.com/ </code>无法通过ipv6访问，设置代理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/apt/apt.conf</span><br></pre></td></tr></table></figure>
+<p>添加代理服务器配置后保存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Acquire::http::Proxy &quot;http:&#x2F;&#x2F;127.0.0.1:8122&quot;;</span><br><span class="line">Acquire::https::Proxy &quot;http:&#x2F;&#x2F;127.0.0.1:8122&quot;;</span><br></pre></td></tr></table></figure>
+<h2 id="4-执行更新动作"><a href="#4-执行更新动作" class="headerlink" title="(4) 执行更新动作"></a>(4) 执行更新动作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+<h2 id="5-列出需要更新的软件版本"><a href="#5-列出需要更新的软件版本" class="headerlink" title="(5) 列出需要更新的软件版本"></a>(5) 列出需要更新的软件版本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-cache policy cuda</span><br></pre></td></tr></table></figure>
+<p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-cache policy &lt;package name&gt;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cuda:</span><br><span class="line">  已安装：8.0.61-1</span><br><span class="line">  候选： 9.1.85-1</span><br><span class="line">  版本列表：</span><br><span class="line">     9.1.85-1 500</span><br><span class="line">        500 http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64  Packages</span><br><span class="line">     9.0.176-1 500</span><br><span class="line">        500 http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64  Packages</span><br><span class="line">        100 /var/lib/dpkg/status</span><br><span class="line"> *** 8.0.61-1 500</span><br><span class="line">        500 http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64  Packages</span><br><span class="line">     8.0.44-1 500</span><br><span class="line">        500 http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64  Packages</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-选取指定的版本"><a href="#6-选取指定的版本" class="headerlink" title="(6) 选取指定的版本"></a>(6) 选取指定的版本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update cuda=9.0.176-1</span><br></pre></td></tr></table></figure>
+<h2 id="7-创建软链接并验证安装"><a href="#7-创建软链接并验证安装" class="headerlink" title="(7) 创建软链接并验证安装"></a>(7) 创建软链接并验证安装</h2><p>创建软链接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/</span><br><span class="line">sudo ln -s cuda-9.0 cuda</span><br></pre></td></tr></table></figure>
+<p>安装完成之后，使用以下命令验证安装情况，注意，需要设定环境变量(可在<code>~/.bashrc</code>中添加)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/cuda/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="string">&quot;<span class="variable">$LD_LIBRARY_PATH</span>:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64&quot;</span></span><br><span class="line"><span class="built_in">export</span> CUDA_HOME=/usr/<span class="built_in">local</span>/cuda</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>显示驱动基本情况，执行<code>nvidia-smi</code>，输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Sun Feb  4 11:36:36 2018</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 390.12                 Driver Version: 390.12                    |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  GeForce GTX 108...  Off  | 00000000:03:00.0 Off |                  N/A |</span><br><span class="line">|  0%   19C    P5    26W / 250W |      0MiB / 11176MiB |      2%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line"></span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|=============================================================================|</span><br><span class="line">|  No running processes found                                                 |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<p>执行<code>nvcc -V</code>，输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nvcc: NVIDIA (R) Cuda compiler driver</span><br><span class="line">Copyright (c) 2005-2017 NVIDIA Corporation</span><br><span class="line">Built on Fri_Sep__1_21:08:03_CDT_2017</span><br><span class="line">Cuda compilation tools, release 9.0, V9.0.176</span><br></pre></td></tr></table></figure>
+<h2 id="8-安装cudnn"><a href="#8-安装cudnn" class="headerlink" title="(8) 安装cudnn"></a>(8) 安装cudnn</h2><p>然后进入选定目录，执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget -c http://developer.download.nvidia.com/compute/machine-learning/cudnn/secure/v7.0.5/prod/9.0_20171129/cudnn-9.0-linux-x64-v7.tgz</span><br><span class="line">tar -zxvf cudnn-9.0-linux-x64-v7.tgz</span><br><span class="line">sudo cp cuda/include/cudnn.h /usr/<span class="built_in">local</span>/cuda/include/</span><br><span class="line">sudo cp cuda/lib64/libcudnn* /usr/<span class="built_in">local</span>/cuda/lib64/ -d</span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/include/cudnn.h</span><br><span class="line">sudo chmod a+r /usr/<span class="built_in">local</span>/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
+<h2 id="9-更新完成后，恢复原有的配置"><a href="#9-更新完成后，恢复原有的配置" class="headerlink" title="(9) 更新完成后，恢复原有的配置"></a>(9) 更新完成后，恢复原有的配置</h2><p>去除<code>apt-get</code>代理:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mv /etc/apt/apt.conf /etc/apt/apt.conf.with_proxy</span><br></pre></td></tr></table></figure>
+<p>去除<code>nvidia</code>更新源，将<code>cuda.list</code>的内容注释掉：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/apt/sources.list.d/cuda.list</span><br></pre></td></tr></table></figure>
+<h2 id="10-如果以后需要更新，则将第-9-步的内容恢复即可。"><a href="#10-如果以后需要更新，则将第-9-步的内容恢复即可。" class="headerlink" title="(10) 如果以后需要更新，则将第(9)步的内容恢复即可。"></a>(10) 如果以后需要更新，则将第(9)步的内容恢复即可。</h2><p>参考文档</p>
+<p>[1] <a target="_blank" rel="noopener" href="https://github.com/tensorflow/tensorflow/issues/16478">Failed install on Windows</a><br/><br>[2] <a target="_blank" rel="noopener" href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation">nvidia文档</a><br/><br>[3] <a target="_blank" rel="noopener" href="https://askubuntu.com/questions/257290/configure-proxy-for-apt">Configure proxy for APT?</a><br/><br>[4] <a target="_blank" rel="noopener" href="https://askubuntu.com/questions/428772/how-to-install-specific-version-of-some-package/428778"> How to install specific version of some package </a><br/><br>[5] <a target="_blank" rel="noopener" href="http://www.52nlp.cn/tag/cudnn-7-0">深度学习服务器环境配置</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://njuferret.github.io/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/" title="Ubuntu 16.04下1.5版TensorFlow-gpu升级记录">https://njuferret.github.io/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/tensorflow/" rel="tag"><i class="fa fa-tag"></i> tensorflow</a>
+              <a href="/tags/cuda/" rel="tag"><i class="fa fa-tag"></i> cuda</a>
+              <a href="/tags/cudnn/" rel="tag"><i class="fa fa-tag"></i> cudnn</a>
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/01/28/overfitting-underfitting/" rel="prev" title="机器学习中的过拟合与欠拟合">
+      <i class="fa fa-chevron-left"></i> 机器学习中的过拟合与欠拟合
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/07/08/texlive_config/" rel="next" title="TexLive的配置和使用">
+      TexLive的配置和使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1%E3%80%81%E6%9B%B4%E6%96%B0TensorFlow"><span class="nav-text">1、更新TensorFlow</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2%E3%80%81%E6%9B%B4%E6%96%B0cuda-9%E5%92%8Ccudnn-7"><span class="nav-text">2、更新cuda 9和cudnn 7</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%8B%E8%BD%BD%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E8%87%B3%E6%9C%AC%E5%9C%B0%EF%BC%9A"><span class="nav-text">(1) 下载以下两个文件至本地：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%89%A7%E8%A1%8C%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%E5%91%BD%E4%BB%A4%EF%BC%9A"><span class="nav-text">(2) 执行以下两个命令：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BB%99apt-get%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%EF%BC%9A"><span class="nav-text">(3) 给apt-get设置代理：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%89%A7%E8%A1%8C%E6%9B%B4%E6%96%B0%E5%8A%A8%E4%BD%9C"><span class="nav-text">(4) 执行更新动作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%88%97%E5%87%BA%E9%9C%80%E8%A6%81%E6%9B%B4%E6%96%B0%E7%9A%84%E8%BD%AF%E4%BB%B6%E7%89%88%E6%9C%AC"><span class="nav-text">(5) 列出需要更新的软件版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E9%80%89%E5%8F%96%E6%8C%87%E5%AE%9A%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-text">(6) 选取指定的版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%88%9B%E5%BB%BA%E8%BD%AF%E9%93%BE%E6%8E%A5%E5%B9%B6%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-text">(7) 创建软链接并验证安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E5%AE%89%E8%A3%85cudnn"><span class="nav-text">(8) 安装cudnn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%9B%B4%E6%96%B0%E5%AE%8C%E6%88%90%E5%90%8E%EF%BC%8C%E6%81%A2%E5%A4%8D%E5%8E%9F%E6%9C%89%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">(9) 更新完成后，恢复原有的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E5%A6%82%E6%9E%9C%E4%BB%A5%E5%90%8E%E9%9C%80%E8%A6%81%E6%9B%B4%E6%96%B0%EF%BC%8C%E5%88%99%E5%B0%86%E7%AC%AC-9-%E6%AD%A5%E7%9A%84%E5%86%85%E5%AE%B9%E6%81%A2%E5%A4%8D%E5%8D%B3%E5%8F%AF%E3%80%82"><span class="nav-text">(10) 如果以后需要更新，则将第(9)步的内容恢复即可。</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">57</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
