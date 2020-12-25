@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 **相关系数(">
+  <meta name="description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 方差(Variance) ，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 协方差(Covariance) 表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 相关系数(Coeffici">
 <meta property="og:type" content="article">
 <meta property="og:title" content="方差、协方差和相关系数">
 <meta property="og:url" content="https://njuferret.github.io/2019/07/26/2019-07-26-covariance/index.html">
 <meta property="og:site_name" content="有点博客">
-<meta property="og:description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 **相关系数(">
+<meta property="og:description" content="一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。 1、概念　　 方差(Variance) ，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。 　　 协方差(Covariance) 表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。 　　 相关系数(Coeffici">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-07-26T10:30:02.000Z">
-<meta property="article:modified_time" content="2020-08-31T11:15:33.573Z">
+<meta property="article:modified_time" content="2020-12-25T07:55:12.568Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="协方差矩阵">
@@ -81,7 +81,11 @@
   </style>
 </noscript>
 
-</head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -228,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-31 19:15:33" itemprop="dateModified" datetime="2020-08-31T19:15:33+08:00">2020-08-31</time>
+                <time title="修改时间：2020-12-25 15:55:12" itemprop="dateModified" datetime="2020-12-25T15:55:12+08:00">2020-12-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -256,9 +260,9 @@
 
       
         <p>　　一直没明白，方差、协方差以及相关系数这几个概念的含义及其在统计学中作用和计算方法，这里简单做一个记录和梳理。</p>
-<h3 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h3><p>　　 **方差(Variance)**，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。</p>
-<p>　　 **协方差(Covariance)**表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。</p>
-<p>　　 **相关系数(Coefficient)**，统计学上常用是皮尔森相关系数(Pearson correlation coefficient)，定义为两个维度（特征）之间的协方差和标准差之比，用于度量两个维度之间的(线性)相关程度，其值介于$[-1,1]$之间。</p>
+<h3 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h3><p>　　 <strong>方差(Variance)</strong> ，表征统计量（随机变量）对均值的误差（偏离度或离散度），方差越小离散度越小，统计量越接近统计平均值。</p>
+<p>　　 <strong>协方差(Covariance)</strong> 表征统计量（随机变量）不同维度之间的误差，衡量该量不同维度之间的相关性。</p>
+<p>　　 <strong>相关系数(Coefficient)</strong> ，统计学上常用是皮尔森相关系数(Pearson correlation coefficient)，定义为两个维度（特征）之间的协方差和标准差之比，用于度量两个维度之间的(线性)相关程度，其值介于$[-1,1]$之间。</p>
 <a id="more"></a>
 
 <p>　　当协方差为正时，两个维度呈正相关（同增同减）；当协方差为负时，两个维度负相关（一增一减）。将所有将所有维度之间的协方差关系以矩阵的形式表现，即为协方差矩阵。</p>
@@ -270,16 +274,16 @@
 <li>协方差矩阵是一个方阵，其大小由随机变量的维度决定。如果该随机变量维度为 $ N $ ，则协方差矩阵的大小为 $(N \times N )$ 。</li>
 <li>相关系数，也可以看成协方差：一种剔除了两个变量量纲影响、标准化后的特殊协方差（其值为$[-1,1]$之间）。</li>
 </ol>
-<p>　　另外提一下**标准差(Standard Deviation)**。标准差定义为方差的算术平方根（习惯使用$\sigma$表示），由于方差在量纲上与被测物理量不同，因此，标准差可以消除量纲带来的差异。</p>
-<h3 id="2、数学定义"><a href="#2、数学定义" class="headerlink" title="2、数学定义"></a>2、数学定义</h3><p>　　设样本集 $S$ 由 $m$ 个 $n$ 维随机变量构成， $S = { s_1,s_2,\cdots,s_m }$ ，其中 $s_k=[x_{k1}, x_{k2},…,x_{kn}]$ $; (1\le k \le m)$ 。则样本矩阵为：<br>$$<br>S<br>=\begin{bmatrix}<br>S_{1}\<br>S_{2}\<br>\vdots\<br>S_{m}\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>x_{11}  &amp;x_{12}  &amp; \cdots\ &amp;x_{1n}\<br>x_{21}  &amp;x_{22}  &amp; \cdots\ &amp;x_{2n}\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>x_{m1}  &amp;x_{m2}  &amp; \cdots\ &amp;x_{mn}\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>X_{1}&amp; X_{2}&amp; \cdots &amp; X_{n}\<br>\end{bmatrix}<br>$$<br>　　<strong>注意</strong>：$m$是样本数，$n$是随机变量的维度（特征），<font color="#dd00dd">$S_k$为行向量，针对行（样本），$X_k$为列向量，针对列（特征）</font>。第1下标表示样本编号，第2个下标表示维度编号，例如$x_{34}$表示第$3$个样本的第$4$个维度。</p>
+<p>　　另外提一下 <strong>标准差(Standard Deviation)</strong> 。标准差定义为方差的算术平方根（习惯使用$\sigma$表示），由于方差在量纲上与被测物理量不同，因此，标准差可以消除量纲带来的差异。</p>
+<h3 id="2、数学定义"><a href="#2、数学定义" class="headerlink" title="2、数学定义"></a>2、数学定义</h3><p>　　设样本集 $S$ 由 $m$ 个 $n$ 维随机变量构成， $S = { s_1,s_2,\cdots,s_m }$ ，其中 $s_k=[x_{k1}, x_{k2},…,x_{kn}]$ $; (1\le k \le m)$ 。则样本矩阵为：<br>$$<br>S<br>=\begin{bmatrix}<br>S_{1}   \<br>S_{2}   \<br>\vdots  \<br>S_{m}   \<br>\end{bmatrix}<br>=\begin{bmatrix}<br>x_{11}  &amp;x_{12}  &amp; \cdots\ &amp;x_{1n}      \<br>x_{21}  &amp;x_{22}  &amp; \cdots\ &amp;x_{2n}      \<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots   \<br>x_{m1}  &amp;x_{m2}  &amp; \cdots\ &amp;x_{mn}      \<br>\end{bmatrix}<br>=\begin{bmatrix}<br>X_{1}&amp; X_{2}&amp; \cdots &amp; X_{n}            \<br>\end{bmatrix}<br>$$<br>　　<strong>注意</strong>：$m$是样本数，$n$是随机变量的维度（特征），<font color="#dd00dd">$S_k$为行向量，针对行（样本），$X_k$为列向量，针对列（特征）</font>。第1下标表示样本编号，第2个下标表示维度编号，例如$x_{34}$表示第$3$个样本的第$4$个维度。</p>
 <ul>
-<li><strong>方差</strong>：（针对维度，纵向）<br>$$<br>Var(S)=\begin{bmatrix}<br>Var(X_{1})&amp; Var(X_{2})&amp; \cdots &amp; Var(X_{n})\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>\sigma^{2}(X_{1})&amp; \sigma^{2}(X_{2})&amp; \cdots &amp; \sigma^{2}(X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Var(X_{i})=\sigma^{2}(X_{i})=\frac{1}{m-1} {(X_{i}-\overline X_{i})^{T} \cdot {(X_{i}-\overline X_{i})}};;;;; (1\le i \le n)<br>$$</li>
+<li><strong>方差</strong>：（针对维度，纵向）<br>$$<br>Var(S)=\begin{bmatrix}<br>Var(X_{1})&amp; Var(X_{2})&amp; \cdots &amp; Var(X_{n})\\<br>\end{bmatrix}<br>=\begin{bmatrix}<br>\sigma^{2}(X_{1})&amp; \sigma^{2}(X_{2})&amp; \cdots &amp; \sigma^{2}(X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Var(X_{i})=\sigma^{2}(X_{i})=\frac{1}{m-1} {(X_{i}-\overline X_{i})^{T} \cdot {(X_{i}-\overline X_{i})}};;;;; (1\le i \le n)<br>$$</li>
 </ul>
 <p>　　使用统计学符号表示<br>$$<br>Var(X_{i})=\sigma^{2}(X_{i})=E \left ( [X-E(X)]^T [X-E(X)] \right )<br>$$</p>
 <ul>
 <li><strong>协方差</strong>：（同样针对维度）</li>
 </ul>
-<p>$$<br>Cov(S)<br>=\begin{bmatrix}<br>Cov(X_{1},X_{1})  &amp;Cov(X_{1},X_{2})  &amp; \cdots\ &amp;Cov(X_{1},X_{n})\<br>Cov(X_{2},X_{1})  &amp;Cov(X_{2},X_{2})  &amp; \cdots\ &amp;Cov(X_{2},X_{n})\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>Cov(X_{n},X_{1})  &amp;Cov(X_{n},X_{2})  &amp; \cdots\ &amp;Cov(X_{n},X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Cov(X_{i},X_{j})=\frac{1}{m-1}{(X_{i} - \overline X_{i})^{T} \cdot { (X_{j}-\overline X_{j})}};;;;; (1\le i,j \le n)<br>$$<br>　　使用统计学符号表示<br>$$<br>Cov(X_{i},X_{j})=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right );;;;; (1\le i,j \le n)<br>$$</p>
+<p>$$<br>Cov(S)<br>=\begin{bmatrix}<br>Cov(X_{1},X_{1})  &amp;Cov(X_{1},X_{2})  &amp; \cdots\ &amp;Cov(X_{1},X_{n})\<br>Cov(X_{2},X_{1})  &amp;Cov(X_{2},X_{2})  &amp; \cdots\ &amp;Cov(X_{2},X_{n})\<br> \vdots   &amp; \vdots &amp; \ddots  &amp; \vdots  \<br>Cov(X_{n},X_{1})  &amp;Cov(X_{n},X_{2})  &amp; \cdots\ &amp;Cov(X_{n},X_{n})\<br>\end{bmatrix}<br>$$<br>　　其中：<br>$$<br>Cov(X_{i},X_{j})=\frac{1}{m-1}{(X_{i} - \overline X_{i})^{T} \cdot { (X_{j}-\overline X_{j})}}\ \ \ \ \  (1\le i,j \le n)<br>$$<br>　　使用统计学符号表示<br>$$<br>Cov(X_{i},X_{j})=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right );;;;; (1\le i,j \le n)<br>$$</p>
 <p>　　当$i=j$时，即协方差矩阵的对角矩阵，就是方差。</p>
 <ul>
 <li><strong>(Pearson)相关系数</strong>：</li>
