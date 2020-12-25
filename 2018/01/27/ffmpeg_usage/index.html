@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -79,11 +79,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -271,20 +267,20 @@
 <p>ffmpeg 在有多个流的情况下，不会全部保留；默认只会选择同类流中<strong>质量最佳的</strong>。如果质量同样，那么选择索引号靠前的流。你可以选择手动控制流的选择，这需要额外的参数，我们下文介绍。</p>
 <h2 id="主要参数">5. 主要参数</h2>
 <p>下表中： 1. 以 <code>&lt;&gt;</code> 包裹的表示由用户具体指定；以 <code>[]</code> 包裹的表示是可选参数，可以指定也可以省略。 2. 括号内的 <code>i</code> 表示该参数用于输入流，<code>o</code> 表示用于输出流，<code>i/o</code> 表示均可，<code>global</code> 表示全局参数。 3. 关键字 <code>duration</code>, <code>position</code> 或 <code>offset</code> 满足：<code>[-][HH:]MM:SS[.m...]</code> 这种时间戳格式。或者以秒为单位的 <code>SS[.m...]</code> 格式。</p>
-<p>常用的如下： - <code>-b[:stream_specifier] (o)</code>：输出比特率。 - <code>-f &lt;fmt&gt; (i/o)</code>：指定 <code>fmt</code> 作为输入或输出的视频格式。一般会根据文件扩展名自动选择，但有时需要手动指定。<br>
-- <code>-i &lt;filename&gt; (i)</code>：指定 <code>filename</code> 作为源文件。<br>
-- <code>-y (global)</code>：文件存在时直接覆盖。<br>
-- <code>-n (global)</code>：文件存在时不覆盖并立即退出。<br>
-- <code>-bsf[:stream_specifier] &lt;bitstream_filters&gt; (o)</code>：设置比特流滤镜。<code>bitstream_filters</code> 是一个逗号分隔的滤镜列表。 - <code>-stream_loop &lt;num&gt; (i)</code>：指定输入流的循环次数。0 表示不循环，-1 表示无限循环。<br>
-- <code>-c[:stream_specifier] &lt;codec&gt; (i/o)</code>：<code>-c</code>可写为<code>-codec</code>。选择一个 <code>codec</code> ，即编码器（输出时）或一个解码器（输入时），参与到 <code>stream_specifier</code> 指定的一个或多个流的编码/解码中。在输出时，<code>&lt;codec&gt;</code> 可以被指定为 <code>copy</code>，表示复制数据流。<br>
-- <code>-t &lt;duration&gt; (i/o)</code>：（在参数 <code>-i</code> 之前指定）工作持续 <code>duration</code> 时长。一般用于指定剪辑数据流的范围。 它与 <code>-to</code> 参数相互冲突，但本参数优先。<br>
-- <code>-to &lt;position&gt; (o)</code>：到 <code>position</code> 位置后，终止输出。与 <code>-t</code> 参数冲突，本参数优先级低。 - <code>-fs &lt;limit_size&gt; (o)</code>：输出文件大小达到 <code>limit_size</code> 后停止输出，单位是 byte.<br>
-- <code>-ss &lt;position&gt; (i/o)</code>：（在参数 <code>-i</code> 之前指定）从 <code>position</code> 指定的位置开始工作。<em>注意：大多数情形下，工作起始位置是不精确的。ffmpeg会找到其前部的一个点作为真正的起始，并在结束工作后将该点与用户指定点之间的内容抛弃。然而，如果你使用了 copy 参数，这部分内容却会被保留。</em><br>
-- <code>-sseof &lt;position&gt; (i/o)</code>：类似 <code>-ss</code> 参数，只不过是从数据流末端向前寻找 <code>position</code>。此时 0 表示数据流末。<br>
-- <code>-itsoffset &lt;offset&gt; (i)</code>：指定输入流以原时间戳加上 <code>offset</code> 作为其输入时间戳。<br>
-- <code>-metadata[:metadata_specifier] key=value (o)</code>：以键值对的形式设置元数据。<br>
-- <code>-frames[:stream_specifier] &lt;num&gt; (o)</code>：在输出 <code>num</code> 帧后停止写入。 - <code>-qscale[:stream_specifier] q (o)</code>：使用固定质量(VBR)。<br>
-- <code>stats (global)</code>：输出编码过程，是系统默认值。可以使用 <code>-nostats</code> 关闭。<br>
+<p>常用的如下： - <code>-b[:stream_specifier] (o)</code>：输出比特率。 - <code>-f &lt;fmt&gt; (i/o)</code>：指定 <code>fmt</code> 作为输入或输出的视频格式。一般会根据文件扩展名自动选择，但有时需要手动指定。<br />
+- <code>-i &lt;filename&gt; (i)</code>：指定 <code>filename</code> 作为源文件。<br />
+- <code>-y (global)</code>：文件存在时直接覆盖。<br />
+- <code>-n (global)</code>：文件存在时不覆盖并立即退出。<br />
+- <code>-bsf[:stream_specifier] &lt;bitstream_filters&gt; (o)</code>：设置比特流滤镜。<code>bitstream_filters</code> 是一个逗号分隔的滤镜列表。 - <code>-stream_loop &lt;num&gt; (i)</code>：指定输入流的循环次数。0 表示不循环，-1 表示无限循环。<br />
+- <code>-c[:stream_specifier] &lt;codec&gt; (i/o)</code>：<code>-c</code>可写为<code>-codec</code>。选择一个 <code>codec</code> ，即编码器（输出时）或一个解码器（输入时），参与到 <code>stream_specifier</code> 指定的一个或多个流的编码/解码中。在输出时，<code>&lt;codec&gt;</code> 可以被指定为 <code>copy</code>，表示复制数据流。<br />
+- <code>-t &lt;duration&gt; (i/o)</code>：（在参数 <code>-i</code> 之前指定）工作持续 <code>duration</code> 时长。一般用于指定剪辑数据流的范围。 它与 <code>-to</code> 参数相互冲突，但本参数优先。<br />
+- <code>-to &lt;position&gt; (o)</code>：到 <code>position</code> 位置后，终止输出。与 <code>-t</code> 参数冲突，本参数优先级低。 - <code>-fs &lt;limit_size&gt; (o)</code>：输出文件大小达到 <code>limit_size</code> 后停止输出，单位是 byte.<br />
+- <code>-ss &lt;position&gt; (i/o)</code>：（在参数 <code>-i</code> 之前指定）从 <code>position</code> 指定的位置开始工作。<em>注意：大多数情形下，工作起始位置是不精确的。ffmpeg会找到其前部的一个点作为真正的起始，并在结束工作后将该点与用户指定点之间的内容抛弃。然而，如果你使用了 copy 参数，这部分内容却会被保留。</em><br />
+- <code>-sseof &lt;position&gt; (i/o)</code>：类似 <code>-ss</code> 参数，只不过是从数据流末端向前寻找 <code>position</code>。此时 0 表示数据流末。<br />
+- <code>-itsoffset &lt;offset&gt; (i)</code>：指定输入流以原时间戳加上 <code>offset</code> 作为其输入时间戳。<br />
+- <code>-metadata[:metadata_specifier] key=value (o)</code>：以键值对的形式设置元数据。<br />
+- <code>-frames[:stream_specifier] &lt;num&gt; (o)</code>：在输出 <code>num</code> 帧后停止写入。 - <code>-qscale[:stream_specifier] q (o)</code>：使用固定质量(VBR)。<br />
+- <code>stats (global)</code>：输出编码过程，是系统默认值。可以使用 <code>-nostats</code> 关闭。<br />
 - <code>-attach &lt;filename&gt; (o)</code>：将 <code>filename</code> 文件附加到输出文件。附件流作为文件的最后一个流，只有很少的文件类型被支持（例如字体）。</p>
 <h2 id="视频参数">6. 视频参数</h2>
 <ul>

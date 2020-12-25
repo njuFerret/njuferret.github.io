@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -28,18 +28,18 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="第06章 数据加载、存储与文件格式 访问数据是使用本书所介绍的这些工具的第一步。我会着重介绍pandas的数据输入与输出，虽然别的库中也有不少以此为目的的工具。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
-<meta property="og:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png">
-<meta property="og:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png">
-<meta property="og:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png">
-<meta property="og:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png">
 <meta property="article:published_time" content="2018-08-02T02:57:34.000Z">
 <meta property="article:modified_time" content="2018-08-03T04:13:37.340Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="book">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://njuferret.github.io/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
 
 <link rel="canonical" href="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/">
 
@@ -85,11 +85,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -273,7 +269,7 @@
 <p>输入输出通常可以划分为几个大类：读取文本文件和其他更高效的磁盘存储格式，加载数据库中的数据，利用Web API操作网络资源。</p>
 <h2 id="读写文本格式的数据">6.1 读写文本格式的数据</h2>
 <p>pandas提供了一些用于将表格型数据读取为DataFrame对象的函数。表6-1对它们进行了总结，其中read_csv和read_table可能会是你今后用得最多的。</p>
-<img src="/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png" class title="表6-1 pandas中的解析函数">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png" class="" title="表6-1 pandas中的解析函数">
 <p>我将大致介绍一下这些函数在将文本数据转换为DataFrame时所用到的一些技术。这些函数的选项可以划分为以下几个大类：</p>
 <ul>
 <li>索引：将一个或多个列当做返回的DataFrame处理，以及是否从文件、用户获取列名。</li>
@@ -315,9 +311,9 @@
 <p>字典的各列可以使用不同的NA标记值：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">31</span>]: sentinels = &#123;<span class="string">&#x27;message&#x27;</span>: [<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;NA&#x27;</span>], <span class="string">&#x27;something&#x27;</span>: [<span class="string">&#x27;two&#x27;</span>]&#125;</span><br><span class="line"></span><br><span class="line">In [<span class="number">32</span>]: pd.read_csv(<span class="string">&#x27;examples/ex5.csv&#x27;</span>, na_values=sentinels)</span><br><span class="line">Out[<span class="number">32</span>]:</span><br><span class="line">something  a   b     c   d message</span><br><span class="line"><span class="number">0</span>       one  <span class="number">1</span>   <span class="number">2</span>   <span class="number">3.0</span>   <span class="number">4</span>     NaN</span><br><span class="line"><span class="number">1</span>       NaN  <span class="number">5</span>   <span class="number">6</span>   NaN   <span class="number">8</span>   world</span><br><span class="line"><span class="number">2</span>     three  <span class="number">9</span>  <span class="number">10</span>  <span class="number">11.0</span>  <span class="number">12</span>     NaN</span><br></pre></td></tr></table></figure>
 <p>表6-2列出了pandas.read_csv和pandas.read_table常用的选项。</p>
-<img src="/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png" class>
-<img src="/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png" class>
-<img src="/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png" class>
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png" class="">
 <h3 id="逐块读取文本文件">6.1.1 逐块读取文本文件</h3>
 <p>在处理很大的文件时，或找出大文件中的参数集以便于后续处理时，你可能只想读取文件的一小部分或逐块对文件进行迭代。</p>
 <p>在看大文件之前，我们先设置pandas显示地更紧些：</p>
@@ -366,7 +362,7 @@
 <p>各个CSV语支的参数也可以用关键字的形式提供给csv.reader，而无需定义子类：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reader = csv.reader(f, delimiter=<span class="string">&#x27;|&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <p>可用的选项（csv.Dialect的属性）及其功能如表6-3所示。</p>
-<img src="/.io//08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png" class>
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png" class="">
 <blockquote>
 <p>笔记：对于那些使用复杂分隔符或多字符分隔符的文件，csv模块就无能为力了。这种情况下，你就只能使用字符串的split方法或正则表达式方法re.split进行行拆分和其他整理工作了。</p>
 </blockquote>
@@ -405,7 +401,7 @@ pandas.read_html有一些选项，默认条件下，它会搜索、尝试解析
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">INDICATOR</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">INDICATOR_SEQ</span>&gt;</span>373889<span class="tag">&lt;/<span class="name">INDICATOR_SEQ</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PARENT_SEQ</span>&gt;</span><span class="tag">&lt;/<span class="name">PARENT_SEQ</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">AGENCY_NAME</span>&gt;</span>Metro-North Railroad<span class="tag">&lt;/<span class="name">AGENCY_NAME</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">INDICATOR_NAME</span>&gt;</span>Escalator Availability<span class="tag">&lt;/<span class="name">INDICATOR_NAME</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">DESCRIPTION</span>&gt;</span>Percent of the time that escalators are operational</span><br><span class="line">  systemwide. The availability rate is based on physical observations performed</span><br><span class="line">  the morning of regular business days only. This is a new indicator the agency</span><br><span class="line">  began reporting in 2009.<span class="tag">&lt;/<span class="name">DESCRIPTION</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PERIOD_YEAR</span>&gt;</span>2011<span class="tag">&lt;/<span class="name">PERIOD_YEAR</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PERIOD_MONTH</span>&gt;</span>12<span class="tag">&lt;/<span class="name">PERIOD_MONTH</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">CATEGORY</span>&gt;</span>Service Indicators<span class="tag">&lt;/<span class="name">CATEGORY</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">FREQUENCY</span>&gt;</span>M<span class="tag">&lt;/<span class="name">FREQUENCY</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">DESIRED_CHANGE</span>&gt;</span>U<span class="tag">&lt;/<span class="name">DESIRED_CHANGE</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">INDICATOR_UNIT</span>&gt;</span>%<span class="tag">&lt;/<span class="name">INDICATOR_UNIT</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">DECIMAL_PLACES</span>&gt;</span>1<span class="tag">&lt;/<span class="name">DECIMAL_PLACES</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">YTD_TARGET</span>&gt;</span>97.00<span class="tag">&lt;/<span class="name">YTD_TARGET</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">YTD_ACTUAL</span>&gt;</span><span class="tag">&lt;/<span class="name">YTD_ACTUAL</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MONTHLY_TARGET</span>&gt;</span>97.00<span class="tag">&lt;/<span class="name">MONTHLY_TARGET</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MONTHLY_ACTUAL</span>&gt;</span><span class="tag">&lt;/<span class="name">MONTHLY_ACTUAL</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">INDICATOR</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>我们先用lxml.objectify解析该文件，然后通过getroot得到该XML文件的根节点的引用：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> lxml <span class="keyword">import</span> objectify</span><br><span class="line"></span><br><span class="line">path = <span class="string">&#x27;datasets/mta_perf/Performance_MNR.xml&#x27;</span></span><br><span class="line">parsed = objectify.parse(<span class="built_in">open</span>(path))</span><br><span class="line">root = parsed.getroot()</span><br></pre></td></tr></table></figure>
-<p>root.INDICATOR返回一个用于产生各个<INDICATOR>XML元素的生成器。对于每条记录，我们可以用标记名（如YTD_ACTUAL）和数据值填充一个字典（排除几个标记）：</INDICATOR></p>
+<p>root.INDICATOR返回一个用于产生各个<INDICATOR>XML元素的生成器。对于每条记录，我们可以用标记名（如YTD_ACTUAL）和数据值填充一个字典（排除几个标记）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">data = []</span><br><span class="line"></span><br><span class="line">skip_fields = [<span class="string">&#x27;PARENT_SEQ&#x27;</span>, <span class="string">&#x27;INDICATOR_SEQ&#x27;</span>,</span><br><span class="line">               <span class="string">&#x27;DESIRED_CHANGE&#x27;</span>, <span class="string">&#x27;DECIMAL_PLACES&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> elt <span class="keyword">in</span> root.INDICATOR:</span><br><span class="line">    el_data = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> child <span class="keyword">in</span> elt.getchildren():</span><br><span class="line">        <span class="keyword">if</span> child.tag <span class="keyword">in</span> skip_fields:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        el_data[child.tag] = child.pyval</span><br><span class="line">    data.append(el_data)</span><br></pre></td></tr></table></figure>
 <p>最后，将这组字典转换为一个DataFrame：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">81</span>]: perf = pd.DataFrame(data)</span><br><span class="line"></span><br><span class="line">In [<span class="number">82</span>]: perf.head()</span><br><span class="line">Out[<span class="number">82</span>]:</span><br><span class="line">Empty DataFrame</span><br><span class="line">Columns: []</span><br><span class="line">Index: []</span><br></pre></td></tr></table></figure>
@@ -479,7 +475,7 @@ pandas.read_html有一些选项，默认条件下，它会搜索、尝试解析
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">135</span>]: <span class="keyword">import</span> sqlalchemy <span class="keyword">as</span> sqla</span><br><span class="line"></span><br><span class="line">In [<span class="number">136</span>]: db = sqla.create_engine(<span class="string">&#x27;sqlite:///mydata.sqlite&#x27;</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">137</span>]: pd.read_sql(<span class="string">&#x27;select * from test&#x27;</span>, db)</span><br><span class="line">Out[<span class="number">137</span>]: </span><br><span class="line">             a           b     c  d</span><br><span class="line"><span class="number">0</span>      Atlanta     Georgia  <span class="number">1.25</span>  <span class="number">6</span></span><br><span class="line"><span class="number">1</span>  Tallahassee     Florida  <span class="number">2.60</span>  <span class="number">3</span></span><br><span class="line"><span class="number">2</span>   Sacramento  California  <span class="number">1.70</span>  <span class="number">5</span></span><br></pre></td></tr></table></figure>
 <h2 id="总结">6.5 总结</h2>
 <p>访问数据通常是数据分析的第一步。在本章中，我们已经学了一些有用的工具。在接下来的章节中，我们将深入研究数据规整、数据可视化、时间序列分析和其它主题。</p>
-</table>
+
     </div>
 
     

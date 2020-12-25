@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -79,11 +79,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -308,7 +304,7 @@
 </tr>
 </tbody>
 </table>
-<p>4）<del>添加公式自动编号支持</del>，<code>next 6.3.0</code>已经<font color="#FF0000">内置支持</font></p>
+<p>4）<del>添加公式自动编号支持</del>，<code>next 6.3.0</code>已经<font color=#FF0000>内置支持</font></p>
 <p>使用时，在需要添加公式编号的位置<code>\label&#123;公式名称&#125;</code>，引用时<code>$ref&#123;公式名称&#125;</code>。注意，自动编号的公式需要使用<code>equation</code>关键字。 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;equation&#125; <span class="keyword">\theta</span><span class="built_in">_</span>j := <span class="keyword">\theta</span><span class="built_in">_</span>j + </span><br><span class="line"><span class="keyword">\alpha</span> <span class="keyword">\sum</span> <span class="keyword">\limits</span><span class="built_in">_</span>&#123;i=1&#125;<span class="built_in">^</span>n(y<span class="built_in">^</span>&#123;(i)&#125;-h<span class="built_in">_</span>&#123;<span class="keyword">\theta</span>&#125;(x<span class="built_in">^</span>&#123;(i)&#125;))x<span class="built_in">_</span>j<span class="built_in">^</span>&#123;(i)&#125;</span><br><span class="line"><span class="keyword">\label</span>&#123;mini-BGD&#125; </span><br><span class="line"><span class="keyword">\end</span>&#123;equation&#125;</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"></span><br><span class="line">公式<span class="built_in">$</span>(<span class="keyword">\ref</span>&#123;mini-BGD&#125;)<span class="built_in">$</span></span><br></pre></td></tr></table></figure> 效果： <span class="math display">\[ \begin{equation} \theta_j := \theta_j + 
 \alpha \sum \limits_{i=1}^n(y^{(i)}-h_{\theta}(x^{(i)}))x_j^{(i)}
 \label{mini-BGD} 

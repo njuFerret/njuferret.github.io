@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -79,11 +79,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -265,7 +261,7 @@
 <h2 id="编译命令">2.编译命令</h2>
 <p>Botan的编译需要使用msys2和Python，将源码放在msys2的用户目录（假设为yourname）下，进入源码目录。使用以下命令配置：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure.py --prefix=/home/yourname/build/botan-<span class="number">2.1</span><span class="number">.0</span> --os=mingw --cc=gcc --cpu=i686 --link-method=copy --disable-shared --amalgamation</span><br></pre></td></tr></table></figure>
-<p>配置完成后，修改<Botan_Src>/Makefile文件，将：<code>SCRIPTS_DIR    = .\src\scripts</code>改为：<code>SCRIPTS_DIR    = ./src/scripts</code>，然后开始<code>make &amp; make install</code></Botan_Src></p>
+<p>配置完成后，修改<Botan_Src>/Makefile文件，将：<code>SCRIPTS_DIR    = .\src\scripts</code>改为：<code>SCRIPTS_DIR    = ./src/scripts</code>，然后开始<code>make &amp; make install</code></p>
 <h2 id="搞定">3.搞定</h2>
 
     </div>

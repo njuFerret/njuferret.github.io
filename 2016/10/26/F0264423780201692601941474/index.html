@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -78,11 +78,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -258,7 +254,7 @@
       
         <p>将自定义类型加入元对象系统（meta-object system），可以获得运行时类型、信号槽等Qt特性支持。 <a id="more"></a></p>
 <p>1、自定义类型必须至少满足以下3个条件：</p>
-<p>   1）1个公有默认构造函数；<br>    2）1个公有拷贝构造函数：<br>    3）1个公有析构函数。<br></p>
+<p>   1）1个公有默认构造函数；<br/>    2）1个公有拷贝构造函数：<br/>    3）1个公有析构函数。<br/></p>
 <p>2、使用<code>QMetaType</code>声明类型：</p>
 <p>在头文件中使用<code>Q_DECLARE_METATYPE</code>宏声明类型： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Q_DECLARE_METATYPE(UserDefinedType);</span><br></pre></td></tr></table></figure> 使用该宏声明类型后，Qt可以将自定义类型的值以<code>QVariant</code>类型存储； <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MESSAGE_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MESSAGE_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QMetaType&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QStringList&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Message</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Message();</span><br><span class="line">    Message(<span class="keyword">const</span> Message &amp;other);</span><br><span class="line">    ~Message();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Message(<span class="keyword">const</span> QString &amp;body, <span class="keyword">const</span> QStringList &amp;headers);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function">QString <span class="title">body</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function">QStringList <span class="title">headers</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QString m_body;</span><br><span class="line">    QStringList m_headers;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Q_DECLARE_METATYPE(Message);</span><br><span class="line">QDebug <span class="keyword">operator</span>&lt;&lt;(QDebug dbg, <span class="keyword">const</span> Message &amp;message);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure> 以上两步骤完成后，该自定义类型仅能作为直接连接（线程内）的信号槽函数的参数使用。按照文档</p>
 <blockquote>

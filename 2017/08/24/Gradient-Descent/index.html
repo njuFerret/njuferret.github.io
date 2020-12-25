@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -84,11 +84,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --></head>
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -313,7 +309,7 @@
 \theta_1x_1+\theta_2x_2 \end{equation}\]</span></p>
 <p>　　这里<span class="math inline">\(\theta_i\)</span>称为参数(也称作是权重)，这里的变量是<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>，在我们的例子中分别代表Living area和bedrooms，<span class="math inline">\(h_\theta(x)\)</span>就是输出值，这里是就是Price。现在任务很明确，就是根据已知的数据计算出相应的<span class="math inline">\(\theta_i\)</span>参数。整个过程可以用下图表示:</p>
 <figure>
-<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/learning-flow.png" title="学习流程图" alt="学习流程图"><figcaption aria-hidden="true">学习流程图</figcaption>
+<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/learning-flow.png" title="学习流程图" alt="学习流程图" /><figcaption aria-hidden="true">学习流程图</figcaption>
 </figure>
 <p>　　上图是整个统计机器学习的流程，不仅仅局限于回归问题。</p>
 <p>　　为了一般化我们的公式，可以引入一个常量<span class="math inline">\(x_0=1\)</span>，这样我们的公式就可以表示为:</p>
@@ -347,7 +343,7 @@
 <p>　　这就是梯度下降法的基本思路，其中对陡峭的方向就是负梯度的方向。</p>
 <p>　　为了更加易于理解，给出下图:</p>
 <figure>
-<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/gradient-descent.png" title="梯度下降" alt="梯度下降"><figcaption aria-hidden="true">梯度下降</figcaption>
+<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/gradient-descent.png" title="梯度下降" alt="梯度下降" /><figcaption aria-hidden="true">梯度下降</figcaption>
 </figure>
 <p>　　我们<span class="math inline">\(\theta_{n\times 1}\)</span>按照梯度下降的方向进行调整，就会使得<span class="math inline">\(J(\theta_{n\times 1})\)</span>往更低的方向进行变化，如上图所示，算法的结束将是在<span class="math inline">\(\theta_{n\times 1}\)</span>下降到无法继续下降为止。</p>
 <p>　　其中，梯度方向由<span class="math inline">\(J(\theta)\)</span>对<span class="math inline">\(\theta\)</span>的偏导数确定。用公式来表达就是:</p>
@@ -368,7 +364,7 @@
 <h2 id="批梯度下降法bath-gradient-descent">批梯度下降法(bath gradient descent)</h2>
 <p>　　在得到上面的公式之后，我们的算法也就形成了:</p>
 <figure>
-<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/batch-descent.png" alt="batch梯度下降"><figcaption aria-hidden="true">batch梯度下降</figcaption>
+<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/batch-descent.png" alt="batch梯度下降" /><figcaption aria-hidden="true">batch梯度下降</figcaption>
 </figure>
 <p>　　上述算法中的式子是针对所有的训练数据的，这是从公式<span class="math inline">\(\ref{1}\)</span>变化而来，只是加入了一个累加的过程，此处不再证明。从公式中可以看到，每次迭代的时候，该算法都会遍历整个训练数据集，这个就被称为<strong>批梯度下降法(batch gradient descent)</strong>。需要注意的是，此处的梯度下降法是只能找到局部最优解，而非全局最优解。它有以下两个特点:</p>
 <ol type="1">
@@ -378,7 +374,7 @@
 <h2 id="随机梯度下降法stochastic-gradient-descent">随机梯度下降法(stochastic gradient descent)</h2>
 <p>　　在利用<strong>批梯度下降法(bath gradient descent)</strong>进行计算的时候，你会发现，每计算一个参数分量，都需要遍历整个训练数据集，这样做的效率明显不高，因此我们有一个替代的算法：</p>
 <figure>
-<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/sgd.png" alt="随机梯度下降"><figcaption aria-hidden="true">随机梯度下降</figcaption>
+<img src="http://zhouyichu.com/machine-learning/Gradient-Descent/sgd.png" alt="随机梯度下降" /><figcaption aria-hidden="true">随机梯度下降</figcaption>
 </figure>
 <p>　　可以看到，这个算法每次都只利用了一组数据进行计算，这样就大大减少了计算量。这个算法称为<strong>随机梯度下降法(stochastic gradient descent)</strong>。但是，带来的相应后果就是，它最终得到的解可能是在真正的最小值的附近，而不是最小值本身。因此只有在数据量很大的情况下才会使用这个算法。</p>
 <h1 id="参考文献及推荐阅读">参考文献及推荐阅读</h1>
@@ -388,7 +384,7 @@
 <li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/jerrylead/archive/2011/03/05/1971867.html" title="对线性回归，logistic回归和一般回归的认识">对线性回归，logistic回归和一般回归的认识</a></li>
 <li>《统计学习方法》李航</li>
 </ul>
-<hr>
+<hr />
 <p>本文来自：<a target="_blank" rel="noopener" href="http://zhouyichu.com/machine-learning/Gradient-Descent/" title="线性回归与梯度下降法">线性回归与梯度下降法</a></p>
 
     </div>
