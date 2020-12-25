@@ -18,15 +18,15 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
+  <meta name="description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Botan的编译">
 <meta property="og:url" content="https://njuferret.github.io/2017/08/01/Botan%E7%9A%84%E7%BC%96%E8%AF%91/index.html">
 <meta property="og:site_name" content="有点博客">
-<meta property="og:description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
+<meta property="og:description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-08-01T10:24:02.000Z">
 <meta property="article:modified_time" content="2018-11-04T08:56:58.469Z">
@@ -259,13 +259,15 @@
       
         <p>今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程：</p>
 <p>编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0</p>
-<a id="more"></a> 
-
-<h2 id="1-Botan下载"><a href="#1-Botan下载" class="headerlink" title="1.Botan下载"></a>1.Botan下载</h2><p>Botan的地址有两个，一个是<a target="_blank" rel="noopener" href="https://github.com/randombit/botan">Github主页</a>，一个是<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>。打开<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>地址，找到<code>Current Stable Release</code>，点击版本号(<a target="_blank" rel="noopener" href="https://botan.randombit.net/releases/Botan-2.1.0.tgz">2.1.0</a>)下载。</p>
-<h2 id="2-编译命令"><a href="#2-编译命令" class="headerlink" title="2.编译命令"></a>2.编译命令</h2><p>Botan的编译需要使用msys2和Python，将源码放在msys2的用户目录（假设为yourname）下，进入源码目录。使用以下命令配置：</p>
+<a id="more"></a>
+<h2 id="botan下载">1.Botan下载</h2>
+<p>Botan的地址有两个，一个是<a target="_blank" rel="noopener" href="https://github.com/randombit/botan">Github主页</a>，一个是<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>。打开<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>地址，找到<code>Current Stable Release</code>，点击版本号(<a target="_blank" rel="noopener" href="https://botan.randombit.net/releases/Botan-2.1.0.tgz">2.1.0</a>)下载。</p>
+<h2 id="编译命令">2.编译命令</h2>
+<p>Botan的编译需要使用msys2和Python，将源码放在msys2的用户目录（假设为yourname）下，进入源码目录。使用以下命令配置：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure.py --prefix=/home/yourname/build/botan-<span class="number">2.1</span><span class="number">.0</span> --os=mingw --cc=gcc --cpu=i686 --link-method=copy --disable-shared --amalgamation</span><br></pre></td></tr></table></figure>
-<p>配置完成后，修改<Botan_Src>/Makefile文件，将：<code>SCRIPTS_DIR    = .\src\scripts</code>改为：<code>SCRIPTS_DIR    = ./src/scripts</code>，然后开始<code>make &amp; make install</code></p>
-<h2 id="3-搞定"><a href="#3-搞定" class="headerlink" title="3.搞定"></a>3.搞定</h2>
+<p>配置完成后，修改<Botan_Src>/Makefile文件，将：<code>SCRIPTS_DIR    = .\src\scripts</code>改为：<code>SCRIPTS_DIR    = ./src/scripts</code>，然后开始<code>make &amp; make install</code></Botan_Src></p>
+<h2 id="搞定">3.搞定</h2>
+
     </div>
 
     
@@ -367,7 +369,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Botan%E4%B8%8B%E8%BD%BD"><span class="nav-text">1.Botan下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4"><span class="nav-text">2.编译命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%90%9E%E5%AE%9A"><span class="nav-text">3.搞定</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#botan%E4%B8%8B%E8%BD%BD"><span class="nav-text">1.Botan下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4"><span class="nav-text">2.编译命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%9E%E5%AE%9A"><span class="nav-text">3.搞定</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

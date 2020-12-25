@@ -18,7 +18,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是盲源分">
@@ -28,11 +28,11 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是盲源分">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig01.png">
-<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig02.gif">
-<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig03_svd.png">
+<meta property="og:image" content="https://njuferret.github.io/.io//07/31/2019-07-31_pca-ica/fig01.png">
+<meta property="og:image" content="https://njuferret.github.io/.io//07/31/2019-07-31_pca-ica/fig02.gif">
+<meta property="og:image" content="https://njuferret.github.io/.io//07/31/2019-07-31_pca-ica/fig03_svd.png">
 <meta property="article:published_time" content="2019-07-31T01:21:02.000Z">
-<meta property="article:modified_time" content="2020-12-25T08:15:31.892Z">
+<meta property="article:modified_time" content="2020-12-25T11:01:03.527Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="协方差矩阵">
@@ -40,7 +40,7 @@
 <meta property="article:tag" content="ICA">
 <meta property="article:tag" content="numpy">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig01.png">
+<meta name="twitter:image" content="https://njuferret.github.io/.io//07/31/2019-07-31_pca-ica/fig01.png">
 
 <link rel="canonical" href="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/">
 
@@ -237,7 +237,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-25 16:15:31" itemprop="dateModified" datetime="2020-12-25T16:15:31+08:00">2020-12-25</time>
+                <time title="修改时间：2020-12-25 19:01:03" itemprop="dateModified" datetime="2020-12-25T19:01:03+08:00">2020-12-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -270,9 +270,9 @@
 <a id="more"></a>
 <h2 id="pca">1、PCA</h2>
 <h3 id="一个简单的例子">1.1 一个简单的例子</h3>
-<p>　　二维平面上有若干个样本点，现在希望使用1维坐标对其进行降维处理，同时又希望尽量保留原始的信息，如何实现？ <img src="/2019/07/31/2019-07-31_pca-ica/fig01.png" class="" title="图1.二维样本的降维处理"></p>
+<p>　　二维平面上有若干个样本点，现在希望使用1维坐标对其进行降维处理，同时又希望尽量保留原始的信息，如何实现？ <img src="/.io//07/31/2019-07-31_pca-ica/fig01.png" class title="图1.二维样本的降维处理"></p>
 <h3 id="最大方差理论">1.2 最大方差理论</h3>
-<p>　　最懒的一种降维方法，直接将数据点投影至<span class="math inline">\(x\)</span>/<span class="math inline">\(y\)</span>坐标轴。这样处理的结果会使得样本叠加，导致有效样本减少，从而丢失信息。例如，所有的样本投影至<span class="math inline">\(x\)</span>上，此时横坐标上只有3个点，这就造成了原始样本丢失的情况。更为极端的一个例子，如果5个点的横坐标均相同，则投影后只剩下1个点（此时各点在<span class="math inline">\(x\)</span>轴的方差为0）。如果选择<span class="math inline">\(y=x\)</span>作为基准坐标轴，可以发现，5个点的信息都会被保留下来。可以看出，方差是衡量样本信息量的关键指标。 <img src="/2019/07/31/2019-07-31_pca-ica/fig02.gif" class="" title="图2.基向量与方差的关系"> 　　从信号处理的角度来说，一个随机信号最有用的信息体包含在方差里，<strong>方差越大，信号所包含的信息量越多</strong>。另一方面，样本的多样性，是保证机器学习算法能够有效学习到特征的前提条件，而方差即为反应样本多样性的关键指标。如图2所示，基向量不同，样本在基向量上的投影长度（方差）不同。设想一组由10个方差为0的数据构成的样本，方差为0说明这10个数据完全相等，故实际有效的样本仅为1个。因此<strong>最大化方差，即意味着最大化样本的多样性</strong>。图1中，样本在<span class="math inline">\(x&#39;\)</span>轴上的投影方差较大，在<span class="math inline">\(y&#39;\)</span>轴上的投影方差较小。当希望将样本数据从二维降至一维时，可以认为选择<span class="math inline">\(x&#39;\)</span>轴丢失的信息量较少，是较为合理的选择。</p>
+<p>　　最懒的一种降维方法，直接将数据点投影至<span class="math inline">\(x\)</span>/<span class="math inline">\(y\)</span>坐标轴。这样处理的结果会使得样本叠加，导致有效样本减少，从而丢失信息。例如，所有的样本投影至<span class="math inline">\(x\)</span>上，此时横坐标上只有3个点，这就造成了原始样本丢失的情况。更为极端的一个例子，如果5个点的横坐标均相同，则投影后只剩下1个点（此时各点在<span class="math inline">\(x\)</span>轴的方差为0）。如果选择<span class="math inline">\(y=x\)</span>作为基准坐标轴，可以发现，5个点的信息都会被保留下来。可以看出，方差是衡量样本信息量的关键指标。 <img src="/.io//07/31/2019-07-31_pca-ica/fig02.gif" class title="图2.基向量与方差的关系"> 　　从信号处理的角度来说，一个随机信号最有用的信息体包含在方差里，<strong>方差越大，信号所包含的信息量越多</strong>。另一方面，样本的多样性，是保证机器学习算法能够有效学习到特征的前提条件，而方差即为反应样本多样性的关键指标。如图2所示，基向量不同，样本在基向量上的投影长度（方差）不同。设想一组由10个方差为0的数据构成的样本，方差为0说明这10个数据完全相等，故实际有效的样本仅为1个。因此<strong>最大化方差，即意味着最大化样本的多样性</strong>。图1中，样本在<span class="math inline">\(x&#39;\)</span>轴上的投影方差较大，在<span class="math inline">\(y&#39;\)</span>轴上的投影方差较小。当希望将样本数据从二维降至一维时，可以认为选择<span class="math inline">\(x&#39;\)</span>轴丢失的信息量较少，是较为合理的选择。</p>
 <p>　　因此，如果需要对<span class="math inline">\(n\)</span>维特征数据进行降维处理，如果能够找到<span class="math inline">\(k (k&lt;n)\)</span>维特征，使得<span class="math inline">\(\sum_{i=1}^{k} \sigma_{i}^{(k)} \approx \sum_{i=1}^{n} \sigma_{i}^{(n)}\)</span>，那么<span class="math inline">\((n-k)\)</span>维数据都属于冗余数据，可以丢弃，从而使计算量大大下降。</p>
 <p>　　这里有2个问题：</p>
 <ol type="1">
@@ -347,7 +347,7 @@ Y =  X W_{p \times k}
 M=U \Sigma V^* = U \Sigma V^{T} \quad (V\text{为实矩阵})
 \]</span></p>
 <p>　　其中<span class="math inline">\(U\)</span>是<span class="math inline">\(n×n\)</span>阶<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unitary_matrix">酉矩阵(也叫幺正矩阵)</a>；$ <span class="math inline">\(是\)</span> m n <span class="math inline">\(阶非负实数对角矩阵；\)</span>V$的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Conjugate_transpose">共轭转置</a> $ V^{*} <span class="math inline">\(，是\)</span>p p<span class="math inline">\(阶酉矩阵（当\)</span>V<span class="math inline">\(为实矩阵时，\)</span>V^*=V^T<span class="math inline">\(）。这样的分解就称作\)</span>M<span class="math inline">\(的奇异值分解。\)</span><span class="math inline">\(对角线上的元素\)</span>_{i,i}<span class="math inline">\(即为\)</span>M$的奇异值。如图3所示：</p>
-<img src="/2019/07/31/2019-07-31_pca-ica/fig03_svd.png" class="" title="图3.SVD分解可视化">
+<img src="/.io//07/31/2019-07-31_pca-ica/fig03_svd.png" class title="图3.SVD分解可视化">
 <p>　　设<span class="math inline">\(Cov(X)=WLW^{T}\)</span>，考虑矩阵<span class="math inline">\(X\)</span>的奇异值分解：<span class="math inline">\(X=U\Sigma V^T\)</span>，且<span class="math inline">\(\Sigma 为实对角矩阵\)</span>，则：</p>
 <p><span class="math display">\[
 \begin{align*}
