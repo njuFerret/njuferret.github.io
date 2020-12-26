@@ -2398,7 +2398,8 @@ X_1=\begin{bmatrix} 1 \\ 3 \\ 4 \\ 5 \end{bmatrix},  \ \ \    X_2=\begin{bmatrix
 <h3 id="相关系数的计算">5、相关系数的计算</h3>
 <p>　　计算过程基本类似，按照公式来： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">t3=t2.copy()</span><br><span class="line">t3</span><br><span class="line"><span class="comment"># Out[26]: </span></span><br><span class="line"><span class="comment"># array([[  1,   4,  -9,   8,  -4,  -3],</span></span><br><span class="line"><span class="comment">#        [  6,  -9,  -2,   8,   4,  -4],</span></span><br><span class="line"><span class="comment">#        [ -5,   9,  -1,  -4,   7,   4],</span></span><br><span class="line"><span class="comment">#        [ -5, -10,  -9,   2, -10,   6],</span></span><br><span class="line"><span class="comment">#        [  5,   4,  -3,   3,  -9,  -9],</span></span><br><span class="line"><span class="comment">#        [  3,  -8,  -2,   1,  -6,  -1],</span></span><br><span class="line"><span class="comment">#        [  3,   7,   0,  -7,   3,   5],</span></span><br><span class="line"><span class="comment">#        [  9,   8,   2,  -5,   1,  -4],</span></span><br><span class="line"><span class="comment">#        [ -2,  -7,   6,   2,   5,  -2],</span></span><br><span class="line"><span class="comment">#        [ -9,   2,   2,   1,  -2, -10]])</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coef</span>(<span class="params">m</span>):</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">       使用公式计算相关系数，行向量为样本数，列向量为特征数</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    c = np.cov(m,rowvar=<span class="literal">False</span>)					<span class="comment"># 分子协方差矩阵</span></span><br><span class="line">    sigma =  m.std(axis=<span class="number">0</span>,ddof=<span class="number">1</span>,keepdims=<span class="literal">True</span>)			<span class="comment"># 注意ddof...坑</span></span><br><span class="line">    sigma = sigma.T.dot(sigma)					<span class="comment"># 分母标准差矩阵</span></span><br><span class="line">    <span class="keyword">return</span> c/sigma</span><br><span class="line"></span><br><span class="line">coef(t3)</span><br><span class="line"><span class="comment"># Out[24]: </span></span><br><span class="line"><span class="comment"># array([[ 1.    ,  0.1022,  0.0233, -0.0015,  0.0149, -0.1462],</span></span><br><span class="line"><span class="comment">#        [ 0.1022,  1.    ,  0.1396, -0.5573,  0.2739, -0.0822],</span></span><br><span class="line"><span class="comment">#        [ 0.0233,  0.1396,  1.    , -0.4439,  0.6318, -0.2705],</span></span><br><span class="line"><span class="comment">#        [-0.0015, -0.5573, -0.4439,  1.    , -0.3267, -0.4043],</span></span><br><span class="line"><span class="comment">#        [ 0.0149,  0.2739,  0.6318, -0.3267,  1.    ,  0.1757],</span></span><br><span class="line"><span class="comment">#        [-0.1462, -0.0822, -0.2705, -0.4043,  0.1757,  1.    ]])</span></span><br><span class="line"></span><br><span class="line">np.corrcoef(t3,rowvar=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># Out[25]: </span></span><br><span class="line"><span class="comment"># array([[ 1.    ,  0.1022,  0.0233, -0.0015,  0.0149, -0.1462],</span></span><br><span class="line"><span class="comment">#        [ 0.1022,  1.    ,  0.1396, -0.5573,  0.2739, -0.0822],</span></span><br><span class="line"><span class="comment">#        [ 0.0233,  0.1396,  1.    , -0.4439,  0.6318, -0.2705],</span></span><br><span class="line"><span class="comment">#        [-0.0015, -0.5573, -0.4439,  1.    , -0.3267, -0.4043],</span></span><br><span class="line"><span class="comment">#        [ 0.0149,  0.2739,  0.6318, -0.3267,  1.    ,  0.1757],</span></span><br><span class="line"><span class="comment">#        [-0.1462, -0.0822, -0.2705, -0.4043,  0.1757,  1.    ]])</span></span><br></pre></td></tr></table></figure> ### 6、各维度相互独立（也称独立变量）的协方差</p>
 <p>　　机器学习中，经常采用主成分分析（PCA）和独立成分分析（ICA）方法进行数据预处理。使用PCA方法的目的，是为了降低运算量而对原始数据进行降维处理；使用ICA方法的目的，则主要是去除不相关的噪声和干扰。无论是PCA还是ICA，协方差矩阵都是一个重要衡量工具。理想情况下，当协方差矩阵退化为纯对角矩阵时，各个维度之间相互独立，即独立变量情况，这种情况属于珍稀品种，比较少见，以下为推导。</p>
-<p>根据协方差公式，利用矩阵的结合律和转置性质： <span class="math display">\[
+<p>根据协方差公式，利用矩阵的结合律和转置性质：</p>
+<p><span class="math display">\[
 \begin{align*}
 Cov(X_{i},X_{j})&amp;=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right ) \\
  &amp;= E \left ([X_{i} - E(X_{i})]^{T} X_{j} - [X_{i} - E(X_{i})]^{T} E(X_{j}) \right )\\ 
@@ -2408,13 +2409,17 @@ Cov(X_{i},X_{j})&amp;=E \left ([X_{i} - E(X_{i})]^{T} [X_{j} - E(X_{j})] \right 
  &amp;= E (X^T_{i} X_{j}) - E(X^T_{i}) E(X_{j})  \\
  &amp;= E (X^T_{i} X_{j}) - E(X_{i}) E(X_{j})  
 \end{align*}
-\]</span> 由于 <span class="math inline">\(X_{i}, X_{j}\)</span> 独立时：<span class="math inline">\(E(X^T_{i} X_{j})=E(X^T_{i})E(X_{j})=E(X_{i})E(X_{j})\)</span> （证明请参考其他资料）。故 <span class="math inline">\(Cov(X_{i},X_{j})=0\)</span> 。</p>
-<p>这时，协方差矩阵就变成一个对角矩阵了： <span class="math display">\[
+\]</span></p>
+<p>　　由于 <span class="math inline">\(X_{i}, X_{j}\)</span> 独立时：<span class="math inline">\(E(X^T_{i} X_{j})=E(X^T_{i})E(X_{j})=E(X_{i})E(X_{j})\)</span> （证明请参考其他资料）。故 <span class="math inline">\(Cov(X_{i},X_{j})=0\)</span> 。</p>
+<p>　　这时，协方差矩阵就变成一个对角矩阵了：</p>
+<p><span class="math display">\[
 Cov(X)=\begin{bmatrix} Cov(X_{1},X_{1}) &amp; 0\\ 0 &amp; Cov(X_{n},X_{n}) \end{bmatrix}
 \]</span></p>
-<p>　　如果觉得符号比较乱，可以简单的令 $ A=X_{i}, B=X_{j} $，上述公式可以写为： <span class="math display">\[
+<p>　　如果觉得符号比较乱，可以简单的令 $ A=X_{i}, B=X_{j} $，上述公式可以写为：</p>
+<p><span class="math display">\[
 Cov(A,B)=E \left ([A - E(B)]^{T} [B - E(B)] \right ) = E (A^T B) - E(A) E(B)  
-\]</span> 　　推导中应用的矩阵性质：</p>
+\]</span></p>
+<p>　　推导中应用的矩阵性质：</p>
 <p>　　矩阵转置性质：$ (A+B)^{T} = A^T + B^T $</p>
 <p>　　矩阵乘法分配率：$ (A+B)C = AC + BC $</p>
 <p>　　矩阵转置的期望值（<span class="math inline">\(E(A^T)\)</span> 实数）与其本身期望值（<span class="math inline">\(E(A)\)</span>）相等：$ E(A^T) = E(A) $ 。</p>
