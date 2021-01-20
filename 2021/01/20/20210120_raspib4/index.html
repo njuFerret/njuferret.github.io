@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"njuferret.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="禁不住好评如潮，开始折腾树莓派。型号4B，操作系统Ubuntu server 20.04（无GUI）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派的使用">
+<meta property="og:url" content="https://njuferret.github.io/2021/01/20/20210120_raspib4/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="禁不住好评如潮，开始折腾树莓派。型号4B，操作系统Ubuntu server 20.04（无GUI）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-20T04:02:10.000Z">
+<meta property="article:modified_time" content="2021-01-20T14:06:40.474Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="树莓派">
+<meta property="article:tag" content="20.04">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://njuferret.github.io/2021/01/20/20210120_raspib4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>树莓派的使用 | 有点博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有点博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2021/01/20/20210120_raspib4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          树莓派的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-01-20 12:02:10 / 修改时间：22:06:40" itemprop="dateCreated datePublished" datetime="2021-01-20T12:02:10+08:00">2021-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/skill/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/skill/Linux/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>禁不住好评如潮，开始折腾树莓派。型号4B，操作系统<code>Ubuntu server 20.04</code>（无GUI）。</p>
+<a id="more"></a>
+<h2 id="查看系统信息">0、查看系统信息</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;----------当前计算机信息---------------&quot;</span></span><br><span class="line"><span class="comment"># 显示当前系统及版本号</span></span><br><span class="line"><span class="built_in">echo</span> 系统版本：$<span class="string">&#x27;\t&#x27;</span> `lsb_release -a 2&gt;&amp;1 | grep -i <span class="string">&#x27;description&#x27;</span> | cut -d$<span class="string">&#x27;\t&#x27;</span> -f2`</span><br><span class="line"><span class="comment"># 显示内核及版本号</span></span><br><span class="line"><span class="comment"># Kernel=`uname -s -r`</span></span><br><span class="line"><span class="built_in">echo</span> 内核版本：$<span class="string">&#x27;\t&#x27;</span>  `uname -s -r`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示CPU信息</span></span><br><span class="line"><span class="built_in">echo</span> CPU型号：\(详细信息可使用 lscpu 查看\)</span><br><span class="line"><span class="comment">#grep -i &#x27;model name&#x27; /proc/cpuinfo	# Ubuntu桌面版本适用</span></span><br><span class="line">grep -i <span class="string">&#x27;model&#x27;</span> /proc/cpuinfo</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示显卡信息</span></span><br><span class="line"><span class="comment">#echo 显卡信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;vga&#x27;			# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="built_in">echo</span> PCI设备:</span><br><span class="line">lspci</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示网口信息</span></span><br><span class="line"><span class="comment">#echo 以太网信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;Ethernet&#x27;		# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="comment">#echo &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示内存信息</span></span><br><span class="line"><span class="built_in">echo</span> 内存容量：`grep -i <span class="string">&#x27;MemTotal&#x27;</span> /proc/meminfo | cut -d: -f2`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示硬盘信息</span></span><br><span class="line"><span class="built_in">echo</span> 硬盘信息：</span><br><span class="line">lsblk -d -o NAME,SIZE,TYPE,MOUNTPOINT</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;-------------DONE---------------------&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="修改软件更新源">1、修改软件更新源</h2>
+<p>　　外网速度令人发指，改为国内镜像，速度快、ipv6不计流量，价格便宜量又足...</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先保留备份</span></span><br><span class="line">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line"><span class="comment"># 替换为清华镜像</span></span><br><span class="line">sudo sed -i <span class="string">&#x27;s/http:\/\/ports.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/&#x27;</span> /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保留备份</span></span><br><span class="line">sudo cp /root/.config/pip/pip.conf /root/.config/pip/pip.conf.bak &gt;nul 2&gt;&amp;1</span><br><span class="line"><span class="comment"># python 源改为工大镜像</span></span><br><span class="line">sudo pip config <span class="built_in">set</span> global.index-url https://mirrors.njtech.edu.cn/pypi/web/simple </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：请在对系统进行修改前，对原始文件进行备份</p>
+</blockquote>
+<h2 id="安装raspi-config配置外设">2、安装<code>raspi-config</code>，配置外设</h2>
+<h3 id="安装raspi-config">1) 安装<code>raspi-config</code>；</h3>
+<p>　　进入工大镜像，找到最新的<a target="_blank" rel="noopener" href="https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/"><code>raspi-config</code></a>(点击进入下载);</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 最新为 raspi-config_20210119_all.deb</span></span><br><span class="line">wget -c -4 https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/raspi-config_20210119_all.deb -P /tmp</span><br><span class="line"><span class="comment"># 安装（会失败）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># 根据提示安装依赖库....</span></span><br><span class="line"><span class="comment"># sudo apt instal xxxxx</span></span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">sudo apt --fix-broken install</span><br><span class="line"><span class="comment"># 再次安装（应该会成功）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># done</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用raspi-config配置树莓派">2) 使用<code>raspi-config</code>配置树莓派</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下开始使用 raspi-config 配置树莓派</span></span><br><span class="line"><span class="comment"># SSH 开启远程登录，是应当第一个打开的服务</span></span><br><span class="line">sudo raspi-config</span><br><span class="line"><span class="comment"># 进入3 Interface，启用 Camera, SSH, I2C, SPI, Serial Port，保存退出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">i2cdetect -y 1</span><br><span class="line"><span class="comment"># 结果如下：注意40有个设备，如果没有接I2C设备，那么全部为空</span></span><br><span class="line"><span class="comment">#       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f</span></span><br><span class="line"><span class="comment">#  00:          -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  70: 70 -- -- -- -- -- -- --</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注1: 当开启Camera，如果出现固件过时的错误时： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your firmwave appears to be out of date (no start_x.elf). Please ...</span><br></pre></td></tr></table></figure> 解决方法： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看boot分区所在的设备号，设备号可能是：/dev/mmcblk0p1 </span></span><br><span class="line">df -h</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 将该设备号挂载在/boot上</span></span><br><span class="line">mount /dev/mmcblk0p1 /boot</span><br></pre></td></tr></table></figure> 注2: 如果上述命令显示用户无权限，那么可以通过添加一个用户在来解决（以下方法未测试）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd i2c (group may exist already)</span><br><span class="line">sudo chown :i2c /dev/i2c-1 (or i2c-0)</span><br><span class="line">sudo chmod g+rw /dev/i2c-1</span><br><span class="line">sudo usermod -aG i2c *INSERT YOUR USERNAME*</span><br></pre></td></tr></table></figure>
+<p>注3: 也可以通过配置文件打开spi/i2c/uart/1-wire等设备：<code>sudo vi /boot/config.txt</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dtparam&#x3D;spi&#x3D;on</span><br><span class="line">dtparam&#x3D;i2c_arm&#x3D;on</span><br><span class="line"># For the best performance, tweak the I2C core to run at 1MHz.</span><br><span class="line"># By default it may be 100KHz or 400KHz</span><br><span class="line">dtparam&#x3D;i2c_baudrate&#x3D;1000000</span><br><span class="line">enable_uart&#x3D;1</span><br><span class="line">dtoverlay&#x3D;w1-gpio</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_25259461/article/details/108353324">https://blog.csdn.net/sinat_25259461/article/details/108353324</a></p>
+</blockquote>
+<h2 id="安装-net-toolswireless-toolsi2c和蓝牙工具">3、安装 <code>net-tools</code>、<code>wireless-tools</code>、<code>I2C</code>和蓝牙工具</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># net-tools -&gt; ifconfig命令等</span></span><br><span class="line"><span class="comment"># wireless-tools -&gt; iwconfig 命令等</span></span><br><span class="line">sudo apt install raspi-config net-tools wireless-tools i2c-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装蓝牙</span></span><br><span class="line">sudo apt install pi-bluetooth </span><br><span class="line"></span><br><span class="line"><span class="comment"># 蓝牙配置 /boot/firmware/syscfg.txt</span></span><br><span class="line"><span class="comment"># sudo bluetoothctl     # 进入蓝牙控制</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果 wpasupplicant 没有安装，也需要这个软件</span></span><br><span class="line">sudo apt install wpasupplicant</span><br><span class="line"><span class="comment"># 几个工具的使用：</span></span><br><span class="line"><span class="comment"># ls /sys/class/net/ # 查看网卡信息，树莓派输出： eth0  lo  wlan0</span></span><br><span class="line"><span class="comment"># ifconfig  # 以太网络参数</span></span><br><span class="line"><span class="comment"># iwconfig  # 无线网络参数</span></span><br><span class="line"><span class="comment"># 扫描SSID</span></span><br><span class="line"><span class="comment"># sudo iwlist wlan0 scan | grep ESSID</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置无线网络">4、配置无线网络</h2>
+<p>无线网络的配置有两种模式，1) 首次系统启动前，在已安装系统的SD卡上修改；2) 非首次启动，进入系统后修改（需要本地/SSH登录）</p>
+<h3 id="第一种方式">1) 第一种方式：</h3>
+<p>（未测试）进入SDK的<code>system-boot</code>分区，编辑<code>network-config</code>文件，添加 <code>Wi-Fi</code> 信息. <code>network-config</code>文件已经内含了一个简单示例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">wifis:</span></span><br><span class="line">  <span class="attr">wlan0:</span></span><br><span class="line">  <span class="attr">dhcp4:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">access-points:</span></span><br><span class="line">    <span class="string">&lt;wifi</span> <span class="string">network</span> <span class="string">name&gt;:</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">&quot;&lt;wifi password&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="第二种方式">2) 第二种方式：</h3>
+<p>编辑/etc/netplan/01-netconfig.yaml文件（没有就创建）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: networkd</span><br><span class="line">  ethernets:</span><br><span class="line">      eth0:</span><br><span class="line">          optional: true</span><br><span class="line">          dhcp4: yes</span><br><span class="line">          # addresses:</span><br><span class="line">          #    - 10.3.89.200&#x2F;24</span><br><span class="line">          # gateway4: 10.3.89.1</span><br><span class="line">          # nameservers:</span><br><span class="line">          #     addresses: [202.119.248.66,218.2.135.1]</span><br><span class="line">          dhcp6: yes</span><br><span class="line">  wifis:</span><br><span class="line">      wlan0:</span><br><span class="line">          dhcp4: true</span><br><span class="line">          optional: true</span><br><span class="line">          access-points:</span><br><span class="line">              &quot;NJCD&quot;:</span><br><span class="line">                  password: &quot;PASSWORD&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="安装pythonpip和opencv">5、安装<code>python</code>、<code>pip</code>和<code>opencv</code></h2>
+<h3 id="安装-python">1) 安装 <code>python</code></h3>
+<p>　　严格来说，这不叫安装。<code>Ubuntu 20.04</code>已经自带<code>Python</code> 3.8版本.如果只需要使用<code>python 3</code>，并且不愿每次都输入<code>python3</code>来执行脚本，那么简单的做一个软链接即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s /bin/python3.8 /bin/python</span><br></pre></td></tr></table></figure>
+<h3 id="安装pip">2) 安装<code>pip</code></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br></pre></td></tr></table></figure>
+<h3 id="通过pip安装常用的python第三方包和opencv">3) 通过<code>pip</code>安装常用的<code>python</code>第三方包和<code>OpenCV</code></h3>
+<p>　　<code>OpenCV</code>的部分依赖库，需要<code>cmake</code>联网下载，直接安装会出错，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 首先安装常用的python库</span></span><br><span class="line">sudo pip install -U numpy scipy matplotlib pandas lxml requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 adafruit硬件操作库</span></span><br><span class="line">pip install -U RPi.GPIO smbus2 Adafruit-Blinka adafruit-circuitpython-busdevice \</span><br><span class="line">               adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span><br><span class="line">	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span><br><span class="line">	       adafruit-circuitpython-ssd1306 Adafruit-PlatformDetect Adafruit-PureIO</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 OpenCV</span></span><br><span class="line">sudo pip install -U opencv-contrib-python-headless</span><br></pre></td></tr></table></figure>
+<p>　　<code>OpenCV</code>的安装如果能成功，可以略过以下步骤。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下为OpenCV源码编译安装，</span></span><br><span class="line"><span class="comment"># 基本过程为将源码(.tar.gz结尾)复制到一个临时文件夹内进行编译，</span></span><br><span class="line"><span class="comment"># 然后使用pip直接安装编译成功的whl文件。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 首先安装cmake</span></span><br><span class="line"></span><br><span class="line">sudo apt install cmake</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入管理员模式，一般情况，尽量避免在管理员模式下操作。</span></span><br><span class="line">sudo su</span><br><span class="line">find /root -name opencv-contrib*</span><br><span class="line">cp /root/.cache/pip/xxx(一串路径)xx/opencv-contrib-python-headless-4.4.0.46.tar.gz /root</span><br><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line">tar xvfz opencv-contrib-python-headless-4.4.0.46.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> opencv-contrib-python-headless-4.4.0.46</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我这里编译不成功的关键是缺少xfeatures2d，也可以禁用该模块，</span></span><br><span class="line">mkdir -p opencv/.cache/xfeatures2d/boostdesc</span><br><span class="line">mkdir -p .cache/xfeatures2d/vgg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入opencv_contrib/modules/xfeatures2d/cmake目录，</span></span><br><span class="line"><span class="comment"># 打开download_boostdesc.cmake和download_vgg.cmake文件</span></span><br><span class="line"><span class="comment"># 需要下载的文件链接为：</span></span><br><span class="line"><span class="comment">#   https://raw.githubusercontent.com/opencv/opencv_3rdparty/$&#123;OPENCV_3RDPARTY_COMMIT&#125;/$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 保存的文件名为 $&#123;hash&#125;-$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 分别下载vgg和bootsdesc文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 截至 2020.1.20日编译时，下载的xfeature2d所需文件</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/151805e03568c9f490a5e3a872777b75-vgg_generated_120.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用pip正常安装opencv</span></span><br><span class="line"></span><br><span class="line">pip install -U .</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：上述安装过程中，可能需要安装相应的编译工具。</p>
+</blockquote>
+<h2 id="安装配置-nginxuwsgiflask">6、安装配置 <code>nginx</code>、<code>uWSGI</code>、<code>flask</code>；</h2>
+<h3 id="安装">1) 安装；</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nginx uwsgi uwsgi-plugin-python3</span><br><span class="line">sudo pip install flask</span><br></pre></td></tr></table></figure>
+<h3 id="配置">2) 配置：</h3>
+<p>待续</p>
+<h2 id="x更新ubuntu和各个python库">X、更新<code>Ubuntu</code>和各个<code>python</code>库</h2>
+<h3 id="添加一个alias方便更新">1) 添加一个<code>alias</code>，方便更新</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo vi ~/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制添加以下内容至 ~/.bash_aliases文件</span></span><br><span class="line"><span class="comment"># alias pipupdate =&#x27;pip install -U numpy scipy matplotlib pandas lxml requests \</span></span><br><span class="line"><span class="comment">#	       flask RPi.GPIO smbus2 adafruit-circuitpython-ssd1306 \</span></span><br><span class="line"><span class="comment">#	       Adafruit-Blinka adafruit-circuitpython-busdevice Adafruit-PureIO\</span></span><br><span class="line"><span class="comment">#              adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span></span><br><span class="line"><span class="comment">#	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span></span><br><span class="line"><span class="comment">#	       Adafruit-PlatformDetect&#x27;</span></span><br><span class="line">	       </span><br><span class="line"><span class="comment"># 激活</span></span><br><span class="line">sudo <span class="built_in">source</span> ~/.bash_aliases</span><br></pre></td></tr></table></figure>
+<h2 id="xx题外话">XX、题外话</h2>
+<p>　　如果使用的是树莓派自己的系统（2020-12-02-raspios-buster-armhf-lite，非ubuntu)，首先需要卸载自带的vim-common 安装完整版的vim，才能正常使用vim。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt remove vim-common</span><br><span class="line">sudo apt install vim</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://njuferret.github.io/2021/01/20/20210120_raspib4/" title="树莓派的使用">https://njuferret.github.io/2021/01/20/20210120_raspib4/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"><i class="fa fa-tag"></i> 树莓派</a>
+              <a href="/tags/20-04/" rel="tag"><i class="fa fa-tag"></i> 20.04</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/07/2020-10-07_plantuml_graphviz/" rel="prev" title="plantuml + graphviz配置">
+      <i class="fa fa-chevron-left"></i> plantuml + graphviz配置
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF"><span class="nav-text">0、查看系统信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E8%BD%AF%E4%BB%B6%E6%9B%B4%E6%96%B0%E6%BA%90"><span class="nav-text">1、修改软件更新源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85raspi-config%E9%85%8D%E7%BD%AE%E5%A4%96%E8%AE%BE"><span class="nav-text">2、安装raspi-config，配置外设</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85raspi-config"><span class="nav-text">1) 安装raspi-config；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8raspi-config%E9%85%8D%E7%BD%AE%E6%A0%91%E8%8E%93%E6%B4%BE"><span class="nav-text">2) 使用raspi-config配置树莓派</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-net-toolswireless-toolsi2c%E5%92%8C%E8%93%9D%E7%89%99%E5%B7%A5%E5%85%B7"><span class="nav-text">3、安装 net-tools、wireless-tools、I2C和蓝牙工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BA%BF%E7%BD%91%E7%BB%9C"><span class="nav-text">4、配置无线网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">1) 第一种方式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">2) 第二种方式：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85pythonpip%E5%92%8Copencv"><span class="nav-text">5、安装python、pip和opencv</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-python"><span class="nav-text">1) 安装 python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85pip"><span class="nav-text">2) 安装pip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87pip%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E7%9A%84python%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85%E5%92%8Copencv"><span class="nav-text">3) 通过pip安装常用的python第三方包和OpenCV</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE-nginxuwsgiflask"><span class="nav-text">6、安装配置 nginx、uWSGI、flask；</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-text">1) 安装；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">2) 配置：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x%E6%9B%B4%E6%96%B0ubuntu%E5%92%8C%E5%90%84%E4%B8%AApython%E5%BA%93"><span class="nav-text">X、更新Ubuntu和各个python库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AAalias%E6%96%B9%E4%BE%BF%E6%9B%B4%E6%96%B0"><span class="nav-text">1) 添加一个alias，方便更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xx%E9%A2%98%E5%A4%96%E8%AF%9D"><span class="nav-text">XX、题外话</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
