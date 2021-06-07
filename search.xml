@@ -202,6 +202,68 @@ A \xi=\lambda \xi
       </tags>
   </entry>
   <entry>
+    <title>C++之点点滴滴</title>
+    <url>/2019/09/22/2019-09-22_cpp_basic/</url>
+    <content><![CDATA[<p>记录C++语法的点点滴滴</p>
+<a id="more"></a>
+<h2 id="新式类型转换">1.新式类型转换</h2>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>static_cast</code></td>
+<td>用于兼容类型转换，如整型和浮点型、字符型之间的互相转换。</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>const_cast</code></td>
+<td>仅用于进行去除 const 属性的转换</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>reinterpret_cast</code></td>
+<td>用于进行各种不同类型的指针之间、不同类型的引用之间以及指针和能容纳指针的整数类型之间的转换</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>dynamic_cast</code></td>
+<td>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。对于不安全的指针转换，转换结果返回 NULL 指针</td>
+</tr>
+</tbody>
+</table>
+<p><code>xxxxxx_cast&lt;T2&gt;T1</code>:</p>
+<ul>
+<li>语法：<code>xxxxxx_cast&lt;类型2&gt;(类型1变量)</code></li>
+<li>功能：将指针变量由类型1转换为类型2</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 以下都是合法的转换</span></span><br><span class="line"><span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> uchar *&gt;(p)         <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"><span class="keyword">static_cast</span>&lt;<span class="keyword">size_t</span>&gt;(p)                <span class="comment">// p 类型为 int</span></span><br><span class="line"><span class="keyword">const_cast</span>&lt;uchar *&gt;(p)                <span class="comment">// p 类型为 const uchar*</span></span><br><span class="line"><span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">const</span> uchar *&gt;(p);   <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="static_cast示例">1.1 <code>static_cast</code>示例：</h3>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">int</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">1</span>; &#125;</span><br><span class="line">    <span class="keyword">operator</span> <span class="keyword">char</span>*() &#123; <span class="keyword">return</span> <span class="literal">NULL</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">char</span>* p = <span class="string">&quot;New Dragon Inn&quot;</span>;</span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (<span class="number">3.14</span>);  <span class="comment">// n 的值变为 3</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (a);     <span class="comment">//调用 a.operator int，n 的值变为 1</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="keyword">char</span>*&gt; (a);   <span class="comment">//调用 a.operator char*，p 的值变为 NULL</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (p);     <span class="comment">//编译错误，static_cast不能将指针转换成整型</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="keyword">char</span>*&gt; (n);   <span class="comment">//编译错误，static_cast 不能将整型转换成指针</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="reinterpret_cast示例">1.2 <code>reinterpret_cast</code>示例：</h3>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    A(<span class="keyword">int</span> n):i(n),j(n) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">A <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>;</span><br><span class="line">    <span class="keyword">int</span> &amp;r = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">int</span>&amp;&gt;(a);	    <span class="comment">//强行让 r 引用 a</span></span><br><span class="line">    r = <span class="number">200</span>;                                <span class="comment">//把 a.i 变成了 200</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; a.i &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; a.j &lt;&lt; <span class="built_in">endl</span>;      <span class="comment">// 输出 200,100</span></span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">300</span>;</span><br><span class="line">    A *pa = <span class="keyword">reinterpret_cast</span>&lt;A*&gt; ( &amp; n);    <span class="comment">//强行让 pa 指向 n</span></span><br><span class="line">    pa-&gt;i = <span class="number">400</span>;                            <span class="comment">// n 变成 400</span></span><br><span class="line">    pa-&gt;j = <span class="number">500</span>;                            <span class="comment">//此条语句不安全，很可能导致程序崩溃</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; n &lt;&lt; <span class="built_in">endl</span>;                      <span class="comment">// 输出 400</span></span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> la = <span class="number">0x12345678abcd</span>LL;</span><br><span class="line">    pa = <span class="keyword">reinterpret_cast</span>&lt;A*&gt;(la);          <span class="comment">//la太长，只取低32位0x5678abcd拷贝给pa</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> u = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt;(pa);        <span class="comment">//pa逐个比特拷贝到u</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; hex &lt;&lt; u &lt;&lt; <span class="built_in">endl</span>;               <span class="comment">//输出 5678abcd</span></span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(* PF1)</span> <span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(* PF2)</span> <span class="params">(<span class="keyword">int</span>,<span class="keyword">char</span> *)</span></span>;</span><br><span class="line">    PF1 pf1;  PF2 pf2;</span><br><span class="line">    pf2 = <span class="keyword">reinterpret_cast</span>&lt;PF2&gt;(pf1);       <span class="comment">//两个不同类型的函数指针之间可以互相转换</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 200, 100</span></span><br><span class="line"><span class="comment">// 400</span></span><br><span class="line"><span class="comment">// 5678abed</span></span><br></pre></td></tr></table></figure>
+<h3 id="const_cast示例">1.3 <code>const_cast</code>示例</h3>
+<h3 id="dynamic_cast示例">1.4 <code>dynamic_cast</code>示例</h3>
+<p><code>reinterpret_cast</code> 可以将多态基类（包含虚函数的基类）的指针强制转换为派生类的指针，但是这种转换不检查安全性，即不检查转换后的指针是否确实指向一个派生类对象。<code>dynamic_cast</code>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。</p>
+<p>如果类型转换成功，则 <code>dynamic_cast</code> 返回 <code>新类型</code> 的值。若转换失败且<code>新类型</code>是指针类型，则它返回该类型的空指针。若转型失败且<code>新类型</code>是引用类型，则它抛出与类型 <code>std::bad_cast</code> 的处理块匹配的异常。。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">V</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;;  <span class="comment">// 必须为多态以使用运行时检查的 dynamic_cast</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> :</span> <span class="keyword">virtual</span> V &#123;&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B</span> :</span> <span class="keyword">virtual</span> V &#123;</span><br><span class="line">  B(V* v, A* a) &#123;</span><br><span class="line">    <span class="comment">// 构造中转型（见后述 D 的构造函数中的调用）</span></span><br><span class="line">    <span class="keyword">dynamic_cast</span>&lt;B*&gt;(v); <span class="comment">// 良好定义：v 有类型 V*，B 的 V 基类，产生 B*</span></span><br><span class="line">    <span class="keyword">dynamic_cast</span>&lt;B*&gt;(a); <span class="comment">// 未定义行为：a 有类型 A*，A 非 B 的基类</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">D</span> :</span> A, B &#123;</span><br><span class="line">    D() : B((A*)<span class="keyword">this</span>, <span class="keyword">this</span>) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Base</span> &#123;</span></span><br><span class="line">    <span class="keyword">virtual</span> ~Base() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Derived</span>:</span> Base &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">name</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    D d; <span class="comment">// 最终派生对象</span></span><br><span class="line">    A&amp; a = d; <span class="comment">// 向上转型，可以用 dynamic_cast，但不必须</span></span><br><span class="line">    D&amp; new_d = <span class="keyword">dynamic_cast</span>&lt;D&amp;&gt;(a); <span class="comment">// 向下转型</span></span><br><span class="line">    B&amp; new_b = <span class="keyword">dynamic_cast</span>&lt;B&amp;&gt;(a); <span class="comment">// 侧向转型</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    Base* b1 = <span class="keyword">new</span> Base;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(b1))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;downcast from b1 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;name(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    Base* b2 = <span class="keyword">new</span> Derived;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(b2))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;downcast from b2 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;name(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">delete</span> b1;</span><br><span class="line">    <span class="keyword">delete</span> b2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span>  <span class="comment">//有虚函数，因此是多态基类</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Base() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123; &#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Base b;</span><br><span class="line">    Derived d;</span><br><span class="line">    Derived* pd;</span><br><span class="line">    pd = <span class="keyword">reinterpret_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="comment">//此处pd不会为 NULL。reinterpret_cast不检查安全性，总是进行转换</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe reinterpret_cast&quot;</span> &lt;&lt; <span class="built_in">endl</span>;	<span class="comment">//不会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//结果会是NULL，因为 &amp;b 不指向派生类对象，此转换不安全</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe dynamic_cast1&quot;</span> &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">//会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;d);			<span class="comment">//安全的转换</span></span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//此处 pd 不会为 NULL</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe dynamic_cast2&quot;</span> &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">//不会执行</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>编程开发</category>
+        <category>Qt</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+        <tag>基础语法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>主成分分析与独立成分分析</title>
     <url>/2019/07/31/2019-07-31_pca-ica/</url>
     <content><![CDATA[<p>　　<a href="https://en.wikipedia.org/wiki/Principal_component_analysis">主成分分析</a>(Principle Component Analysis, PCA)和<a href="https://en.wikipedia.org/wiki/Independent_component_analysis">独立成分分析</a>(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。</p>
@@ -353,68 +415,6 @@ numpy.linalg.eig(a)
       </tags>
   </entry>
   <entry>
-    <title>C++之点点滴滴</title>
-    <url>/2019/09/22/2019-09-22_cpp_basic/</url>
-    <content><![CDATA[<p>记录C++语法的点点滴滴</p>
-<a id="more"></a>
-<h2 id="新式类型转换">1.新式类型转换</h2>
-<table>
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 80%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">函数</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><code>static_cast</code></td>
-<td>用于兼容类型转换，如整型和浮点型、字符型之间的互相转换。</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><code>const_cast</code></td>
-<td>仅用于进行去除 const 属性的转换</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><code>reinterpret_cast</code></td>
-<td>用于进行各种不同类型的指针之间、不同类型的引用之间以及指针和能容纳指针的整数类型之间的转换</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><code>dynamic_cast</code></td>
-<td>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。对于不安全的指针转换，转换结果返回 NULL 指针</td>
-</tr>
-</tbody>
-</table>
-<p><code>xxxxxx_cast&lt;T2&gt;T1</code>:</p>
-<ul>
-<li>语法：<code>xxxxxx_cast&lt;类型2&gt;(类型1变量)</code></li>
-<li>功能：将指针变量由类型1转换为类型2</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 以下都是合法的转换</span></span><br><span class="line"><span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> uchar *&gt;(p)         <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"><span class="keyword">static_cast</span>&lt;<span class="keyword">size_t</span>&gt;(p)                <span class="comment">// p 类型为 int</span></span><br><span class="line"><span class="keyword">const_cast</span>&lt;uchar *&gt;(p)                <span class="comment">// p 类型为 const uchar*</span></span><br><span class="line"><span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">const</span> uchar *&gt;(p);   <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="static_cast示例">1.1 <code>static_cast</code>示例：</h3>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">int</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">1</span>; &#125;</span><br><span class="line">    <span class="keyword">operator</span> <span class="keyword">char</span>*() &#123; <span class="keyword">return</span> <span class="literal">NULL</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">char</span>* p = <span class="string">&quot;New Dragon Inn&quot;</span>;</span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (<span class="number">3.14</span>);  <span class="comment">// n 的值变为 3</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (a);     <span class="comment">//调用 a.operator int，n 的值变为 1</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="keyword">char</span>*&gt; (a);   <span class="comment">//调用 a.operator char*，p 的值变为 NULL</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="keyword">int</span>&gt; (p);     <span class="comment">//编译错误，static_cast不能将指针转换成整型</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="keyword">char</span>*&gt; (n);   <span class="comment">//编译错误，static_cast 不能将整型转换成指针</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="reinterpret_cast示例">1.2 <code>reinterpret_cast</code>示例：</h3>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    A(<span class="keyword">int</span> n):i(n),j(n) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">A <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>;</span><br><span class="line">    <span class="keyword">int</span> &amp;r = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">int</span>&amp;&gt;(a);	    <span class="comment">//强行让 r 引用 a</span></span><br><span class="line">    r = <span class="number">200</span>;                                <span class="comment">//把 a.i 变成了 200</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; a.i &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; a.j &lt;&lt; <span class="built_in">endl</span>;      <span class="comment">// 输出 200,100</span></span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">300</span>;</span><br><span class="line">    A *pa = <span class="keyword">reinterpret_cast</span>&lt;A*&gt; ( &amp; n);    <span class="comment">//强行让 pa 指向 n</span></span><br><span class="line">    pa-&gt;i = <span class="number">400</span>;                            <span class="comment">// n 变成 400</span></span><br><span class="line">    pa-&gt;j = <span class="number">500</span>;                            <span class="comment">//此条语句不安全，很可能导致程序崩溃</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; n &lt;&lt; <span class="built_in">endl</span>;                      <span class="comment">// 输出 400</span></span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> la = <span class="number">0x12345678abcd</span>LL;</span><br><span class="line">    pa = <span class="keyword">reinterpret_cast</span>&lt;A*&gt;(la);          <span class="comment">//la太长，只取低32位0x5678abcd拷贝给pa</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> u = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt;(pa);        <span class="comment">//pa逐个比特拷贝到u</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; hex &lt;&lt; u &lt;&lt; <span class="built_in">endl</span>;               <span class="comment">//输出 5678abcd</span></span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(* PF1)</span> <span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(* PF2)</span> <span class="params">(<span class="keyword">int</span>,<span class="keyword">char</span> *)</span></span>;</span><br><span class="line">    PF1 pf1;  PF2 pf2;</span><br><span class="line">    pf2 = <span class="keyword">reinterpret_cast</span>&lt;PF2&gt;(pf1);       <span class="comment">//两个不同类型的函数指针之间可以互相转换</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 200, 100</span></span><br><span class="line"><span class="comment">// 400</span></span><br><span class="line"><span class="comment">// 5678abed</span></span><br></pre></td></tr></table></figure>
-<h3 id="const_cast示例">1.3 <code>const_cast</code>示例</h3>
-<h3 id="dynamic_cast示例">1.4 <code>dynamic_cast</code>示例</h3>
-<p><code>reinterpret_cast</code> 可以将多态基类（包含虚函数的基类）的指针强制转换为派生类的指针，但是这种转换不检查安全性，即不检查转换后的指针是否确实指向一个派生类对象。<code>dynamic_cast</code>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。</p>
-<p>如果类型转换成功，则 <code>dynamic_cast</code> 返回 <code>新类型</code> 的值。若转换失败且<code>新类型</code>是指针类型，则它返回该类型的空指针。若转型失败且<code>新类型</code>是引用类型，则它抛出与类型 <code>std::bad_cast</code> 的处理块匹配的异常。。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">V</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;;  <span class="comment">// 必须为多态以使用运行时检查的 dynamic_cast</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> :</span> <span class="keyword">virtual</span> V &#123;&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B</span> :</span> <span class="keyword">virtual</span> V &#123;</span><br><span class="line">  B(V* v, A* a) &#123;</span><br><span class="line">    <span class="comment">// 构造中转型（见后述 D 的构造函数中的调用）</span></span><br><span class="line">    <span class="keyword">dynamic_cast</span>&lt;B*&gt;(v); <span class="comment">// 良好定义：v 有类型 V*，B 的 V 基类，产生 B*</span></span><br><span class="line">    <span class="keyword">dynamic_cast</span>&lt;B*&gt;(a); <span class="comment">// 未定义行为：a 有类型 A*，A 非 B 的基类</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">D</span> :</span> A, B &#123;</span><br><span class="line">    D() : B((A*)<span class="keyword">this</span>, <span class="keyword">this</span>) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Base</span> &#123;</span></span><br><span class="line">    <span class="keyword">virtual</span> ~Base() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Derived</span>:</span> Base &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">name</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    D d; <span class="comment">// 最终派生对象</span></span><br><span class="line">    A&amp; a = d; <span class="comment">// 向上转型，可以用 dynamic_cast，但不必须</span></span><br><span class="line">    D&amp; new_d = <span class="keyword">dynamic_cast</span>&lt;D&amp;&gt;(a); <span class="comment">// 向下转型</span></span><br><span class="line">    B&amp; new_b = <span class="keyword">dynamic_cast</span>&lt;B&amp;&gt;(a); <span class="comment">// 侧向转型</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    Base* b1 = <span class="keyword">new</span> Base;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(b1))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;downcast from b1 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;name(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    Base* b2 = <span class="keyword">new</span> Derived;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(b2))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;downcast from b2 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;name(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">delete</span> b1;</span><br><span class="line">    <span class="keyword">delete</span> b2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span>  <span class="comment">//有虚函数，因此是多态基类</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Base() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123; &#125;;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Base b;</span><br><span class="line">    Derived d;</span><br><span class="line">    Derived* pd;</span><br><span class="line">    pd = <span class="keyword">reinterpret_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="comment">//此处pd不会为 NULL。reinterpret_cast不检查安全性，总是进行转换</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe reinterpret_cast&quot;</span> &lt;&lt; <span class="built_in">endl</span>;	<span class="comment">//不会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//结果会是NULL，因为 &amp;b 不指向派生类对象，此转换不安全</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe dynamic_cast1&quot;</span> &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">//会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;d);			<span class="comment">//安全的转换</span></span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//此处 pd 不会为 NULL</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;unsafe dynamic_cast2&quot;</span> &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">//不会执行</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>编程开发</category>
-        <category>Qt</category>
-      </categories>
-      <tags>
-        <tag>C++</tag>
-        <tag>基础语法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Qt之点滴</title>
     <url>/2020/09/24/2020-09-24_qt/</url>
     <content><![CDATA[<p>记录Qt中的一些小方法。</p>
@@ -466,6 +466,92 @@ numpy.linalg.eig(a)
         <tag>plantuml</tag>
         <tag>graphviz</tag>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派的使用</title>
+    <url>/2021/01/20/20210120_raspib4/</url>
+    <content><![CDATA[<p>禁不住好评如潮，开始折腾树莓派。型号4B，操作系统<code>Ubuntu server 20.04</code>（无GUI）。</p>
+<a id="more"></a>
+<h2 id="查看系统信息">0、查看系统信息</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;----------当前计算机信息---------------&quot;</span></span><br><span class="line"><span class="comment"># 显示当前系统及版本号</span></span><br><span class="line"><span class="built_in">echo</span> 系统版本：$<span class="string">&#x27;\t&#x27;</span> `lsb_release -a 2&gt;&amp;1 | grep -i <span class="string">&#x27;description&#x27;</span> | cut -d$<span class="string">&#x27;\t&#x27;</span> -f2`</span><br><span class="line"><span class="comment"># 显示内核及版本号</span></span><br><span class="line"><span class="comment"># Kernel=`uname -s -r`</span></span><br><span class="line"><span class="built_in">echo</span> 内核版本：$<span class="string">&#x27;\t&#x27;</span>  `uname -s -r`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示CPU信息</span></span><br><span class="line"><span class="built_in">echo</span> CPU型号：\(详细信息可使用 lscpu 查看\)</span><br><span class="line"><span class="comment">#grep -i &#x27;model name&#x27; /proc/cpuinfo	# Ubuntu桌面版本适用</span></span><br><span class="line">grep -i <span class="string">&#x27;model&#x27;</span> /proc/cpuinfo</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示显卡信息</span></span><br><span class="line"><span class="comment">#echo 显卡信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;vga&#x27;			# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="built_in">echo</span> PCI设备:</span><br><span class="line">lspci</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示网口信息</span></span><br><span class="line"><span class="comment">#echo 以太网信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;Ethernet&#x27;		# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="comment">#echo &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示内存信息</span></span><br><span class="line"><span class="built_in">echo</span> 内存容量：`grep -i <span class="string">&#x27;MemTotal&#x27;</span> /proc/meminfo | cut -d: -f2`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示硬盘信息</span></span><br><span class="line"><span class="built_in">echo</span> 硬盘信息：</span><br><span class="line">lsblk -d -o NAME,SIZE,TYPE,MOUNTPOINT</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;-------------DONE---------------------&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>将上述命令存为shell脚本，如<code>info.sh</code> 然后执行即可 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi info.sh</span><br><span class="line">bash ./info.sh</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>输出: <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">----------当前计算机信息---------------</span><br><span class="line">系统版本：       Ubuntu 20.04.1 LTS</span><br><span class="line">内核版本：       Linux 5.4.0-1026-raspi</span><br><span class="line"> </span><br><span class="line">CPU型号：(详细信息可使用 lscpu 查看)</span><br><span class="line">Model           : Raspberry Pi 4 Model B Rev 1.2</span><br><span class="line"></span><br><span class="line">PCI设备:</span><br><span class="line">00:00.0 PCI bridge: Broadcom Inc. and subsidiaries Device 2711 (rev 10)</span><br><span class="line">01:00.0 USB controller: VIA Technologies, Inc. VL805 USB 3.0 Host Controller (rev 01)</span><br><span class="line"></span><br><span class="line">以太网信息：</span><br><span class="line"></span><br><span class="line">内存容量： 3831216 kB</span><br><span class="line"></span><br><span class="line">硬盘信息：</span><br><span class="line">NAME     SIZE TYPE MOUNTPOINT</span><br><span class="line">loop0   48.5M loop &#x2F;snap&#x2F;core18&#x2F;1883</span><br><span class="line">loop1   48.9M loop &#x2F;snap&#x2F;core18&#x2F;1949</span><br><span class="line">loop2   63.6M loop &#x2F;snap&#x2F;lxd&#x2F;16103</span><br><span class="line">loop3   59.9M loop &#x2F;snap&#x2F;lxd&#x2F;18152</span><br><span class="line">loop4     27M loop &#x2F;snap&#x2F;snapd&#x2F;10494</span><br><span class="line">loop5     27M loop &#x2F;snap&#x2F;snapd&#x2F;10709</span><br><span class="line">mmcblk0 14.9G disk</span><br><span class="line"></span><br><span class="line">-------------DONE---------------------</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="修改软件更新源">1、修改软件更新源</h2>
+<p>　　外网速度令人发指，改为国内镜像，速度快、ipv6不计流量，价格便宜量又足...</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先保留备份</span></span><br><span class="line">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line"><span class="comment"># 替换为清华镜像</span></span><br><span class="line">sudo sed -i <span class="string">&#x27;s/http:\/\/ports.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/&#x27;</span> /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保留备份</span></span><br><span class="line">sudo cp /root/.config/pip/pip.conf /root/.config/pip/pip.conf.bak &gt;nul 2&gt;&amp;1</span><br><span class="line"><span class="comment"># python 源改为工大镜像</span></span><br><span class="line">sudo pip config <span class="built_in">set</span> global.index-url https://mirrors.njtech.edu.cn/pypi/web/simple </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：请在对系统进行修改前，对原始文件进行备份</p>
+</blockquote>
+<h2 id="安装raspi-config配置外设">2、安装<code>raspi-config</code>，配置外设</h2>
+<h3 id="安装raspi-config">1) 安装<code>raspi-config</code>；</h3>
+<p>　　进入工大镜像，找到最新的<a href="https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/"><code>raspi-config</code></a>(点击进入下载);</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 最新为 raspi-config_20210119_all.deb</span></span><br><span class="line">wget -c -4 https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/raspi-config_20210119_all.deb -P /tmp</span><br><span class="line"><span class="comment"># 安装（会失败）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># 根据提示安装依赖库....</span></span><br><span class="line"><span class="comment"># sudo apt instal xxxxx</span></span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">sudo apt --fix-broken install</span><br><span class="line"><span class="comment"># 再次安装（应该会成功）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># done</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用raspi-config配置树莓派">2) 使用<code>raspi-config</code>配置树莓派</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以下开始使用 raspi-config 配置树莓派</span></span><br><span class="line"><span class="comment"># SSH 开启远程登录，是应当第一个打开的服务</span></span><br><span class="line">sudo raspi-config</span><br><span class="line"><span class="comment"># 进入3 Interface，启用 Camera, SSH, I2C, SPI, Serial Port，保存退出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">i2cdetect -y 1</span><br><span class="line"><span class="comment"># 结果如下：注意40有个设备，如果没有接I2C设备，那么全部为空</span></span><br><span class="line"><span class="comment">#       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f</span></span><br><span class="line"><span class="comment">#  00:          -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  70: 70 -- -- -- -- -- -- --</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注1: 当开启Camera，如果出现固件过时的错误时： <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your firmwave appears to be out of date (no start_x.elf). Please ...</span><br></pre></td></tr></table></figure> 解决方法： <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看boot分区所在的设备号，设备号可能是：/dev/mmcblk0p1 </span></span><br><span class="line">df -h</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 将该设备号挂载在/boot上</span></span><br><span class="line">mount /dev/mmcblk0p1 /boot</span><br></pre></td></tr></table></figure> 注2: 如果上述命令显示用户无权限，那么可以通过添加一个用户在来解决（以下方法未测试）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo groupadd i2c (group may exist already)</span><br><span class="line">sudo chown :i2c /dev/i2c-1 (or i2c-0)</span><br><span class="line">sudo chmod g+rw /dev/i2c-1</span><br><span class="line">sudo usermod -aG i2c *INSERT YOUR USERNAME*</span><br></pre></td></tr></table></figure>
+<p>注3: 也可以通过配置文件打开spi/i2c/uart/1-wire等设备：<code>sudo vi /boot/config.txt</code>:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dtparam&#x3D;spi&#x3D;on</span><br><span class="line">dtparam&#x3D;i2c_arm&#x3D;on</span><br><span class="line"># For the best performance, tweak the I2C core to run at 1MHz.</span><br><span class="line"># By default it may be 100KHz or 400KHz</span><br><span class="line">dtparam&#x3D;i2c_baudrate&#x3D;1000000</span><br><span class="line">enable_uart&#x3D;1</span><br><span class="line">dtoverlay&#x3D;w1-gpio</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/sinat_25259461/article/details/108353324">https://blog.csdn.net/sinat_25259461/article/details/108353324</a></p>
+</blockquote>
+<h2 id="安装-net-toolswireless-toolsi2c和蓝牙工具">3、安装 <code>net-tools</code>、<code>wireless-tools</code>、<code>I2C</code>和蓝牙工具</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># net-tools -&gt; ifconfig命令等</span></span><br><span class="line"><span class="comment"># wireless-tools -&gt; iwconfig 命令等</span></span><br><span class="line">sudo apt install raspi-config net-tools wireless-tools i2c-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装蓝牙</span></span><br><span class="line">sudo apt install pi-bluetooth </span><br><span class="line"></span><br><span class="line"><span class="comment"># 蓝牙配置 /boot/firmware/syscfg.txt</span></span><br><span class="line"><span class="comment"># sudo bluetoothctl     # 进入蓝牙控制</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果 wpasupplicant 没有安装，也需要这个软件</span></span><br><span class="line">sudo apt install wpasupplicant</span><br><span class="line"><span class="comment"># 几个工具的使用：</span></span><br><span class="line"><span class="comment"># ls /sys/class/net/ # 查看网卡信息，树莓派输出： eth0  lo  wlan0</span></span><br><span class="line"><span class="comment"># ifconfig  # 以太网络参数</span></span><br><span class="line"><span class="comment"># iwconfig  # 无线网络参数</span></span><br><span class="line"><span class="comment"># 扫描SSID</span></span><br><span class="line"><span class="comment"># sudo iwlist wlan0 scan | grep ESSID</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置无线网络">4、配置无线网络</h2>
+<p>无线网络的配置有两种模式，1) 首次系统启动前，在已安装系统的SD卡上修改；2) 非首次启动，进入系统后修改（需要本地/SSH登录）</p>
+<h3 id="第一种方式">1) 第一种方式：</h3>
+<p>（未测试）进入SDK的<code>system-boot</code>分区，编辑<code>network-config</code>文件，添加 <code>Wi-Fi</code> 信息. <code>network-config</code>文件已经内含了一个简单示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">wifis:</span></span><br><span class="line">  <span class="attr">wlan0:</span></span><br><span class="line">  <span class="attr">dhcp4:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">access-points:</span></span><br><span class="line">    <span class="string">&lt;wifi</span> <span class="string">network</span> <span class="string">name&gt;:</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">&quot;&lt;wifi password&gt;&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="第二种方式">2) 第二种方式：</h3>
+<p>编辑/etc/netplan/01-netconfig.yaml文件（没有就创建）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: networkd</span><br><span class="line">  ethernets:</span><br><span class="line">      eth0:</span><br><span class="line">          optional: true</span><br><span class="line">          dhcp4: yes</span><br><span class="line">          # addresses:</span><br><span class="line">          #    - 10.3.89.200&#x2F;24</span><br><span class="line">          # gateway4: 10.3.89.1</span><br><span class="line">          # nameservers:</span><br><span class="line">          #     addresses: [202.119.248.66,218.2.135.1]</span><br><span class="line">          dhcp6: yes</span><br><span class="line">  wifis:</span><br><span class="line">      wlan0:</span><br><span class="line">          dhcp4: true</span><br><span class="line">          optional: true</span><br><span class="line">          access-points:</span><br><span class="line">              &quot;NJCD&quot;:</span><br><span class="line">                  password: &quot;PASSWORD&quot;</span><br><span class="line">              &quot;NJTech&quot;:</span><br><span class="line">                  password: &quot;PASSWORD&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="安装pythonpip和opencv">5、安装<code>python</code>、<code>pip</code>和<code>opencv</code></h2>
+<h3 id="安装-python">1) 安装 <code>python</code></h3>
+<p>　　严格来说，这不叫安装。<code>Ubuntu 20.04</code>已经自带<code>Python</code> 3.8版本.如果只需要使用<code>python 3</code>，并且不愿每次都输入<code>python3</code>来执行脚本，那么简单的做一个软链接即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln -s /bin/python3.8 /bin/python</span><br></pre></td></tr></table></figure>
+<h3 id="安装pip">2) 安装<code>pip</code></h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 方法一，通过Ubuntu安装</span></span><br><span class="line">sudo apt install python-pip</span><br><span class="line"><span class="comment"># 方法二：利用getpip.py安装，详见: https://pip.pypa.io/en/stable/installing/</span></span><br><span class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</span><br><span class="line"><span class="comment"># 使用管理员权限，</span></span><br><span class="line">sudo python get-pip.py --proxy=<span class="string">&quot;http://[user:passwd@]proxy.server:port&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="通过pip安装常用的python第三方包和opencv">3) 通过<code>pip</code>安装常用的<code>python</code>第三方包和<code>OpenCV</code></h3>
+<p>　　<code>OpenCV</code>的部分依赖库，需要<code>cmake</code>联网下载，直接安装会出错，</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先安装常用的python库</span></span><br><span class="line">sudo pip install -U numpy scipy matplotlib pandas lxml requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 adafruit硬件操作库</span></span><br><span class="line">sudo pip install -U RPi.GPIO smbus2 Adafruit-Blinka adafruit-circuitpython-busdevice \</span><br><span class="line">               adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span><br><span class="line">	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span><br><span class="line">	       adafruit-circuitpython-ssd1306 Adafruit-PlatformDetect Adafruit-PureIO</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 OpenCV</span></span><br><span class="line">sudo pip install -U opencv-contrib-python-headless</span><br></pre></td></tr></table></figure>
+<p>　　<code>OpenCV</code>的安装如果能成功，可以略过以下步骤。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以下为OpenCV源码编译安装，</span></span><br><span class="line"><span class="comment"># 基本过程为将源码(.tar.gz结尾)复制到一个临时文件夹内进行编译，</span></span><br><span class="line"><span class="comment"># 然后使用pip直接安装编译成功的whl文件。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 首先安装cmake</span></span><br><span class="line"></span><br><span class="line">sudo apt install cmake</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入管理员模式，一般情况，尽量避免在管理员模式下操作。</span></span><br><span class="line">sudo su</span><br><span class="line">find /root -name opencv-contrib*.tar.gz</span><br><span class="line"><span class="comment"># find会返回已经查找到的opencv-contrib*tar.gz的压缩包文件</span></span><br><span class="line">cp /root/.cache/pip/xxx(一串路径)xx/opencv-contrib-python-headless-4.4.0.46.tar.gz /root</span><br><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line">tar xvfz opencv-contrib-python-headless-4.4.0.46.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> opencv-contrib-python-headless-4.4.0.46</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我这里编译不成功的关键是缺少xfeatures2d，也可以禁用该模块，</span></span><br><span class="line">mkdir -p opencv/.cache/xfeatures2d/boostdesc</span><br><span class="line">mkdir -p .cache/xfeatures2d/vgg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入opencv_contrib/modules/xfeatures2d/cmake目录，</span></span><br><span class="line"><span class="comment"># 打开download_boostdesc.cmake和download_vgg.cmake文件</span></span><br><span class="line"><span class="comment"># 需要下载的文件链接为：</span></span><br><span class="line"><span class="comment">#   https://raw.githubusercontent.com/opencv/opencv_3rdparty/$&#123;OPENCV_3RDPARTY_COMMIT&#125;/$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 保存的文件名为 $&#123;hash&#125;-$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 分别下载vgg和bootsdesc文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 截至 2020.1.20日编译时，下载的xfeature2d所需文件</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/151805e03568c9f490a5e3a872777b75-vgg_generated_120.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用pip正常安装opencv</span></span><br><span class="line"></span><br><span class="line">pip install -U .</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：上述安装过程中，可能需要安装相应的编译工具。</p>
+</blockquote>
+<h2 id="安装配置-nginxuwsgiflask">6、安装配置 <code>nginx</code>、<code>uWSGI</code>、<code>flask</code>；</h2>
+<h3 id="安装">1) 安装；</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install nginx uwsgi uwsgi-plugin-python3</span><br><span class="line">sudo pip install flask</span><br></pre></td></tr></table></figure>
+<h3 id="配置">2) 配置：</h3>
+<h2 id="非管理员访问硬件">7、非管理员访问硬件：</h2>
+<p>使用管理员权限进行硬件操作太过危险，还是使用非管理员权限比较安全，以下将用户<code>ubuntu</code>添加至<code>device</code>用户组，修改<code>device</code>用户组，使之具有各个设备的访问权限：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将用户添加至devices组，以直接访问外设</span></span><br><span class="line"><span class="comment"># 类似可以处理spi</span></span><br><span class="line">sudo groupadd devices</span><br><span class="line">sudo chown :devices /dev/i2c-1 <span class="comment">#(or i2c-0)</span></span><br><span class="line">sudo chown :devices /dev/spidev0.0</span><br><span class="line">sudo chown :devices /dev/spidev0.1</span><br><span class="line">sudo chown :devices /dev/gpiochip0</span><br><span class="line">sudo chown :devices /dev/gpiochip1</span><br><span class="line">sudo chown :devices /dev/gpiomem</span><br><span class="line">sudo chmod g+rw /dev/i2c-1</span><br><span class="line">sudo chmod g+rw /dev/spidev0.0</span><br><span class="line">sudo chmod g+rw /dev/spidev0.1</span><br><span class="line">sudo chmod g+rw /dev/gpiomem</span><br><span class="line">sudo chmod g+rw /dev/gpiochip0</span><br><span class="line">sudo chmod g+rw /dev/gpiochip1</span><br><span class="line"></span><br><span class="line">sudo usermod -aG devices ubuntu</span><br></pre></td></tr></table></figure>
+<p>测试时发现，貌似仅在当前session中执行后有效（原因不明），可以将上述命令作为服务，每次启动自动运行一次：</p>
+<p>创建启动服务<code>my-start-up</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vi /etc/init.d/my-start-up</span><br></pre></td></tr></table></figure>
+<p>添加如下内容： <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">sudo chown :devices /dev/i2c-1 <span class="comment">#(or i2c-0)</span></span><br><span class="line">sudo chown :devices /dev/spidev0.0</span><br><span class="line">sudo chown :devices /dev/spidev0.1</span><br><span class="line">sudo chown :devices /dev/gpiochip0</span><br><span class="line">sudo chown :devices /dev/gpiochip1</span><br><span class="line">sudo chown :devices /dev/gpiomem</span><br><span class="line">sudo chmod g+rw /dev/i2c-1</span><br><span class="line">sudo chmod g+rw /dev/spidev0.0</span><br><span class="line">sudo chmod g+rw /dev/spidev0.1</span><br><span class="line">sudo chmod g+rw /dev/gpiomem</span><br><span class="line">sudo chmod g+rw /dev/gpiochip0</span><br><span class="line">sudo chmod g+rw /dev/gpiochip1</span><br><span class="line"></span><br><span class="line">sudo usermod -aG devices ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">i2cdetect -y 1</span><br></pre></td></tr></table></figure> 执行以下命令，创建启动服务 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/rc2.d</span><br><span class="line">sudo ln -s ../init.d/my-start-up S20my-start-up</span><br><span class="line"><span class="built_in">cd</span> /etc/rc3.d</span><br><span class="line">sudo ln -s ../init.d/my-start-up S20my-start-up</span><br><span class="line"><span class="built_in">cd</span> /etc/rc4.d</span><br><span class="line">sudo ln -s ../init.d/my-start-up S20my-start-up</span><br><span class="line"><span class="built_in">cd</span> /etc/rc5.d</span><br><span class="line">sudo ln -s ../init.d/my-start-up S20my-start-up</span><br></pre></td></tr></table></figure></p>
+<p>待续</p>
+<h2 id="x更新ubuntu和各个python库">X、更新<code>Ubuntu</code>和各个<code>python</code>库</h2>
+<h3 id="添加一个alias方便更新">1) 添加一个<code>alias</code>，方便更新</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vi ~/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制添加以下内容至 ~/.bash_aliases文件</span></span><br><span class="line"><span class="comment"># alias pipupdate =&#x27;pip install -U numpy scipy matplotlib pandas lxml requests \</span></span><br><span class="line"><span class="comment">#	       flask RPi.GPIO smbus2 adafruit-circuitpython-ssd1306 \</span></span><br><span class="line"><span class="comment">#	       Adafruit-Blinka adafruit-circuitpython-busdevice Adafruit-PureIO\</span></span><br><span class="line"><span class="comment">#              adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span></span><br><span class="line"><span class="comment">#	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span></span><br><span class="line"><span class="comment">#	       Adafruit-PlatformDetect&#x27;</span></span><br><span class="line">	       </span><br><span class="line"><span class="comment"># 激活</span></span><br><span class="line">sudo <span class="built_in">source</span> ~/.bash_aliases</span><br></pre></td></tr></table></figure>
+<h2 id="xx题外话">XX、题外话</h2>
+<p>　　如果使用的是树莓派自己的系统（2020-12-02-raspios-buster-armhf-lite，非ubuntu)，首先需要卸载自带的vim-common 安装完整版的vim，才能正常使用vim。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt remove vim-common</span><br><span class="line">sudo apt install vim</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>折腾</category>
+        <category>Linux</category>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>树莓派</tag>
+        <tag>ubuntu</tag>
+        <tag>20.04</tag>
       </tags>
   </entry>
   <entry>
@@ -659,6 +745,19 @@ numpy.linalg.eig(a)
       </tags>
   </entry>
   <entry>
+    <title>5R6G5B 与 8R8G8B 的相互转换</title>
+    <url>/2014/08/06/F09644237802014767482553/</url>
+    <content><![CDATA[<img src="/2014/08/06/F09644237802014767482553/rgb.jpg" class="" title="5R6G5B与8R8G8B的相互转换">
+]]></content>
+      <categories>
+        <category>杂项</category>
+      </categories>
+      <tags>
+        <tag>颜色转换</tag>
+        <tag>小知识</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Qt命令行中使用cout，cin，cerr</title>
     <url>/2015/03/08/F07644237802015283455827/</url>
     <content><![CDATA[<p>cout，cin，cerr是C++标准输入输出库函数，很多使用标准库的程序使用上述函数输出。本文记录一种在Qt中定义函数的方法，在某些情况下，可以很方便的导入第三方标准库撰写的代码。 <a id="more"></a></p>
@@ -671,19 +770,6 @@ numpy.linalg.eig(a)
       </categories>
       <tags>
         <tag>qt</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>5R6G5B 与 8R8G8B 的相互转换</title>
-    <url>/2014/08/06/F09644237802014767482553/</url>
-    <content><![CDATA[<img src="/2014/08/06/F09644237802014767482553/rgb.jpg" class="" title="5R6G5B与8R8G8B的相互转换">
-]]></content>
-      <categories>
-        <category>杂项</category>
-      </categories>
-      <tags>
-        <tag>颜色转换</tag>
-        <tag>小知识</tag>
       </tags>
   </entry>
   <entry>
@@ -1303,57 +1389,6 @@ l &amp;= m - n \label{eq5}
       </tags>
   </entry>
   <entry>
-    <title>MinGW编译Box2D</title>
-    <url>/2018/10/30/box2d_mingw_compile/</url>
-    <content><![CDATA[<p><a href="https://github.com/erincatto/Box2D">Box2D</a>是一个著名的2D物理引擎。网上很多文章是老版本，使用<code>cmake</code>编译，最新的<code>git</code>版本，已经移除了<code>cmake</code>支持，使用<code>premake5</code>编译。本文记录了使用<code>mingw</code>编译该版本的方法。</p>
-<a id="more"></a>
-<p>编译平台：MinGW 5.3.0 32位, Win10x64</p>
-<p>编译器信息：</p>
-<blockquote>
-<p>g++ -v</p>
-</blockquote>
-<blockquote>
-<p>gcc version 5.3.0 (i686-posix-dwarf-rev0, Built by MinGW-W64 project)</p>
-</blockquote>
-<h2 id="下载box2d源码">1、下载<code>Box2D</code>源码：</h2>
-<p><code>Box2D</code>源码仓库：<a href="https://github.com/erincatto/Box2D">https://github.com/erincatto/Box2D</a></p>
-<h2 id="下载premake5">2、下载<code>premake5</code>，</h2>
-<p>下载地址：<a href="https://premake.github.io/download.html">premake5</a></p>
-<h2 id="编辑box2d目录下的premake5.lua">3、编辑<code>Box2D</code>目录下的<code>premake5.lua</code></h2>
-<p>主要有4个部分，</p>
-<ol type="1">
-<li><code>configurations</code>调换两个配置的位置，从而默认创建<code>release</code>版本;</li>
-<li><code>defaultplatform</code>改为<code>x86</code>，因为这里用的是32位版本编译器;</li>
-<li>在<code>kind 'StaticLib'</code>后面添加两行，创建<code>libBox2D.a</code>的库: <figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"> 	kind &#x27;StaticLib&#x27;</span><br><span class="line"><span class="addition">+    targetextension &#x27;.a&#x27;</span></span><br><span class="line"><span class="addition">+    targetprefix &#x27;lib&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>在<code>filter &#123; 'system:windows' &#125;</code>过滤器下，添加两个缺少的库<code>gdi32</code>和<code>imm32</code>；</li>
-</ol>
-<figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"><span class="deletion">-    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27; &#125;</span></span><br><span class="line"><span class="addition">+    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27;, &#x27;gdi32&#x27;,&#x27;imm32&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
-<p>完整的<code>diff</code>文件如下： <figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"><span class="comment">diff --git &quot;a/premake5-a174dba-left.lua&quot; &quot;b/premake5.lua&quot;</span></span><br><span class="line"><span class="comment">index 092eab4..138cc76 100644</span></span><br><span class="line"><span class="comment">--- &quot;a/premake5-a174dba-left.lua&quot;</span></span><br><span class="line"><span class="comment">+++ &quot;b/premake5.lua&quot;</span></span><br><span class="line"><span class="meta">@@ -2,7 +2,7 @@</span></span><br><span class="line"> -- https://premake.github.io/</span><br><span class="line"> </span><br><span class="line"> workspace &#x27;Box2D&#x27;</span><br><span class="line"><span class="deletion">-	configurations &#123; &#x27;Debug&#x27;, &#x27;Release&#x27; &#125;</span></span><br><span class="line"><span class="addition">+	configurations &#123; &#x27;Release&#x27;,&#x27;Debug&#x27; &#125;</span></span><br><span class="line"> 	startproject &#x27;Testbed&#x27;</span><br><span class="line"> 	location &#x27;Build&#x27;</span><br><span class="line"> 	symbols &#x27;On&#x27;</span><br><span class="line"><span class="meta">@@ -15,7 +15,7 @@</span> workspace &#x27;Box2D&#x27;</span><br><span class="line">         platforms &#123; &#x27;x86_64&#x27; &#125;</span><br><span class="line">     filter &#x27;system:windows&#x27;</span><br><span class="line">         platforms &#123; &#x27;x86&#x27;, &#x27;x86_64&#x27; &#125;</span><br><span class="line"><span class="deletion">-        defaultplatform &#x27;x86_64&#x27;</span></span><br><span class="line"><span class="addition">+        defaultplatform &#x27;x86&#x27;</span></span><br><span class="line"> 		defines &#123; &#x27;_CRT_SECURE_NO_WARNINGS&#x27; &#125;</span><br><span class="line"> 	filter &#123;&#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@@ -29,6 +29,8 @@</span> workspace &#x27;Box2D&#x27;</span><br><span class="line"> </span><br><span class="line"> project &#x27;Box2D&#x27;</span><br><span class="line"> 	kind &#x27;StaticLib&#x27;</span><br><span class="line"><span class="addition">+    targetextension &#x27;.a&#x27;</span></span><br><span class="line"><span class="addition">+    targetprefix &#x27;lib&#x27;</span></span><br><span class="line"> 	files &#123; &#x27;Box2D/**&#x27; &#125;</span><br><span class="line"> 	includedirs &#123; &#x27;.&#x27; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@@ -79,7 +81,7 @@</span> project &#x27;Testbed&#x27;</span><br><span class="line"> 			&#x27;Testbed/glfw/wgl_context.c&#x27;,</span><br><span class="line"> 			&#x27;Testbed/glfw/egl_context.c&#x27;</span><br><span class="line"> 		&#125;</span><br><span class="line"><span class="deletion">-    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27; &#125;</span></span><br><span class="line"><span class="addition">+    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27;, &#x27;gdi32&#x27;,&#x27;imm32&#x27; &#125;</span></span><br><span class="line"> </span><br><span class="line">     filter &#123; &#x27;system:macosx&#x27; &#125;</span><br><span class="line">     	files</span><br><span class="line"></span><br></pre></td></tr></table></figure> 将上述patch文件保存，使用git自带的patch命令，可以很方便的打补丁，命令如下：</p>
-<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">$ patch premake5.lua build.patch</span><br></pre></td></tr></table></figure>
-<h2 id="运行premake5创建makefile">3、运行<code>premake5</code>，创建<code>Makefile</code></h2>
-<p>可以首先运行<code>premake5 --help</code>，看看支持哪些命令。生成<code>MinGW</code>可编译的<code>Makefile</code>需要使用<code>gmake2</code>参数：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ premake5 gmake2</span><br><span class="line">Building configurations...</span><br><span class="line">Running action &#39;gmake2&#39;...</span><br><span class="line">Generated Build&#x2F;Makefile...</span><br><span class="line">Generated Build&#x2F;Box2D.make...</span><br><span class="line">Generated Build&#x2F;HelloWorld.make...</span><br><span class="line">Generated Build&#x2F;Testbed.make...</span><br><span class="line">Done (247ms).</span><br></pre></td></tr></table></figure>
-<h2 id="修改testbed.make">4、修改<code>Testbed.make</code></h2>
-<p>进入<code>Build</code>目录，打开<code>Testbed.make</code>，在文件开始处前添加<code>CC=gcc</code>，注意<code>CC</code>需要大写</p>
-<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ------注意增加这一句------</span></span><br><span class="line">CC=gcc   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="保存开始编译">5、保存，开始编译</h2>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mingw32-make</span><br></pre></td></tr></table></figure>
-<h2 id="运行">6、运行</h2>
-<p>在<code>Build\bin\x86\Release</code>目录下找到<code>Testbed.exe</code>，运行后，在Test中选择<code>Tumbler</code>，可以看到一个旋转的矩形，编译完成。</p>
-<h2 id="安装">7、安装</h2>
-<p>新建安装目录<code>Box2D</code>/<code>Box2D\include</code>/<code>Box2d\lib</code>，将<code>.h</code>文件复制到<code>include</code>目录下，<code>.a</code>文件复制到<code>lib</code>目录下，批处理文件如下</p>
-<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">set</span> BUILD_CONFIG=Release</span><br><span class="line"><span class="built_in">set</span> PLATFORM=x86</span><br><span class="line"><span class="built_in">set</span> IGNORED=ignored.txt</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> %~dp0.\Box2d %~dp0.\Box2D\include %~dp0.\Box2D\lib %~dp0.\Box2D\bin</span><br><span class="line"><span class="comment">rem echo %~dp0</span></span><br><span class="line"><span class="built_in">echo</span> .cpp&gt;<span class="variable">%IGNORED%</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">xcopy</span> %~dp0..\Box2D %~dp0.\Box2D\include /E /EXCLUDE:<span class="variable">%IGNORED%</span> /Y</span><br><span class="line"><span class="built_in">copy</span> <span class="variable">%~dp0.\bin\%</span>PLATFORM<span class="variable">%\%</span>BUILD_CONFIG%\libBox2D.a %~dp0.\Box2D\lib\ /Y</span><br><span class="line"><span class="built_in">copy</span> <span class="variable">%~dp0.\bin\%</span>PLATFORM<span class="variable">%\%</span>BUILD_CONFIG%\*.exe %~dp0.\Box2D\bin\ /Y</span><br><span class="line"><span class="built_in">del</span> <span class="variable">%IGNORED%</span></span><br><span class="line"></span><br><span class="line">@<span class="built_in">echo</span> on</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>折腾</category>
-        <category>其他</category>
-      </categories>
-      <tags>
-        <tag>MinGW</tag>
-        <tag>Box2D</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>转载：C/C++语言宏定义技巧</title>
     <url>/2018/09/03/cpp_macro_usage/</url>
     <content><![CDATA[<p>记录一些C++中宏定义的使用技巧，转自<a href="https://blog.csdn.net/yujinqiong/article/details/4098700">CSND</a>。</p>
@@ -1472,6 +1507,178 @@ l &amp;= m - n \label{eq5}
       </tags>
   </entry>
   <entry>
+    <title>MinGW编译Box2D</title>
+    <url>/2018/10/30/box2d_mingw_compile/</url>
+    <content><![CDATA[<p><a href="https://github.com/erincatto/Box2D">Box2D</a>是一个著名的2D物理引擎。网上很多文章是老版本，使用<code>cmake</code>编译，最新的<code>git</code>版本，已经移除了<code>cmake</code>支持，使用<code>premake5</code>编译。本文记录了使用<code>mingw</code>编译该版本的方法。</p>
+<a id="more"></a>
+<p>编译平台：MinGW 5.3.0 32位, Win10x64</p>
+<p>编译器信息：</p>
+<blockquote>
+<p>g++ -v</p>
+</blockquote>
+<blockquote>
+<p>gcc version 5.3.0 (i686-posix-dwarf-rev0, Built by MinGW-W64 project)</p>
+</blockquote>
+<h2 id="下载box2d源码">1、下载<code>Box2D</code>源码：</h2>
+<p><code>Box2D</code>源码仓库：<a href="https://github.com/erincatto/Box2D">https://github.com/erincatto/Box2D</a></p>
+<h2 id="下载premake5">2、下载<code>premake5</code>，</h2>
+<p>下载地址：<a href="https://premake.github.io/download.html">premake5</a></p>
+<h2 id="编辑box2d目录下的premake5.lua">3、编辑<code>Box2D</code>目录下的<code>premake5.lua</code></h2>
+<p>主要有4个部分，</p>
+<ol type="1">
+<li><code>configurations</code>调换两个配置的位置，从而默认创建<code>release</code>版本;</li>
+<li><code>defaultplatform</code>改为<code>x86</code>，因为这里用的是32位版本编译器;</li>
+<li>在<code>kind 'StaticLib'</code>后面添加两行，创建<code>libBox2D.a</code>的库: <figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"> 	kind &#x27;StaticLib&#x27;</span><br><span class="line"><span class="addition">+    targetextension &#x27;.a&#x27;</span></span><br><span class="line"><span class="addition">+    targetprefix &#x27;lib&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li>在<code>filter &#123; 'system:windows' &#125;</code>过滤器下，添加两个缺少的库<code>gdi32</code>和<code>imm32</code>；</li>
+</ol>
+<figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"><span class="deletion">-    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27; &#125;</span></span><br><span class="line"><span class="addition">+    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27;, &#x27;gdi32&#x27;,&#x27;imm32&#x27; &#125;</span></span><br></pre></td></tr></table></figure>
+<p>完整的<code>diff</code>文件如下： <figure class="highlight patch"><table><tr><td class="code"><pre><span class="line"><span class="comment">diff --git &quot;a/premake5-a174dba-left.lua&quot; &quot;b/premake5.lua&quot;</span></span><br><span class="line"><span class="comment">index 092eab4..138cc76 100644</span></span><br><span class="line"><span class="comment">--- &quot;a/premake5-a174dba-left.lua&quot;</span></span><br><span class="line"><span class="comment">+++ &quot;b/premake5.lua&quot;</span></span><br><span class="line"><span class="meta">@@ -2,7 +2,7 @@</span></span><br><span class="line"> -- https://premake.github.io/</span><br><span class="line"> </span><br><span class="line"> workspace &#x27;Box2D&#x27;</span><br><span class="line"><span class="deletion">-	configurations &#123; &#x27;Debug&#x27;, &#x27;Release&#x27; &#125;</span></span><br><span class="line"><span class="addition">+	configurations &#123; &#x27;Release&#x27;,&#x27;Debug&#x27; &#125;</span></span><br><span class="line"> 	startproject &#x27;Testbed&#x27;</span><br><span class="line"> 	location &#x27;Build&#x27;</span><br><span class="line"> 	symbols &#x27;On&#x27;</span><br><span class="line"><span class="meta">@@ -15,7 +15,7 @@</span> workspace &#x27;Box2D&#x27;</span><br><span class="line">         platforms &#123; &#x27;x86_64&#x27; &#125;</span><br><span class="line">     filter &#x27;system:windows&#x27;</span><br><span class="line">         platforms &#123; &#x27;x86&#x27;, &#x27;x86_64&#x27; &#125;</span><br><span class="line"><span class="deletion">-        defaultplatform &#x27;x86_64&#x27;</span></span><br><span class="line"><span class="addition">+        defaultplatform &#x27;x86&#x27;</span></span><br><span class="line"> 		defines &#123; &#x27;_CRT_SECURE_NO_WARNINGS&#x27; &#125;</span><br><span class="line"> 	filter &#123;&#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@@ -29,6 +29,8 @@</span> workspace &#x27;Box2D&#x27;</span><br><span class="line"> </span><br><span class="line"> project &#x27;Box2D&#x27;</span><br><span class="line"> 	kind &#x27;StaticLib&#x27;</span><br><span class="line"><span class="addition">+    targetextension &#x27;.a&#x27;</span></span><br><span class="line"><span class="addition">+    targetprefix &#x27;lib&#x27;</span></span><br><span class="line"> 	files &#123; &#x27;Box2D/**&#x27; &#125;</span><br><span class="line"> 	includedirs &#123; &#x27;.&#x27; &#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@@ -79,7 +81,7 @@</span> project &#x27;Testbed&#x27;</span><br><span class="line"> 			&#x27;Testbed/glfw/wgl_context.c&#x27;,</span><br><span class="line"> 			&#x27;Testbed/glfw/egl_context.c&#x27;</span><br><span class="line"> 		&#125;</span><br><span class="line"><span class="deletion">-    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27; &#125;</span></span><br><span class="line"><span class="addition">+    	links &#123; &#x27;Box2D&#x27;, &#x27;opengl32&#x27;, &#x27;winmm&#x27;, &#x27;gdi32&#x27;,&#x27;imm32&#x27; &#125;</span></span><br><span class="line"> </span><br><span class="line">     filter &#123; &#x27;system:macosx&#x27; &#125;</span><br><span class="line">     	files</span><br><span class="line"></span><br></pre></td></tr></table></figure> 将上述patch文件保存，使用git自带的patch命令，可以很方便的打补丁，命令如下：</p>
+<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">$ patch premake5.lua build.patch</span><br></pre></td></tr></table></figure>
+<h2 id="运行premake5创建makefile">3、运行<code>premake5</code>，创建<code>Makefile</code></h2>
+<p>可以首先运行<code>premake5 --help</code>，看看支持哪些命令。生成<code>MinGW</code>可编译的<code>Makefile</code>需要使用<code>gmake2</code>参数：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ premake5 gmake2</span><br><span class="line">Building configurations...</span><br><span class="line">Running action &#39;gmake2&#39;...</span><br><span class="line">Generated Build&#x2F;Makefile...</span><br><span class="line">Generated Build&#x2F;Box2D.make...</span><br><span class="line">Generated Build&#x2F;HelloWorld.make...</span><br><span class="line">Generated Build&#x2F;Testbed.make...</span><br><span class="line">Done (247ms).</span><br></pre></td></tr></table></figure>
+<h2 id="修改testbed.make">4、修改<code>Testbed.make</code></h2>
+<p>进入<code>Build</code>目录，打开<code>Testbed.make</code>，在文件开始处前添加<code>CC=gcc</code>，注意<code>CC</code>需要大写</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ------注意增加这一句------</span></span><br><span class="line">CC=gcc   </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="保存开始编译">5、保存，开始编译</h2>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mingw32-make</span><br></pre></td></tr></table></figure>
+<h2 id="运行">6、运行</h2>
+<p>在<code>Build\bin\x86\Release</code>目录下找到<code>Testbed.exe</code>，运行后，在Test中选择<code>Tumbler</code>，可以看到一个旋转的矩形，编译完成。</p>
+<h2 id="安装">7、安装</h2>
+<p>新建安装目录<code>Box2D</code>/<code>Box2D\include</code>/<code>Box2d\lib</code>，将<code>.h</code>文件复制到<code>include</code>目录下，<code>.a</code>文件复制到<code>lib</code>目录下，批处理文件如下</p>
+<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">set</span> BUILD_CONFIG=Release</span><br><span class="line"><span class="built_in">set</span> PLATFORM=x86</span><br><span class="line"><span class="built_in">set</span> IGNORED=ignored.txt</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> %~dp0.\Box2d %~dp0.\Box2D\include %~dp0.\Box2D\lib %~dp0.\Box2D\bin</span><br><span class="line"><span class="comment">rem echo %~dp0</span></span><br><span class="line"><span class="built_in">echo</span> .cpp&gt;<span class="variable">%IGNORED%</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">xcopy</span> %~dp0..\Box2D %~dp0.\Box2D\include /E /EXCLUDE:<span class="variable">%IGNORED%</span> /Y</span><br><span class="line"><span class="built_in">copy</span> <span class="variable">%~dp0.\bin\%</span>PLATFORM<span class="variable">%\%</span>BUILD_CONFIG%\libBox2D.a %~dp0.\Box2D\lib\ /Y</span><br><span class="line"><span class="built_in">copy</span> <span class="variable">%~dp0.\bin\%</span>PLATFORM<span class="variable">%\%</span>BUILD_CONFIG%\*.exe %~dp0.\Box2D\bin\ /Y</span><br><span class="line"><span class="built_in">del</span> <span class="variable">%IGNORED%</span></span><br><span class="line"></span><br><span class="line">@<span class="built_in">echo</span> on</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>折腾</category>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>MinGW</tag>
+        <tag>Box2D</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用FFMpeg及Python进行视频裁剪</title>
+    <url>/2018/01/03/ffmpeg_video_strip/</url>
+    <content><![CDATA[<p>最近追剧《风筝》，从某管下载的视频，前后有不低于1分钟的片头和片尾，片头更是达到了2分40秒，又懒得每次遥控下一个文件，干脆写个脚本裁剪片头和片尾。</p>
+<a id="more"></a>
+<p>注意事项： 1、文件名不能含有空格，含有空格的文件需要预先处理。原文件名称为<code>风筝 _ Kite 29【DVD版】（柳雲龍、羅海瓊、李小冉等主演）.mp4</code>，可以使用下列脚本进行批量重命名： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">    os.rename(f,<span class="string">&quot;&#123;&#125;_&#123;&#125;.mp4&quot;</span>.<span class="built_in">format</span>(f[:<span class="number">2</span>],f[<span class="number">10</span>:<span class="number">12</span>]))</span><br><span class="line"></span><br></pre></td></tr></table></figure> 注：下面的脚本中已经包含上述处理步骤。</p>
+<p>2、系统中需要有ffmpeg，下载地址在这里<a href="https://ffmpeg.zeranoe.com/builds/" title="FFMPEG下载">下载FFMpeg</a>，对于绿色版，请预先设置好环境变量。</p>
+<p>新文件在上一级目录保存，转换完成后，可以删除原文件，如果懒得可以，可以直接在脚本中删除。 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> shlex</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runCommand</span>(<span class="params">cmd</span>):</span></span><br><span class="line">    output = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr = subprocess.STDOUT)</span><br><span class="line">    <span class="comment">#rst = output.stdout.read().decode(&quot;UTF8&quot;).strip()</span></span><br><span class="line">    rst = output.stdout.readlines()<span class="comment">#.decode(&quot;UTF8&quot;).strip()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rst</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">processVideoStripCmd</span>():</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">secondsToString</span>(<span class="params">seconds</span>):</span></span><br><span class="line">        strSeconds = []</span><br><span class="line">        strSeconds.append(seconds//<span class="number">3600</span>)</span><br><span class="line">        strSeconds.append((seconds-strSeconds[<span class="number">0</span>]*<span class="number">3600</span>)//<span class="number">60</span>)</span><br><span class="line">        strSeconds.append(seconds%<span class="number">60</span>)</span><br><span class="line">        strSeconds = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x :<span class="built_in">str</span>.<span class="built_in">format</span>(<span class="string">&#x27;&#123;:02d&#125;&#x27;</span>,x),strSeconds)) </span><br><span class="line">        strSeconds = <span class="string">&quot;:&quot;</span>.join(strSeconds)</span><br><span class="line">        <span class="keyword">return</span> strSeconds</span><br><span class="line"></span><br><span class="line">    timeFromBegin = <span class="number">160</span>      <span class="comment"># 距离文件开始起始时间</span></span><br><span class="line">    timeToEOF =<span class="number">90</span>            <span class="comment"># 距离文件结束截止时间</span></span><br><span class="line"></span><br><span class="line">    files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;old_风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)]</span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        print(<span class="string">&quot;----\n&quot;</span>,f)</span><br><span class="line">        cmd = <span class="string">&#x27;ffprobe &quot;&#123;&#125;&quot;&#x27;</span>.<span class="built_in">format</span>(f)</span><br><span class="line">        rst = runCommand(cmd)</span><br><span class="line">        rst = [r.decode(<span class="string">&quot;UTF8&quot;</span>).strip() <span class="keyword">for</span> r <span class="keyword">in</span> rst <span class="keyword">if</span> <span class="string">&quot;Duration&quot;</span> <span class="keyword">in</span> r.decode(<span class="string">&quot;UTF8&quot;</span>).strip()]</span><br><span class="line">        <span class="comment">#print(len(rst))</span></span><br><span class="line">        duration = <span class="string">&quot;&quot;</span></span><br><span class="line">        validDura = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(rst)&gt;<span class="number">0</span>:</span><br><span class="line">            start = <span class="built_in">len</span>(<span class="string">&#x27;Duration: &#x27;</span>)</span><br><span class="line">            duration=rst[<span class="number">0</span>][start:start+<span class="number">8</span>]</span><br><span class="line">            t = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>,duration.split(<span class="string">&#x27;:&#x27;</span>)))</span><br><span class="line">            v = t[<span class="number">0</span>]*<span class="number">3600</span>+t[<span class="number">1</span>]*<span class="number">60</span>+t[<span class="number">2</span>]</span><br><span class="line">            v = v-timeFromBegin     <span class="comment">#开头</span></span><br><span class="line">            v = v-timeToEOF         <span class="comment">#结尾</span></span><br><span class="line">            validDura = secondsToString(v) </span><br><span class="line">            print(<span class="string">&quot;\t 总时长:&#123;&#125;, 有效时长:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(duration,validDura))</span><br><span class="line">            </span><br><span class="line">            cmd = <span class="string">&#x27;ffmpeg -ss &#123;&#125; -i &quot;&#123;&#125;&quot; -t &#123;&#125; -vcodec copy -acodec copy &quot;../&#123;&#125;&quot;&#x27;</span>.<span class="built_in">format</span>(secondsToString(timeFromBegin),f,validDura,f[<span class="number">4</span>:])</span><br><span class="line">            print(cmd)</span><br><span class="line">            rst = runCommand(cmd)</span><br><span class="line">            rst = [ r.decode(<span class="string">&quot;UTF8&quot;</span>).strip() <span class="keyword">for</span> r <span class="keyword">in</span> rst]</span><br><span class="line">            os.remove(f)</span><br><span class="line">            <span class="comment">#print(&quot;\n&quot;.join(rst))</span></span><br><span class="line">    print(<span class="string">&#x27;共处理&#123;&#125;个文件&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">len</span>(files)))</span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)] </span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        os.rename(f,<span class="string">&quot;old_&#123;&#125;_&#123;&#125;.mp4&quot;</span>.<span class="built_in">format</span>(f[:<span class="number">2</span>],f[<span class="number">10</span>:<span class="number">12</span>]))</span><br><span class="line">    </span><br><span class="line">    result = processVideoStripCmd()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>编程开发</category>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>ffmpeg</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习算法评价指标</title>
+    <url>/2017/08/29/machinelearning_roc_pr/</url>
+    <content><![CDATA[<p>　　为了衡量机器学习算法特别是分类算法的优劣，常用精确率(Precision)与召回率(Recall)，RoC曲线与PR曲线等指标，本文具体说明上述各项指标的基本含义。</p>
+<a id="more"></a>
+<h1 id="混淆矩阵">1、混淆矩阵</h1>
+<p>　　考虑一个二分类问题，即将实例分成正类（positive）或负类（negative）。对一个二分类问题来说，会出现四种情况。如果一个实例是正类并且也被预测成正类，即为真正类（True positive）,如果实例是负类被预测成正类，称之为假正类（False positive）。相应地，如果实例是负类被预测成负类，称之为真负类（True negative）,正类被预测成负类则为假负类（false negative）。</p>
+<h2 id="tp-fp-tn-fn">TP, FP, TN, FN</h2>
+<ol type="1">
+<li>True Positives,TP：预测为正样本，实际也为正样本的特征数</li>
+<li>False Positives,FP：预测为正样本，实际为负样本的特征数</li>
+<li>True Negatives,TN：预测为负样本，实际也为负样本的特征数</li>
+<li>False Negatives,FN：预测为负样本，实际为正样本的特征数</li>
+</ol>
+<p>　　混淆矩阵如下表所示，1代表正类，0代表负类：</p>
+
+<table style="margin-left: auto; margin-right: auto;" border="0">
+<tbody>
+<tr>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: center;"><span style="font-size: 16px; color: #ff0000;">预测“1”</span></td>
+<td style="text-align: center;"><span style="font-size: 16px; color: #ff0000;">预测“0”</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span style="font-size: 16px; color: #008000; background-color: #ffffff;">实际“1”</span></td>
+<td style="text-align: center;"><span style="font-size: 16px;">True Positive(TP)</span></td>
+<td style="text-align: center;"><span style="font-size: 16px;">False Negative(FN)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span style="font-size: 16px; color: #008000; background-color: #ffffff;">实际“0”</span></td>
+<td style="text-align: center;"><span style="font-size: 16px;">False Positive(FP)</span></td>
+<td style="text-align: center;"><span style="font-size: 16px;">True Negative(TN)</span></td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="精确率precision与召回率recall">2、精确率(precision)与召回率(Recall)</h1>
+<p>　　<strong><font color="#FF0000">精确率(Precision)</font></strong>的定义在上图可以看出，是绿色半圆除以红色绿色组成的圆。<strong><font color="#FF0000">召回率(Recall)</font></strong>的定义也在图上能看出，是绿色半圆除以左边的长方形。<strong><font color="#FF0000">特异性(specificity，或<span class="math inline">\(FP_{rate}\)</span>)</font></strong>的定义图上没有直接写明，这里给出，是红色半圆除以右边的长方形。<strong><font color="#FF0000">F1值</font></strong>来综合评估精确率和召回率，它是精确率和召回率的调和均值。当精确率和召回率都高时,<span class="math inline">\(F_1\)</span>值也会高。严格的数学定义如下：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">名称</th>
+<th>数学定义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>精确率（Precision）</strong></td>
+<td>$ \displaystyle P = \frac {TP}{TP+FP} $</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>召回率(Recall)</strong></td>
+<td>$ \displaystyle R=\frac{TP}{TP+FN} $</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>特异性(Specificity, <span class="math inline">\(FP_{rate}\)</span>)</strong></td>
+<td>$ \displaystyle S=\frac{FP}{FP+TN} $</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong><span class="math inline">\(F_1\)</span>值</strong></td>
+<td>$\displaystyle \frac {2} {F_{1}} = \frac {1}{P}+\frac {1}{R} \quad \Leftrightarrow \quad F_{1} = 2 \times \left ( \frac{P\cdot R}{P+R} \right ) $</td>
+</tr>
+</tbody>
+</table>
+<p>　　有时候我们对精确率和召回率并不是一视同仁，比如有时候我们更加重视精确率。我们用一个参数<span class="math inline">\(\beta\)</span>来度量两者之间的关系，含有参数<span class="math inline">\(\beta\)</span>的<span class="math inline">\(F_1\)</span>我们记为<span class="math inline">\(F_{\beta}\)</span>。如果<span class="math inline">\(\beta&gt;1\)</span>，召回率有更大影响，如果<span class="math inline">\(\beta&lt;1\)</span>，精确率有更大影响。当<span class="math inline">\(\beta=1\)</span>时，精确率和召回率影响力相同，<span class="math inline">\(F_{\beta}\)</span>退化为<span class="math inline">\(F_1\)</span>的形式。严格的数学定义如下：</p>
+<p><span class="math display">\[ F_{\beta} = \frac{(1+\beta_{2})\cdot P \cdot R} {\beta_{2}\cdot P+R}  \]</span></p>
+<h1 id="roc曲线">3、RoC曲线</h1>
+<p>　　以召回率为<span class="math inline">\(y\)</span>轴，以特异性为<span class="math inline">\(x\)</span>轴，我们就直接得到了RoC曲线。召回率越高，特异性越小，RoC曲线越靠近左上角，模型和算法就越高效，如图2。另一方面，如果ROC是光滑的，那么基本可以判断没有太大的过拟合（overfitting）。从几何的角度讲，RoC曲线下方的面积越大越大，则模型越优。所以有时候我们用RoC曲线下的面积，即AUC（Area Under Curve）值来作为算法和模型好坏的标准。</p>
+<img src="/2017/08/29/machinelearning_roc_pr/roc.png" class="" title="图2 RoC曲线">
+<h1 id="pr曲线">4、PR曲线</h1>
+<p>　　以精确率为<span class="math inline">\(y\)</span>轴，以召回率为<span class="math inline">\(x\)</span>轴，我们就得到了PR曲线。精确率越高，召回率越高，PR曲线越靠近右上角，模型和算法就越高效。和ROC一样，先看PR曲线的平滑度，再看谁上谁下（同一测试集上）。一般来说，上面的比下面的好。当P和R接近F1值就也越大，一般会画出连接(0,0)和(1,1)的线，线和PR曲线重合处的F1是这条线最大的F1（光滑的情况下），此时的F1对于PR曲线就好象AUC对于ROC曲线一样。数字比一条线更方便调模型。</p>
+<img src="/2017/08/29/machinelearning_roc_pr/pr.png" class="" title="图3 PR曲线">
+<h1 id="roc和pr曲线之间的关系和不同">5、ROC和PR曲线之间的关系和不同</h1>
+<p>　　RoC曲线和PR曲线是非常常用的衡量模型分类能力两个指标，在模型评估中具有重要的作用。当正负样本的分布较为平衡时，ROC和PR的趋势差不多。但当样本分布不均时，两者就截然不同了，ROC效果依然看似很好，但是PR上反映效果一般。因此，对非平衡（倾斜）数据集，PR曲线或F1值将是更好的选择。</p>
+<blockquote>
+<p>解释：</p>
+<p>　　设数据集负类占大多数（例如占99%），正类为极少数（例如占1%）。此时负类样本预测为负类的数值TN较大，负类样本预测为正类的数值FP较少。此时当FP的数量变化时，由于<span class="math inline">\(\displaystyle FP_{rate}=\frac{FP}{FP+TN}\)</span>，所以<span class="math inline">\(FP_{rate}\)</span>不会有很大变化。</p>
+<p>　　但是<span class="math inline">\(\displaystyle PR=\frac{TP}{TP +FP}\)</span>，正类样本预测为正类的数值TP以及负类样本预测正类的数值FP均较小，因此，当FP稍有变化，PR曲线即可以捕获到这个差异，所以效果会更好。</p>
+</blockquote>
+<hr />
+<p>参考文档：</p>
+<ol type="1">
+<li><a href="https://www.zhihu.com/question/30643044">精确率、召回率、F1 值、ROC、AUC 各自的优缺点是什么？</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/5993450.html">精确率与召回率，RoC曲线与PR曲线</a></li>
+<li><a href="https://www.bbsmax.com/A/D854V4Z3zE/">ROC曲线和PR曲线</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+        <category>基础知识</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>Precision</tag>
+        <tag>Recall</tag>
+        <tag>ROC</tag>
+        <tag>PR</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>神器FFmpeg的使用</title>
     <url>/2018/01/27/ffmpeg_usage/</url>
     <content><![CDATA[<p>以前进行视频转换，用这个那个工具，最后发现神器<code>FFmpeg</code>太强大了。<code>FFmpeg</code>参数众多，以下记录<code>ffmpeg</code>的一些用法。</p>
@@ -1587,24 +1794,6 @@ l &amp;= m - n \label{eq5}
       </tags>
   </entry>
   <entry>
-    <title>使用FFMpeg及Python进行视频裁剪</title>
-    <url>/2018/01/03/ffmpeg_video_strip/</url>
-    <content><![CDATA[<p>最近追剧《风筝》，从某管下载的视频，前后有不低于1分钟的片头和片尾，片头更是达到了2分40秒，又懒得每次遥控下一个文件，干脆写个脚本裁剪片头和片尾。</p>
-<a id="more"></a>
-<p>注意事项： 1、文件名不能含有空格，含有空格的文件需要预先处理。原文件名称为<code>风筝 _ Kite 29【DVD版】（柳雲龍、羅海瓊、李小冉等主演）.mp4</code>，可以使用下列脚本进行批量重命名： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)]</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">    os.rename(f,<span class="string">&quot;&#123;&#125;_&#123;&#125;.mp4&quot;</span>.<span class="built_in">format</span>(f[:<span class="number">2</span>],f[<span class="number">10</span>:<span class="number">12</span>]))</span><br><span class="line"></span><br></pre></td></tr></table></figure> 注：下面的脚本中已经包含上述处理步骤。</p>
-<p>2、系统中需要有ffmpeg，下载地址在这里<a href="https://ffmpeg.zeranoe.com/builds/" title="FFMPEG下载">下载FFMpeg</a>，对于绿色版，请预先设置好环境变量。</p>
-<p>新文件在上一级目录保存，转换完成后，可以删除原文件，如果懒得可以，可以直接在脚本中删除。 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">import</span> shlex</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runCommand</span>(<span class="params">cmd</span>):</span></span><br><span class="line">    output = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr = subprocess.STDOUT)</span><br><span class="line">    <span class="comment">#rst = output.stdout.read().decode(&quot;UTF8&quot;).strip()</span></span><br><span class="line">    rst = output.stdout.readlines()<span class="comment">#.decode(&quot;UTF8&quot;).strip()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rst</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">processVideoStripCmd</span>():</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">secondsToString</span>(<span class="params">seconds</span>):</span></span><br><span class="line">        strSeconds = []</span><br><span class="line">        strSeconds.append(seconds//<span class="number">3600</span>)</span><br><span class="line">        strSeconds.append((seconds-strSeconds[<span class="number">0</span>]*<span class="number">3600</span>)//<span class="number">60</span>)</span><br><span class="line">        strSeconds.append(seconds%<span class="number">60</span>)</span><br><span class="line">        strSeconds = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x :<span class="built_in">str</span>.<span class="built_in">format</span>(<span class="string">&#x27;&#123;:02d&#125;&#x27;</span>,x),strSeconds)) </span><br><span class="line">        strSeconds = <span class="string">&quot;:&quot;</span>.join(strSeconds)</span><br><span class="line">        <span class="keyword">return</span> strSeconds</span><br><span class="line"></span><br><span class="line">    timeFromBegin = <span class="number">160</span>      <span class="comment"># 距离文件开始起始时间</span></span><br><span class="line">    timeToEOF =<span class="number">90</span>            <span class="comment"># 距离文件结束截止时间</span></span><br><span class="line"></span><br><span class="line">    files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;old_风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)]</span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        print(<span class="string">&quot;----\n&quot;</span>,f)</span><br><span class="line">        cmd = <span class="string">&#x27;ffprobe &quot;&#123;&#125;&quot;&#x27;</span>.<span class="built_in">format</span>(f)</span><br><span class="line">        rst = runCommand(cmd)</span><br><span class="line">        rst = [r.decode(<span class="string">&quot;UTF8&quot;</span>).strip() <span class="keyword">for</span> r <span class="keyword">in</span> rst <span class="keyword">if</span> <span class="string">&quot;Duration&quot;</span> <span class="keyword">in</span> r.decode(<span class="string">&quot;UTF8&quot;</span>).strip()]</span><br><span class="line">        <span class="comment">#print(len(rst))</span></span><br><span class="line">        duration = <span class="string">&quot;&quot;</span></span><br><span class="line">        validDura = <span class="number">0</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(rst)&gt;<span class="number">0</span>:</span><br><span class="line">            start = <span class="built_in">len</span>(<span class="string">&#x27;Duration: &#x27;</span>)</span><br><span class="line">            duration=rst[<span class="number">0</span>][start:start+<span class="number">8</span>]</span><br><span class="line">            t = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="built_in">int</span>,duration.split(<span class="string">&#x27;:&#x27;</span>)))</span><br><span class="line">            v = t[<span class="number">0</span>]*<span class="number">3600</span>+t[<span class="number">1</span>]*<span class="number">60</span>+t[<span class="number">2</span>]</span><br><span class="line">            v = v-timeFromBegin     <span class="comment">#开头</span></span><br><span class="line">            v = v-timeToEOF         <span class="comment">#结尾</span></span><br><span class="line">            validDura = secondsToString(v) </span><br><span class="line">            print(<span class="string">&quot;\t 总时长:&#123;&#125;, 有效时长:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(duration,validDura))</span><br><span class="line">            </span><br><span class="line">            cmd = <span class="string">&#x27;ffmpeg -ss &#123;&#125; -i &quot;&#123;&#125;&quot; -t &#123;&#125; -vcodec copy -acodec copy &quot;../&#123;&#125;&quot;&#x27;</span>.<span class="built_in">format</span>(secondsToString(timeFromBegin),f,validDura,f[<span class="number">4</span>:])</span><br><span class="line">            print(cmd)</span><br><span class="line">            rst = runCommand(cmd)</span><br><span class="line">            rst = [ r.decode(<span class="string">&quot;UTF8&quot;</span>).strip() <span class="keyword">for</span> r <span class="keyword">in</span> rst]</span><br><span class="line">            os.remove(f)</span><br><span class="line">            <span class="comment">#print(&quot;\n&quot;.join(rst))</span></span><br><span class="line">    print(<span class="string">&#x27;共处理&#123;&#125;个文件&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">len</span>(files)))</span><br><span class="line">  </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line"></span><br><span class="line">    files = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">if</span> f.startswith(<span class="string">&#x27;风筝&#x27;</span>) <span class="keyword">and</span> f.endswith(<span class="string">&#x27;.mp4&#x27;</span>)] </span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        os.rename(f,<span class="string">&quot;old_&#123;&#125;_&#123;&#125;.mp4&quot;</span>.<span class="built_in">format</span>(f[:<span class="number">2</span>],f[<span class="number">10</span>:<span class="number">12</span>]))</span><br><span class="line">    </span><br><span class="line">    result = processVideoStripCmd()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>编程开发</category>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>ffmpeg</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>git配置及命令行乱码</title>
     <url>/2018/08/24/git-usage/</url>
     <content><![CDATA[<p>日常使用Git，越来越觉得GUI不方便，以下记录下Git命令行配置</p>
@@ -1693,109 +1882,6 @@ l &amp;= m - n \label{eq5}
       <tags>
         <tag>git</tag>
         <tag>utf-8</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习算法评价指标</title>
-    <url>/2017/08/29/machinelearning_roc_pr/</url>
-    <content><![CDATA[<p>　　为了衡量机器学习算法特别是分类算法的优劣，常用精确率(Precision)与召回率(Recall)，RoC曲线与PR曲线等指标，本文具体说明上述各项指标的基本含义。</p>
-<a id="more"></a>
-<h1 id="混淆矩阵">1、混淆矩阵</h1>
-<p>　　考虑一个二分类问题，即将实例分成正类（positive）或负类（negative）。对一个二分类问题来说，会出现四种情况。如果一个实例是正类并且也被预测成正类，即为真正类（True positive）,如果实例是负类被预测成正类，称之为假正类（False positive）。相应地，如果实例是负类被预测成负类，称之为真负类（True negative）,正类被预测成负类则为假负类（false negative）。</p>
-<h2 id="tp-fp-tn-fn">TP, FP, TN, FN</h2>
-<ol type="1">
-<li>True Positives,TP：预测为正样本，实际也为正样本的特征数</li>
-<li>False Positives,FP：预测为正样本，实际为负样本的特征数</li>
-<li>True Negatives,TN：预测为负样本，实际也为负样本的特征数</li>
-<li>False Negatives,FN：预测为负样本，实际为正样本的特征数</li>
-</ol>
-<p>　　混淆矩阵如下表所示，1代表正类，0代表负类：</p>
-
-<table style="margin-left: auto; margin-right: auto;" border="0">
-<tbody>
-<tr>
-<td style="text-align: left;">&nbsp;</td>
-<td style="text-align: center;"><span style="font-size: 16px; color: #ff0000;">预测“1”</span></td>
-<td style="text-align: center;"><span style="font-size: 16px; color: #ff0000;">预测“0”</span></td>
-</tr>
-<tr>
-<td style="text-align: center;"><span style="font-size: 16px; color: #008000; background-color: #ffffff;">实际“1”</span></td>
-<td style="text-align: center;"><span style="font-size: 16px;">True Positive(TP)</span></td>
-<td style="text-align: center;"><span style="font-size: 16px;">False Negative(FN)</span></td>
-</tr>
-<tr>
-<td style="text-align: center;"><span style="font-size: 16px; color: #008000; background-color: #ffffff;">实际“0”</span></td>
-<td style="text-align: center;"><span style="font-size: 16px;">False Positive(FP)</span></td>
-<td style="text-align: center;"><span style="font-size: 16px;">True Negative(TN)</span></td>
-</tr>
-</tbody>
-</table>
-
-<h1 id="精确率precision与召回率recall">2、精确率(precision)与召回率(Recall)</h1>
-<p>　　<strong><font color="#FF0000">精确率(Precision)</font></strong>的定义在上图可以看出，是绿色半圆除以红色绿色组成的圆。<strong><font color="#FF0000">召回率(Recall)</font></strong>的定义也在图上能看出，是绿色半圆除以左边的长方形。<strong><font color="#FF0000">特异性(specificity，或<span class="math inline">\(FP_{rate}\)</span>)</font></strong>的定义图上没有直接写明，这里给出，是红色半圆除以右边的长方形。<strong><font color="#FF0000">F1值</font></strong>来综合评估精确率和召回率，它是精确率和召回率的调和均值。当精确率和召回率都高时,<span class="math inline">\(F_1\)</span>值也会高。严格的数学定义如下：</p>
-<table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">名称</th>
-<th>数学定义</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><strong>精确率（Precision）</strong></td>
-<td>$ \displaystyle P = \frac {TP}{TP+FP} $</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>召回率(Recall)</strong></td>
-<td>$ \displaystyle R=\frac{TP}{TP+FN} $</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>特异性(Specificity, <span class="math inline">\(FP_{rate}\)</span>)</strong></td>
-<td>$ \displaystyle S=\frac{FP}{FP+TN} $</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong><span class="math inline">\(F_1\)</span>值</strong></td>
-<td>$\displaystyle \frac {2} {F_{1}} = \frac {1}{P}+\frac {1}{R} \quad \Leftrightarrow \quad F_{1} = 2 \times \left ( \frac{P\cdot R}{P+R} \right ) $</td>
-</tr>
-</tbody>
-</table>
-<p>　　有时候我们对精确率和召回率并不是一视同仁，比如有时候我们更加重视精确率。我们用一个参数<span class="math inline">\(\beta\)</span>来度量两者之间的关系，含有参数<span class="math inline">\(\beta\)</span>的<span class="math inline">\(F_1\)</span>我们记为<span class="math inline">\(F_{\beta}\)</span>。如果<span class="math inline">\(\beta&gt;1\)</span>，召回率有更大影响，如果<span class="math inline">\(\beta&lt;1\)</span>，精确率有更大影响。当<span class="math inline">\(\beta=1\)</span>时，精确率和召回率影响力相同，<span class="math inline">\(F_{\beta}\)</span>退化为<span class="math inline">\(F_1\)</span>的形式。严格的数学定义如下：</p>
-<p><span class="math display">\[ F_{\beta} = \frac{(1+\beta_{2})\cdot P \cdot R} {\beta_{2}\cdot P+R}  \]</span></p>
-<h1 id="roc曲线">3、RoC曲线</h1>
-<p>　　以召回率为<span class="math inline">\(y\)</span>轴，以特异性为<span class="math inline">\(x\)</span>轴，我们就直接得到了RoC曲线。召回率越高，特异性越小，RoC曲线越靠近左上角，模型和算法就越高效，如图2。另一方面，如果ROC是光滑的，那么基本可以判断没有太大的过拟合（overfitting）。从几何的角度讲，RoC曲线下方的面积越大越大，则模型越优。所以有时候我们用RoC曲线下的面积，即AUC（Area Under Curve）值来作为算法和模型好坏的标准。</p>
-<img src="/2017/08/29/machinelearning_roc_pr/roc.png" class="" title="图2 RoC曲线">
-<h1 id="pr曲线">4、PR曲线</h1>
-<p>　　以精确率为<span class="math inline">\(y\)</span>轴，以召回率为<span class="math inline">\(x\)</span>轴，我们就得到了PR曲线。精确率越高，召回率越高，PR曲线越靠近右上角，模型和算法就越高效。和ROC一样，先看PR曲线的平滑度，再看谁上谁下（同一测试集上）。一般来说，上面的比下面的好。当P和R接近F1值就也越大，一般会画出连接(0,0)和(1,1)的线，线和PR曲线重合处的F1是这条线最大的F1（光滑的情况下），此时的F1对于PR曲线就好象AUC对于ROC曲线一样。数字比一条线更方便调模型。</p>
-<img src="/2017/08/29/machinelearning_roc_pr/pr.png" class="" title="图3 PR曲线">
-<h1 id="roc和pr曲线之间的关系和不同">5、ROC和PR曲线之间的关系和不同</h1>
-<p>　　RoC曲线和PR曲线是非常常用的衡量模型分类能力两个指标，在模型评估中具有重要的作用。当正负样本的分布较为平衡时，ROC和PR的趋势差不多。但当样本分布不均时，两者就截然不同了，ROC效果依然看似很好，但是PR上反映效果一般。因此，对非平衡（倾斜）数据集，PR曲线或F1值将是更好的选择。</p>
-<blockquote>
-<p>解释：</p>
-<p>　　设数据集负类占大多数（例如占99%），正类为极少数（例如占1%）。此时负类样本预测为负类的数值TN较大，负类样本预测为正类的数值FP较少。此时当FP的数量变化时，由于<span class="math inline">\(\displaystyle FP_{rate}=\frac{FP}{FP+TN}\)</span>，所以<span class="math inline">\(FP_{rate}\)</span>不会有很大变化。</p>
-<p>　　但是<span class="math inline">\(\displaystyle PR=\frac{TP}{TP +FP}\)</span>，正类样本预测为正类的数值TP以及负类样本预测正类的数值FP均较小，因此，当FP稍有变化，PR曲线即可以捕获到这个差异，所以效果会更好。</p>
-</blockquote>
-<hr />
-<p>参考文档：</p>
-<ol type="1">
-<li><a href="https://www.zhihu.com/question/30643044">精确率、召回率、F1 值、ROC、AUC 各自的优缺点是什么？</a></li>
-<li><a href="https://www.cnblogs.com/pinard/p/5993450.html">精确率与召回率，RoC曲线与PR曲线</a></li>
-<li><a href="https://www.bbsmax.com/A/D854V4Z3zE/">ROC曲线和PR曲线</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-        <category>基础知识</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>Precision</tag>
-        <tag>Recall</tag>
-        <tag>ROC</tag>
-        <tag>PR</tag>
       </tags>
   </entry>
   <entry>
@@ -1975,10 +2061,10 @@ l &amp;= m - n \label{eq5}
         <category>Linux</category>
       </categories>
       <tags>
+        <tag>ubuntu</tag>
         <tag>tensorflow</tag>
         <tag>cuda</tag>
         <tag>cudnn</tag>
-        <tag>ubuntu</tag>
       </tags>
   </entry>
   <entry>
@@ -7082,85 +7168,6 @@ pandas.read_html有一些选项，默认条件下，它会搜索、尝试解析
       <tags>
         <tag>Python</tag>
         <tag>book</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树莓派的使用</title>
-    <url>/2021/01/20/20210120_raspib4/</url>
-    <content><![CDATA[<p>禁不住好评如潮，开始折腾树莓派。型号4B，操作系统<code>Ubuntu server 20.04</code>（无GUI）。</p>
-<a id="more"></a>
-<h2 id="查看系统信息">0、查看系统信息</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;----------当前计算机信息---------------&quot;</span></span><br><span class="line"><span class="comment"># 显示当前系统及版本号</span></span><br><span class="line"><span class="built_in">echo</span> 系统版本：$<span class="string">&#x27;\t&#x27;</span> `lsb_release -a 2&gt;&amp;1 | grep -i <span class="string">&#x27;description&#x27;</span> | cut -d$<span class="string">&#x27;\t&#x27;</span> -f2`</span><br><span class="line"><span class="comment"># 显示内核及版本号</span></span><br><span class="line"><span class="comment"># Kernel=`uname -s -r`</span></span><br><span class="line"><span class="built_in">echo</span> 内核版本：$<span class="string">&#x27;\t&#x27;</span>  `uname -s -r`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示CPU信息</span></span><br><span class="line"><span class="built_in">echo</span> CPU型号：\(详细信息可使用 lscpu 查看\)</span><br><span class="line"><span class="comment">#grep -i &#x27;model name&#x27; /proc/cpuinfo	# Ubuntu桌面版本适用</span></span><br><span class="line">grep -i <span class="string">&#x27;model&#x27;</span> /proc/cpuinfo</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示显卡信息</span></span><br><span class="line"><span class="comment">#echo 显卡信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;vga&#x27;			# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="built_in">echo</span> PCI设备:</span><br><span class="line">lspci</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示网口信息</span></span><br><span class="line"><span class="comment">#echo 以太网信息：</span></span><br><span class="line"><span class="comment">#lspci | grep -i &#x27;Ethernet&#x27;		# Ubuntu桌面版本适用</span></span><br><span class="line"><span class="comment">#echo &quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示内存信息</span></span><br><span class="line"><span class="built_in">echo</span> 内存容量：`grep -i <span class="string">&#x27;MemTotal&#x27;</span> /proc/meminfo | cut -d: -f2`</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示硬盘信息</span></span><br><span class="line"><span class="built_in">echo</span> 硬盘信息：</span><br><span class="line">lsblk -d -o NAME,SIZE,TYPE,MOUNTPOINT</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;-------------DONE---------------------&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>将上述命令存为shell脚本，如<code>info.sh</code> 然后执行即可 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi info.sh</span><br><span class="line">bash ./info.sh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>输出: <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">----------当前计算机信息---------------</span><br><span class="line">系统版本：       Ubuntu 20.04.1 LTS</span><br><span class="line">内核版本：       Linux 5.4.0-1026-raspi</span><br><span class="line"> </span><br><span class="line">CPU型号：(详细信息可使用 lscpu 查看)</span><br><span class="line">Model           : Raspberry Pi 4 Model B Rev 1.2</span><br><span class="line"></span><br><span class="line">PCI设备:</span><br><span class="line">00:00.0 PCI bridge: Broadcom Inc. and subsidiaries Device 2711 (rev 10)</span><br><span class="line">01:00.0 USB controller: VIA Technologies, Inc. VL805 USB 3.0 Host Controller (rev 01)</span><br><span class="line"></span><br><span class="line">以太网信息：</span><br><span class="line"></span><br><span class="line">内存容量： 3831216 kB</span><br><span class="line"></span><br><span class="line">硬盘信息：</span><br><span class="line">NAME     SIZE TYPE MOUNTPOINT</span><br><span class="line">loop0   48.5M loop &#x2F;snap&#x2F;core18&#x2F;1883</span><br><span class="line">loop1   48.9M loop &#x2F;snap&#x2F;core18&#x2F;1949</span><br><span class="line">loop2   63.6M loop &#x2F;snap&#x2F;lxd&#x2F;16103</span><br><span class="line">loop3   59.9M loop &#x2F;snap&#x2F;lxd&#x2F;18152</span><br><span class="line">loop4     27M loop &#x2F;snap&#x2F;snapd&#x2F;10494</span><br><span class="line">loop5     27M loop &#x2F;snap&#x2F;snapd&#x2F;10709</span><br><span class="line">mmcblk0 14.9G disk</span><br><span class="line"></span><br><span class="line">-------------DONE---------------------</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="修改软件更新源">1、修改软件更新源</h2>
-<p>　　外网速度令人发指，改为国内镜像，速度快、ipv6不计流量，价格便宜量又足...</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 先保留备份</span></span><br><span class="line">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line"><span class="comment"># 替换为清华镜像</span></span><br><span class="line">sudo sed -i <span class="string">&#x27;s/http:\/\/ports.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/&#x27;</span> /etc/apt/sources.list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保留备份</span></span><br><span class="line">sudo cp /root/.config/pip/pip.conf /root/.config/pip/pip.conf.bak &gt;nul 2&gt;&amp;1</span><br><span class="line"><span class="comment"># python 源改为工大镜像</span></span><br><span class="line">sudo pip config <span class="built_in">set</span> global.index-url https://mirrors.njtech.edu.cn/pypi/web/simple </span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注：请在对系统进行修改前，对原始文件进行备份</p>
-</blockquote>
-<h2 id="安装raspi-config配置外设">2、安装<code>raspi-config</code>，配置外设</h2>
-<h3 id="安装raspi-config">1) 安装<code>raspi-config</code>；</h3>
-<p>　　进入工大镜像，找到最新的<a href="https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/"><code>raspi-config</code></a>(点击进入下载);</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 最新为 raspi-config_20210119_all.deb</span></span><br><span class="line">wget -c -4 https://mirrors.njtech.edu.cn/raspberrypi/pool/main/r/raspi-config/raspi-config_20210119_all.deb -P /tmp</span><br><span class="line"><span class="comment"># 安装（会失败）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># 根据提示安装依赖库....</span></span><br><span class="line"><span class="comment"># sudo apt instal xxxxx</span></span><br><span class="line"><span class="comment"># 修复</span></span><br><span class="line">sudo apt --fix-broken install</span><br><span class="line"><span class="comment"># 再次安装（应该会成功）</span></span><br><span class="line">sudo dpkg -i ./raspi-config_20210119_all.deb</span><br><span class="line"><span class="comment"># done</span></span><br></pre></td></tr></table></figure>
-<h3 id="使用raspi-config配置树莓派">2) 使用<code>raspi-config</code>配置树莓派</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以下开始使用 raspi-config 配置树莓派</span></span><br><span class="line"><span class="comment"># SSH 开启远程登录，是应当第一个打开的服务</span></span><br><span class="line">sudo raspi-config</span><br><span class="line"><span class="comment"># 进入3 Interface，启用 Camera, SSH, I2C, SPI, Serial Port，保存退出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试</span></span><br><span class="line">i2cdetect -y 1</span><br><span class="line"><span class="comment"># 结果如下：注意40有个设备，如果没有接I2C设备，那么全部为空</span></span><br><span class="line"><span class="comment">#       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f</span></span><br><span class="line"><span class="comment">#  00:          -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span></span><br><span class="line"><span class="comment">#  70: 70 -- -- -- -- -- -- --</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注1: 当开启Camera，如果出现固件过时的错误时： <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Your firmwave appears to be out of date (no start_x.elf). Please ...</span><br></pre></td></tr></table></figure> 解决方法： <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看boot分区所在的设备号，设备号可能是：/dev/mmcblk0p1 </span></span><br><span class="line">df -h</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 将该设备号挂载在/boot上</span></span><br><span class="line">mount /dev/mmcblk0p1 /boot</span><br></pre></td></tr></table></figure> 注2: 如果上述命令显示用户无权限，那么可以通过添加一个用户在来解决（以下方法未测试）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo groupadd i2c (group may exist already)</span><br><span class="line">sudo chown :i2c /dev/i2c-1 (or i2c-0)</span><br><span class="line">sudo chmod g+rw /dev/i2c-1</span><br><span class="line">sudo usermod -aG i2c *INSERT YOUR USERNAME*</span><br></pre></td></tr></table></figure>
-<p>注3: 也可以通过配置文件打开spi/i2c/uart/1-wire等设备：<code>sudo vi /boot/config.txt</code>:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">dtparam&#x3D;spi&#x3D;on</span><br><span class="line">dtparam&#x3D;i2c_arm&#x3D;on</span><br><span class="line"># For the best performance, tweak the I2C core to run at 1MHz.</span><br><span class="line"># By default it may be 100KHz or 400KHz</span><br><span class="line">dtparam&#x3D;i2c_baudrate&#x3D;1000000</span><br><span class="line">enable_uart&#x3D;1</span><br><span class="line">dtoverlay&#x3D;w1-gpio</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>参考：<a href="https://blog.csdn.net/sinat_25259461/article/details/108353324">https://blog.csdn.net/sinat_25259461/article/details/108353324</a></p>
-</blockquote>
-<h2 id="安装-net-toolswireless-toolsi2c和蓝牙工具">3、安装 <code>net-tools</code>、<code>wireless-tools</code>、<code>I2C</code>和蓝牙工具</h2>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># net-tools -&gt; ifconfig命令等</span></span><br><span class="line"><span class="comment"># wireless-tools -&gt; iwconfig 命令等</span></span><br><span class="line">sudo apt install raspi-config net-tools wireless-tools i2c-tools</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装蓝牙</span></span><br><span class="line">sudo apt install pi-bluetooth </span><br><span class="line"></span><br><span class="line"><span class="comment"># 蓝牙配置 /boot/firmware/syscfg.txt</span></span><br><span class="line"><span class="comment"># sudo bluetoothctl     # 进入蓝牙控制</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果 wpasupplicant 没有安装，也需要这个软件</span></span><br><span class="line">sudo apt install wpasupplicant</span><br><span class="line"><span class="comment"># 几个工具的使用：</span></span><br><span class="line"><span class="comment"># ls /sys/class/net/ # 查看网卡信息，树莓派输出： eth0  lo  wlan0</span></span><br><span class="line"><span class="comment"># ifconfig  # 以太网络参数</span></span><br><span class="line"><span class="comment"># iwconfig  # 无线网络参数</span></span><br><span class="line"><span class="comment"># 扫描SSID</span></span><br><span class="line"><span class="comment"># sudo iwlist wlan0 scan | grep ESSID</span></span><br></pre></td></tr></table></figure>
-<h2 id="配置无线网络">4、配置无线网络</h2>
-<p>无线网络的配置有两种模式，1) 首次系统启动前，在已安装系统的SD卡上修改；2) 非首次启动，进入系统后修改（需要本地/SSH登录）</p>
-<h3 id="第一种方式">1) 第一种方式：</h3>
-<p>（未测试）进入SDK的<code>system-boot</code>分区，编辑<code>network-config</code>文件，添加 <code>Wi-Fi</code> 信息. <code>network-config</code>文件已经内含了一个简单示例：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">wifis:</span></span><br><span class="line">  <span class="attr">wlan0:</span></span><br><span class="line">  <span class="attr">dhcp4:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">optional:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">access-points:</span></span><br><span class="line">    <span class="string">&lt;wifi</span> <span class="string">network</span> <span class="string">name&gt;:</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">&quot;&lt;wifi password&gt;&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="第二种方式">2) 第二种方式：</h3>
-<p>编辑/etc/netplan/01-netconfig.yaml文件（没有就创建）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">network:</span><br><span class="line">  version: 2</span><br><span class="line">  renderer: networkd</span><br><span class="line">  ethernets:</span><br><span class="line">      eth0:</span><br><span class="line">          optional: true</span><br><span class="line">          dhcp4: yes</span><br><span class="line">          # addresses:</span><br><span class="line">          #    - 10.3.89.200&#x2F;24</span><br><span class="line">          # gateway4: 10.3.89.1</span><br><span class="line">          # nameservers:</span><br><span class="line">          #     addresses: [202.119.248.66,218.2.135.1]</span><br><span class="line">          dhcp6: yes</span><br><span class="line">  wifis:</span><br><span class="line">      wlan0:</span><br><span class="line">          dhcp4: true</span><br><span class="line">          optional: true</span><br><span class="line">          access-points:</span><br><span class="line">              &quot;NJCD&quot;:</span><br><span class="line">                  password: &quot;PASSWORD&quot;</span><br></pre></td></tr></table></figure>
-<h2 id="安装pythonpip和opencv">5、安装<code>python</code>、<code>pip</code>和<code>opencv</code></h2>
-<h3 id="安装-python">1) 安装 <code>python</code></h3>
-<p>　　严格来说，这不叫安装。<code>Ubuntu 20.04</code>已经自带<code>Python</code> 3.8版本.如果只需要使用<code>python 3</code>，并且不愿每次都输入<code>python3</code>来执行脚本，那么简单的做一个软链接即可：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln -s /bin/python3.8 /bin/python</span><br></pre></td></tr></table></figure>
-<h3 id="安装pip">2) 安装<code>pip</code></h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python-pip</span><br></pre></td></tr></table></figure>
-<h3 id="通过pip安装常用的python第三方包和opencv">3) 通过<code>pip</code>安装常用的<code>python</code>第三方包和<code>OpenCV</code></h3>
-<p>　　<code>OpenCV</code>的部分依赖库，需要<code>cmake</code>联网下载，直接安装会出错，</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 首先安装常用的python库</span></span><br><span class="line">sudo pip install -U numpy scipy matplotlib pandas lxml requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 adafruit硬件操作库</span></span><br><span class="line">sudo pip install -U RPi.GPIO smbus2 Adafruit-Blinka adafruit-circuitpython-busdevice \</span><br><span class="line">               adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span><br><span class="line">	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span><br><span class="line">	       adafruit-circuitpython-ssd1306 Adafruit-PlatformDetect Adafruit-PureIO</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 OpenCV</span></span><br><span class="line">sudo pip install -U opencv-contrib-python-headless</span><br></pre></td></tr></table></figure>
-<p>　　<code>OpenCV</code>的安装如果能成功，可以略过以下步骤。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 以下为OpenCV源码编译安装，</span></span><br><span class="line"><span class="comment"># 基本过程为将源码(.tar.gz结尾)复制到一个临时文件夹内进行编译，</span></span><br><span class="line"><span class="comment"># 然后使用pip直接安装编译成功的whl文件。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 首先安装cmake</span></span><br><span class="line"></span><br><span class="line">sudo apt install cmake</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入管理员模式，一般情况，尽量避免在管理员模式下操作。</span></span><br><span class="line">sudo su</span><br><span class="line">find /root -name opencv-contrib*.tar.gz</span><br><span class="line"><span class="comment"># find会返回已经查找到的opencv-contrib*tar.gz的压缩包文件</span></span><br><span class="line">cp /root/.cache/pip/xxx(一串路径)xx/opencv-contrib-python-headless-4.4.0.46.tar.gz /root</span><br><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line">tar xvfz opencv-contrib-python-headless-4.4.0.46.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> opencv-contrib-python-headless-4.4.0.46</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我这里编译不成功的关键是缺少xfeatures2d，也可以禁用该模块，</span></span><br><span class="line">mkdir -p opencv/.cache/xfeatures2d/boostdesc</span><br><span class="line">mkdir -p .cache/xfeatures2d/vgg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入opencv_contrib/modules/xfeatures2d/cmake目录，</span></span><br><span class="line"><span class="comment"># 打开download_boostdesc.cmake和download_vgg.cmake文件</span></span><br><span class="line"><span class="comment"># 需要下载的文件链接为：</span></span><br><span class="line"><span class="comment">#   https://raw.githubusercontent.com/opencv/opencv_3rdparty/$&#123;OPENCV_3RDPARTY_COMMIT&#125;/$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 保存的文件名为 $&#123;hash&#125;-$&#123;file_name&#125;</span></span><br><span class="line"><span class="comment"># 分别下载vgg和bootsdesc文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 截至 2020.1.20日编译时，下载的xfeature2d所需文件</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/boostdesc/e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/151805e03568c9f490a5e3a872777b75-vgg_generated_120.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i</span></span><br><span class="line"><span class="comment"># xfeatures2d/vgg/e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用pip正常安装opencv</span></span><br><span class="line"></span><br><span class="line">pip install -U .</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：上述安装过程中，可能需要安装相应的编译工具。</p>
-</blockquote>
-<h2 id="安装配置-nginxuwsgiflask">6、安装配置 <code>nginx</code>、<code>uWSGI</code>、<code>flask</code>；</h2>
-<h3 id="安装">1) 安装；</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install nginx uwsgi uwsgi-plugin-python3</span><br><span class="line">sudo pip install flask</span><br></pre></td></tr></table></figure>
-<h3 id="配置">2) 配置：</h3>
-<p>待续</p>
-<h2 id="x更新ubuntu和各个python库">X、更新<code>Ubuntu</code>和各个<code>python</code>库</h2>
-<h3 id="添加一个alias方便更新">1) 添加一个<code>alias</code>，方便更新</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vi ~/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制添加以下内容至 ~/.bash_aliases文件</span></span><br><span class="line"><span class="comment"># alias pipupdate =&#x27;pip install -U numpy scipy matplotlib pandas lxml requests \</span></span><br><span class="line"><span class="comment">#	       flask RPi.GPIO smbus2 adafruit-circuitpython-ssd1306 \</span></span><br><span class="line"><span class="comment">#	       Adafruit-Blinka adafruit-circuitpython-busdevice Adafruit-PureIO\</span></span><br><span class="line"><span class="comment">#              adafruit-circuitpython-framebuf adafruit-circuitpython-motor \</span></span><br><span class="line"><span class="comment">#	       adafruit-circuitpython-pca9685 adafruit-circuitpython-register \</span></span><br><span class="line"><span class="comment">#	       Adafruit-PlatformDetect&#x27;</span></span><br><span class="line">	       </span><br><span class="line"><span class="comment"># 激活</span></span><br><span class="line">sudo <span class="built_in">source</span> ~/.bash_aliases</span><br></pre></td></tr></table></figure>
-<h2 id="xx题外话">XX、题外话</h2>
-<p>　　如果使用的是树莓派自己的系统（2020-12-02-raspios-buster-armhf-lite，非ubuntu)，首先需要卸载自带的vim-common 安装完整版的vim，才能正常使用vim。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt remove vim-common</span><br><span class="line">sudo apt install vim</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>折腾</category>
-        <category>Linux</category>
-        <category>树莓派</category>
-      </categories>
-      <tags>
-        <tag>ubuntu</tag>
-        <tag>树莓派</tag>
-        <tag>20.04</tag>
       </tags>
   </entry>
 </search>
