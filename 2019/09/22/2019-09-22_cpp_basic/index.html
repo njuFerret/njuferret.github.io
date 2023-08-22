@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="记录C++语法的点点滴滴">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++之点点滴滴">
+<meta property="og:url" content="https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="记录C++语法的点点滴滴">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-22T07:28:32.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.670Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="基础语法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/","path":"2019/09/22/2019-09-22_cpp_basic/","title":"C++之点点滴滴"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++之点点滴滴 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%BC%8F%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.新式类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#static_cast%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.1 static_cast示例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reinterpret_cast%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.2
+reinterpret_cast示例：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const_cast%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.3 const_cast示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dynamic_cast%E7%A4%BA%E4%BE%8B"><span class="nav-text">1.4 dynamic_cast示例</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++之点点滴滴 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++之点点滴滴
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-09-22 15:28:32" itemprop="dateCreated datePublished" datetime="2019-09-22T15:28:32+08:00">2019-09-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">编程开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/Qt/" itemprop="url" rel="index"><span itemprop="name">Qt</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>记录C++语法的点点滴滴</p>
+<span id="more"></span>
+<h2 id="新式类型转换">1.新式类型转换</h2>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>static_cast</code></td>
+<td>用于兼容类型转换，如整型和浮点型、字符型之间的互相转换。</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>const_cast</code></td>
+<td>仅用于进行去除 const 属性的转换</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>reinterpret_cast</code></td>
+<td>用于进行各种不同类型的指针之间、不同类型的引用之间以及指针和能容纳指针的整数类型之间的转换</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>dynamic_cast</code></td>
+<td>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。对于不安全的指针转换，转换结果返回
+NULL 指针</td>
+</tr>
+</tbody>
+</table>
+<p><code>xxxxxx_cast&lt;T2&gt;T1</code>:</p>
+<ul>
+<li>语法：<code>xxxxxx_cast&lt;类型2&gt;(类型1变量)</code></li>
+<li>功能：将指针变量由类型1转换为类型2</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下都是合法的转换</span></span><br><span class="line"><span class="built_in">static_cast</span>&lt;<span class="type">const</span> uchar *&gt;(p)         <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"><span class="built_in">static_cast</span>&lt;<span class="type">size_t</span>&gt;(p)                <span class="comment">// p 类型为 int</span></span><br><span class="line"><span class="built_in">const_cast</span>&lt;uchar *&gt;(p)                <span class="comment">// p 类型为 const uchar*</span></span><br><span class="line"><span class="built_in">reinterpret_cast</span>&lt;<span class="type">const</span> uchar *&gt;(p);   <span class="comment">// p 类型为 uchar*</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="static_cast示例">1.1 <code>static_cast</code>示例：</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">int</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">1</span>; &#125;</span><br><span class="line">    <span class="keyword">operator</span> <span class="type">char</span>*() &#123; <span class="keyword">return</span> <span class="literal">NULL</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="type">char</span>* p = <span class="string">&quot;New Dragon Inn&quot;</span>;</span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="type">int</span>&gt; (<span class="number">3.14</span>);  <span class="comment">// n 的值变为 3</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="type">int</span>&gt; (a);     <span class="comment">//调用 a.operator int，n 的值变为 1</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="type">char</span>*&gt; (a);   <span class="comment">//调用 a.operator char*，p 的值变为 NULL</span></span><br><span class="line">    n = <span class="keyword">static_cast</span> &lt;<span class="type">int</span>&gt; (p);     <span class="comment">//编译错误，static_cast不能将指针转换成整型</span></span><br><span class="line">    p = <span class="keyword">static_cast</span> &lt;<span class="type">char</span>*&gt; (n);   <span class="comment">//编译错误，static_cast 不能将整型转换成指针</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="reinterpret_cast示例">1.2
+<code>reinterpret_cast</code>示例：</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    <span class="type">int</span> j;</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> n):<span class="built_in">i</span>(n),<span class="built_in">j</span>(n) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">A <span class="title">a</span><span class="params">(<span class="number">100</span>)</span></span>;</span><br><span class="line">    <span class="type">int</span> &amp;r = <span class="built_in">reinterpret_cast</span>&lt;<span class="type">int</span>&amp;&gt;(a);	    <span class="comment">//强行让 r 引用 a</span></span><br><span class="line">    r = <span class="number">200</span>;                                <span class="comment">//把 a.i 变成了 200</span></span><br><span class="line">    cout &lt;&lt; a.i &lt;&lt; <span class="string">&quot;,&quot;</span> &lt;&lt; a.j &lt;&lt; endl;      <span class="comment">// 输出 200,100</span></span><br><span class="line">    <span class="type">int</span> n = <span class="number">300</span>;</span><br><span class="line">    A *pa = <span class="built_in">reinterpret_cast</span>&lt;A*&gt; ( &amp; n);    <span class="comment">//强行让 pa 指向 n</span></span><br><span class="line">    pa-&gt;i = <span class="number">400</span>;                            <span class="comment">// n 变成 400</span></span><br><span class="line">    pa-&gt;j = <span class="number">500</span>;                            <span class="comment">//此条语句不安全，很可能导致程序崩溃</span></span><br><span class="line">    cout &lt;&lt; n &lt;&lt; endl;                      <span class="comment">// 输出 400</span></span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> la = <span class="number">0x12345678abcd</span>LL;</span><br><span class="line">    pa = <span class="built_in">reinterpret_cast</span>&lt;A*&gt;(la);          <span class="comment">//la太长，只取低32位0x5678abcd拷贝给pa</span></span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> u = <span class="built_in">reinterpret_cast</span>&lt;<span class="type">unsigned</span> <span class="type">int</span>&gt;(pa);        <span class="comment">//pa逐个比特拷贝到u</span></span><br><span class="line">    cout &lt;&lt; hex &lt;&lt; u &lt;&lt; endl;               <span class="comment">//输出 5678abcd</span></span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(* PF1)</span> <span class="params">(<span class="type">int</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(* PF2)</span> <span class="params">(<span class="type">int</span>,<span class="type">char</span> *)</span></span>;</span><br><span class="line">    PF1 pf1;  PF2 pf2;</span><br><span class="line">    pf2 = <span class="built_in">reinterpret_cast</span>&lt;PF2&gt;(pf1);       <span class="comment">//两个不同类型的函数指针之间可以互相转换</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output </span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 200, 100</span></span><br><span class="line"><span class="comment">// 400</span></span><br><span class="line"><span class="comment">// 5678abed</span></span><br></pre></td></tr></table></figure>
+<h3 id="const_cast示例">1.3 <code>const_cast</code>示例</h3>
+<h3 id="dynamic_cast示例">1.4 <code>dynamic_cast</code>示例</h3>
+<p><code>reinterpret_cast</code>
+可以将多态基类（包含虚函数的基类）的指针强制转换为派生类的指针，但是这种转换不检查安全性，即不检查转换后的指针是否确实指向一个派生类对象。<code>dynamic_cast</code>专门用于将多态基类的指针或引用强制转换为派生类的指针或引用，而且能够检查转换的安全性。</p>
+<p>如果类型转换成功，则 <code>dynamic_cast</code> 返回
+<code>新类型</code>
+的值。若转换失败且<code>新类型</code>是指针类型，则它返回该类型的空指针。若转型失败且<code>新类型</code>是引用类型，则它抛出与类型
+<code>std::bad_cast</code> 的处理块匹配的异常。。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">V</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;;  <span class="comment">// 必须为多态以使用运行时检查的 dynamic_cast</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> : <span class="keyword">virtual</span> V &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : <span class="keyword">virtual</span> V &#123;</span><br><span class="line">  <span class="built_in">B</span>(V* v, A* a) &#123;</span><br><span class="line">    <span class="comment">// 构造中转型（见后述 D 的构造函数中的调用）</span></span><br><span class="line">    <span class="built_in">dynamic_cast</span>&lt;B*&gt;(v); <span class="comment">// 良好定义：v 有类型 V*，B 的 V 基类，产生 B*</span></span><br><span class="line">    <span class="built_in">dynamic_cast</span>&lt;B*&gt;(a); <span class="comment">// 未定义行为：a 有类型 A*，A 非 B 的基类</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span> : A, B &#123;</span><br><span class="line">    <span class="built_in">D</span>() : <span class="built_in">B</span>((A*)<span class="keyword">this</span>, <span class="keyword">this</span>) &#123; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Base</span> &#123;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Derived</span>: Base &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">name</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    D d; <span class="comment">// 最终派生对象</span></span><br><span class="line">    A&amp; a = d; <span class="comment">// 向上转型，可以用 dynamic_cast，但不必须</span></span><br><span class="line">    D&amp; new_d = <span class="built_in">dynamic_cast</span>&lt;D&amp;&gt;(a); <span class="comment">// 向下转型</span></span><br><span class="line">    B&amp; new_b = <span class="built_in">dynamic_cast</span>&lt;B&amp;&gt;(a); <span class="comment">// 侧向转型</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    Base* b1 = <span class="keyword">new</span> Base;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="built_in">dynamic_cast</span>&lt;Derived*&gt;(b1))</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;downcast from b1 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;<span class="built_in">name</span>(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    Base* b2 = <span class="keyword">new</span> Derived;</span><br><span class="line">    <span class="keyword">if</span>(Derived* d = <span class="built_in">dynamic_cast</span>&lt;Derived*&gt;(b2))</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;downcast from b2 to d successful\n&quot;</span>;</span><br><span class="line">        d-&gt;<span class="built_in">name</span>(); <span class="comment">// 可以安全调用</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">delete</span> b1;</span><br><span class="line">    <span class="keyword">delete</span> b2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span></span><br><span class="line">&#123;  <span class="comment">//有虚函数，因此是多态基类</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base &#123; &#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Base b;</span><br><span class="line">    Derived d;</span><br><span class="line">    Derived* pd;</span><br><span class="line">    pd = <span class="keyword">reinterpret_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="comment">//此处pd不会为 NULL。reinterpret_cast不检查安全性，总是进行转换</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;unsafe reinterpret_cast&quot;</span> &lt;&lt; endl;	<span class="comment">//不会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;b);</span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//结果会是NULL，因为 &amp;b 不指向派生类对象，此转换不安全</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;unsafe dynamic_cast1&quot;</span> &lt;&lt; endl;		<span class="comment">//会执行</span></span><br><span class="line">    pd = <span class="keyword">dynamic_cast</span> &lt;Derived*&gt; (&amp;d);			<span class="comment">//安全的转换</span></span><br><span class="line">    <span class="keyword">if</span> (pd == <span class="literal">NULL</span>)					<span class="comment">//此处 pd 不会为 NULL</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;unsafe dynamic_cast2&quot;</span> &lt;&lt; endl;		<span class="comment">//不会执行</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/" title="C++之点点滴滴">https://njuferret.github.io/2019/09/22/2019-09-22_cpp_basic/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+              <a href="/tags/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" rel="tag"><i class="fa fa-tag"></i> 基础语法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/07/31/2019-07-31_pca-ica/" rel="prev" title="主成分分析与独立成分分析">
+                  <i class="fa fa-angle-left"></i> 主成分分析与独立成分分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/09/24/2020-09-24_qt/" rel="next" title="Qt之点滴">
+                  Qt之点滴 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

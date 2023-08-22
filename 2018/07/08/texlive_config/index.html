@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="以前使用miktex编译Letex，很久没更新，没法自动安装缺失的包。Google之后，考虑使用TexLive，并使用清华大学镜像。以下内容简要说明其步骤。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TexLive的配置和使用">
+<meta property="og:url" content="https://njuferret.github.io/2018/07/08/texlive_config/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="以前使用miktex编译Letex，很久没更新，没法自动安装缺失的包。Google之后，考虑使用TexLive，并使用清华大学镜像。以下内容简要说明其步骤。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-08T02:57:40.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:07.937Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="TexLive">
+<meta property="article:tag" content="Latex">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2018/07/08/texlive_config/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2018/07/08/texlive_config/","path":"2018/07/08/texlive_config/","title":"TexLive的配置和使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>TexLive的配置和使用 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85texlive"><span class="nav-text">1、安装TexLive</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="nav-text">1） 下载与安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85texliveonfly"><span class="nav-text">2） 安装TexLiveonfly</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2018/07/08/texlive_config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="TexLive的配置和使用 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TexLive的配置和使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-08 10:57:40" itemprop="dateCreated datePublished" datetime="2018-07-08T10:57:40+08:00">2018-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:07" itemprop="dateModified" datetime="2023-08-22T12:01:07+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>以前使用miktex编译Letex，很久没更新，没法自动安装缺失的包。Google之后，考虑使用TexLive，并使用清华大学镜像。以下内容简要说明其步骤。</p>
+<span id="more"></span>
+<h2 id="安装texlive">1、安装TexLive</h2>
+<h3 id="下载与安装">1） 下载与安装</h3>
+<p>网上很多都是直接下载安装包进行安装，一般要超过4G大小的一个镜像。个人对这种方法无爱，以下安装使用的是在线安装模式。
+首先下载<a
+target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet/install-tl.zip"
+title="TexLive 在线安装包">install-tl.zip</a>。
+解压之后，进入<code>install-tl-日期</code>目录，编辑<code>install-tl-advanced.bat</code>文件，添加清华的镜像源：
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet</span><br></pre></td></tr></table></figure> 完整的命令行如下： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">call</span> &quot;%~dp0install-tl-windows.bat&quot; -repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet -gui perltk %*</span><br></pre></td></tr></table></figure></p>
+<p>双击修改后的<code>install-tl-advanced.bat</code>文件，进入<code>GUI</code>安装模式，根据自己的情况配置。这里安装路径设置为<code>D:\Dev\TexLive</code>，安装模式为<code>portable</code>。</p>
+
+<p>为了省事，可以选择全部安装，也可以选择自定义安装包。下图给出自定义的安装包：</p>
+
+<p>配置完成之后，点击<code>安装TexLive</code>，可以开始喝茶慢慢等。安装完成之后，在环境变量<code>PATH</code>中添加<code>TexLive</code>的路径：<code>D:\Dev\TexLive\win32\bin</code>。至此<code>TexLive</code>已经基本可以使用了。</p>
+<h3 id="安装texliveonfly">2） 安装<code>TexLiveonfly</code></h3>
+<p>进入命令行模式，使用<code>tlmgr</code>进行包的管理。</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ tlmgr search texliveonfly</span><br><span class="line">texliveonfly - On-the-fly download of missing TeX live packages</span><br><span class="line"></span><br><span class="line">$ tlmgr install texliveonfly</span><br><span class="line"><span class="function">tlmgr.pl: <span class="title">package</span> <span class="title">repository</span> <span class="title">https</span>://<span class="title">mirrors.tuna.tsinghua.edu.cn</span>/<span class="title">CTAN</span>/<span class="title">systems</span>/<span class="title">texlive</span>/<span class="title">tlnet</span> (<span class="title">not</span> <span class="title">verified</span>: <span class="title">gpg</span> <span class="title">unavailable</span>)</span></span><br><span class="line"><span class="function"><span class="title">tlmgr.pl</span> <span class="title">install</span>: <span class="title">package</span> <span class="title">already</span> <span class="title">present</span>: <span class="title">texliveonfly</span></span></span><br><span class="line"><span class="function"></span></span><br></pre></td></tr></table></figure>
+<p><code>texliveonfly</code>安装完成后，修改其默认的配置参数：进入目录<code>D:\Dev\TexLive\texmf-dist\scripts\texliveonfly</code>，编辑<code>texliveonfly.py</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### 第一处修改 ###</span></span><br><span class="line"><span class="comment">#defaultCompiler = &quot;pdflatex&quot;</span></span><br><span class="line">defaultCompiler = <span class="string">&quot;xelatex&quot;</span>         <span class="comment"># pdflatex 改为 xelatex</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 第二处修改 ###</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    texlive_bin_path = <span class="string">&quot;D:\\Dev\\TexLive\\bin\\win32&quot;</span>   <span class="comment"># 增加这一行</span></span><br><span class="line">    tlmgr_cmd = <span class="string">&#x27;tlmgr.bat&#x27;</span>                             <span class="comment"># 增加这一行</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Parse command line</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 第三处修改 ###</span></span><br><span class="line">    parser.add_option(<span class="string">&#x27;--texlive_bin&#x27;</span>, dest=<span class="string">&#x27;texlive_bin&#x27;</span>, metavar=<span class="string">&#x27;LOCATION&#x27;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&#x27;Custom location for the TeX Live bin folder&#x27;</span>, default=texlive_bin_path)  <span class="comment"># default=&#x27;&#x27; 改为 texlive_bin_path</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### 第四处修改 ###</span></span><br><span class="line">    <span class="comment">#initializes tlmgr, responds if the program not found</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        tlmgr_path = os.path.join(options.texlive_bin, tlmgr_cmd)   <span class="comment"># tlmgr 改为 tlmgr_cmd</span></span><br></pre></td></tr></table></figure>
+<p>以上修改的目的是将告诉<code>texliveonfly.py</code>具体的编译路径和命令。经过上述修改，可以在命令行里直接使用<code>texliveonfly xx.tex</code>命令编译<code>tex</code>文件。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2018/07/08/texlive_config/" title="TexLive的配置和使用">https://njuferret.github.io/2018/07/08/texlive_config/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/TexLive/" rel="tag"><i class="fa fa-tag"></i> TexLive</a>
+              <a href="/tags/Latex/" rel="tag"><i class="fa fa-tag"></i> Latex</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/" rel="prev" title="Ubuntu 16.04下1.5版TensorFlow-gpu升级记录">
+                  <i class="fa fa-angle-left"></i> Ubuntu 16.04下1.5版TensorFlow-gpu升级记录
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/07/20/python_multithread_producer_consumer/" rel="next" title="Python多线程之生产者消费者">
+                  Python多线程之生产者消费者 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

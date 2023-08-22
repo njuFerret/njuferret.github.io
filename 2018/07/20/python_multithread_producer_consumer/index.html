@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1、写在前面 经典的生产者和消费者模型中，\(N\)个线程根据要求生产出第一步处理结果，\(M\)个消费者线程对上述结果进行第二步处理。生产者与消费者之间有明确的前后顺序关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python多线程之生产者消费者">
+<meta property="og:url" content="https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="1、写在前面 经典的生产者和消费者模型中，\(N\)个线程根据要求生产出第一步处理结果，\(M\)个消费者线程对上述结果进行第二步处理。生产者与消费者之间有明确的前后顺序关系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-20T09:06:41.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:07.934Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/","path":"2018/07/20/python_multithread_producer_consumer/","title":"Python多线程之生产者消费者"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Python多线程之生产者消费者 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-text">1、写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#python%E4%B8%AD%E7%9A%84%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B"><span class="nav-text">2、Python中的生产者消费者模型：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Python多线程之生产者消费者 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python多线程之生产者消费者
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-20 17:06:41" itemprop="dateCreated datePublished" datetime="2018-07-20T17:06:41+08:00">2018-07-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:07" itemprop="dateModified" datetime="2023-08-22T12:01:07+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">编程开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/python/tips/" itemprop="url" rel="index"><span itemprop="name">tips</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="写在前面">1、写在前面</h1>
+<p>经典的生产者和消费者模型中，<span
+class="math inline">\(N\)</span>个线程根据要求生产出第一步处理结果，<span
+class="math inline">\(M\)</span>个消费者线程对上述结果进行第二步处理。生产者与消费者之间有明确的前后顺序关系。</p>
+
+<span id="more"></span>
+<p>关于生产者消费者问题，wikipedia是这么描述的：</p>
+<blockquote>
+<p>生产者消费者问题（英语：Producer-consumer
+problem），也称有限缓冲问题（英语：Bounded-buffer
+problem），是一个多线程同步问题的经典案例。该问题描述了共享固定大小缓冲区的两个线程——即所谓的“生产者”和“消费者”——在实际运行时会发生的问题。生产者的主要作用是生成一定量的数据放到缓冲区中，然后重复此过程。与此同时，消费者也在缓冲区消耗这些数据。该问题的关键就是要保证生产者不会在缓冲区满时加入数据，消费者也不会在缓冲区中空时消耗数据。</p>
+</blockquote>
+<p>解决方案，wikipedia也给出了一个解释:</p>
+<blockquote>
+<p>要解决该问题，就必须让生产者在缓冲区满时休眠（要么干脆就放弃数据），等到下次消费者消耗缓冲区中的数据的时候，生产者才能被唤醒，开始往缓冲区添加数据。同样，也可以让消费者在缓冲区空时进入休眠，等到生产者往缓冲区添加数据之后，再唤醒消费者。通常采用进程间通信的方法解决该问题，常用的方法有信号灯法等。如果解决方法不够完善，则容易出现死锁的情况。出现死锁时，两个线程都会陷入休眠，等待对方唤醒自己。</p>
+</blockquote>
+<h1 id="python中的生产者消费者模型">2、Python中的生产者消费者模型：</h1>
+<p>利用Python中<code>Queue</code>对象，可以很方便的解决生产者消费者问题。例如在程序中，创建两个<code>Queue</code>对象，前者是输入任务存放对象(<code>task_queue</code>)，后者是该任务完成后的结果存放对象(<code>out_queue</code>)。生产者首先从<code>task_queue</code>中取出任务（<code>Queue.get()</code>）,进行处理后，将处理结果存入<code>out_queue</code>，然后调用<code>Queue.task_done()</code>函数，表明处理完成。关于<code>Queue.task_done()</code>函数。官方文档给出说明如下：</p>
+<blockquote>
+<p>Queue.task_done()</p>
+<p>Indicate that a formerly enqueued task is complete. Used by queue
+consumer threads. For each get() used to fetch a task, a subsequent call
+to task_done() tells the queue that the processing on the task is
+complete.</p>
+<p>If a join() is currently blocking, it will resume when all items have
+been processed (meaning that a task_done() call was received for every
+item that had been put() into the queue).</p>
+<p>Raises a ValueError if called more times than there were items placed
+in the queue.</p>
+</blockquote>
+<p>翻译如下：</p>
+<blockquote>
+<p>Queue.task_done()</p>
+<p>表明之前队列中的任务已经完成。由Queue的消费线程使用。
+使用<code>get()</code>函数获取任务后，当调用<code>task_done()</code>函数时，表示当前所处理的任务已经完成。</p>
+<p>如果使用<code>join()</code>阻塞当前执行，那么当所有的任务处理完成后，阻塞会解除。（意味着对每个放进(<code>put()</code>)队列的项目处理后，会接收到1个<code>task_done()</code>通知).</p>
+<p>调用次数大于Queue中放入项目数量时，会发出<code>ValueError</code>异常</p>
+</blockquote>
+<p>简要理解：</p>
+<ol type="1">
+<li>每个<code>put()</code>进去的项目，使用<code>get()</code>获取，处理完成后，调用<code>task_done()</code>发送完成通知。</li>
+<li>如果<code>put()</code>时，缓冲的<code>Queue</code>队列已满，则该线程阻塞，等待缓冲<code>Queue</code>有空间，缓冲队列有空间之后，<code>put()</code>立即执行。</li>
+<li>如果使用<code>join()</code>阻塞了线程，那么所有任务完成后，接收到1个<code>task_done()</code>通知，阻塞解除，线程继续执行。</li>
+<li>每个<code>get()</code>的项目对应一个<code>task_done()</code>，调用<code>task_done()</code>的次数大于<code>get()</code>时，会发出<code>ValueError</code>异常。</li>
+</ol>
+<p>最后需要说明一点的是，<code>Queue</code>对象的两个成员函数，<code>put()</code>、<code>get()</code>，在目标队列已满(<code>put()</code>)或为空时(<code>get()</code>)均会阻塞线程，一旦条件满足能够放入或取出数据时，线程解除阻塞，继续向下执行。</p>
+<p>实际使用时，可以采用两种方案：</p>
+<ol type="1">
+<li>一个对象一个线程方式，每个对象管理自己的线程；</li>
+<li>一个对象管理多个线程的方式，</li>
+</ol>
+<p>上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一个对象一个线程方式</span></span><br><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Thread</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.DEBUG,<span class="built_in">format</span>=<span class="string">&#x27;[%(threadName)-9s] %(message)s&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n&lt;=<span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n-<span class="number">1</span>)+fib(n-<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Producer</span>(<span class="title class_ inherited__">Thread</span>):</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,task_queue, out_queue,name=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()        </span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.name = name</span><br><span class="line">        self.__task_q = task_queue</span><br><span class="line">        self.__rets_q = out_queue</span><br><span class="line">        <span class="comment"># 去掉下面依据注释，可以发现，该函数为主线程执行</span></span><br><span class="line">        <span class="comment"># logging.debug(&quot;(Producer.__init__)任务大小：&#123;&#125;&quot;.format(task_queue.qsize()))</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            logging.info(<span class="string">&#x27;P: 任务队列大小  &#123;&#125;，缓冲队列大小 &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(self.__task_q.qsize(),self.__rets_q.qsize()))</span><br><span class="line">            item = self.__task_q.get()</span><br><span class="line">            result = self.job(item)</span><br><span class="line">            logging.info(<span class="string">&quot;P: 值= &#123;&#125; , 结果= &#123;&#125; &quot;</span>.<span class="built_in">format</span>(item,result))</span><br><span class="line">            self.__rets_q.put(result)            </span><br><span class="line">            logging.info(<span class="string">&quot;P: -------------压入缓冲队列 &#123;&#125;--------------&quot;</span>.<span class="built_in">format</span>(item))</span><br><span class="line">            self.__task_q.task_done()</span><br><span class="line">            time.sleep(random.randint(<span class="number">1</span>,<span class="number">5</span>)/<span class="number">40</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">job</span>(<span class="params">self,data</span>):        </span><br><span class="line">        logging.debug(<span class="string">&quot;P开始处理数据(in job)： &#123;&#125;&quot;</span>.<span class="built_in">format</span>(data))</span><br><span class="line">        <span class="comment">#time.sleep(random.randint(1,5)/40)</span></span><br><span class="line">        d = data*<span class="number">3</span>        </span><br><span class="line">        logging.debug(<span class="string">&quot;P数据处理完成(in job)：&#123;&#125;*3=&#123;&#125; &quot;</span>.<span class="built_in">format</span>(data,d))</span><br><span class="line">        <span class="keyword">return</span> d</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Consumer</span>(<span class="title class_ inherited__">Thread</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,task_queue,name=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()        </span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.name = name</span><br><span class="line">        self.__tasks_q = task_queue</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            logging.info(<span class="string">&#x27;C: 任务队列大小  &#123;&#125; &#x27;</span>.<span class="built_in">format</span>(self.__tasks_q.qsize()))</span><br><span class="line">            item = self.__tasks_q.get()</span><br><span class="line">            logging.info(<span class="string">&#x27;C:-------------取出任务数据 &#123;&#125;(&#123;&#125;)--------------&#x27;</span>.<span class="built_in">format</span>(item,item//<span class="number">3</span>))</span><br><span class="line">            result = self.job(item)</span><br><span class="line">            logging.info(<span class="string">&quot;C: 值= &#123;&#125; , 结果= &#123;&#125; &quot;</span>.<span class="built_in">format</span>(item,result))</span><br><span class="line">            self.__tasks_q.task_done()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">job</span>(<span class="params">self,data</span>):</span><br><span class="line">        logging.debug(<span class="string">&quot;C开始处理数据(in job)： &#123;&#125;&quot;</span>.<span class="built_in">format</span>(data))</span><br><span class="line">        time.sleep(random.randint(<span class="number">1</span>,<span class="number">5</span>)/<span class="number">40</span>)</span><br><span class="line">        d = fib(data)</span><br><span class="line">        logging.debug(<span class="string">&quot;C数据处理完成(in job)： --------------(&#123;&#125;)fib(&#123;&#125;)=&#123;&#125;----------&quot;</span>.<span class="built_in">format</span>(data//<span class="number">3</span>,data,d))</span><br><span class="line">        <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># N 生产者数量</span></span><br><span class="line">    <span class="comment"># M 消费者数量</span></span><br><span class="line">    N = <span class="number">3</span></span><br><span class="line">    M = <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 任务队列</span></span><br><span class="line">    task_queue = Queue()</span><br><span class="line">    <span class="comment"># 处理后任务队列</span></span><br><span class="line">    ret_queue = Queue()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 初始化任务队列</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">        task_queue.put(i)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建N个生产者（每个生产者1个线程）</span></span><br><span class="line">    producers = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        p = Producer(task_queue=task_queue, out_queue=ret_queue, name=<span class="string">&#x27; 生产者&#123;:02d&#125;&#x27;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>))</span><br><span class="line">        producers.append(p)</span><br><span class="line">        p.start()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 创建M个消费者（每个消费者1个线程）</span></span><br><span class="line">    consumers = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(M):</span><br><span class="line">        c = Consumer(task_queue=ret_queue, name=<span class="string">&#x27; 消费者&#123;:02d&#125;&#x27;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>))</span><br><span class="line">        consumers.append(c)</span><br><span class="line">        c.start()</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 阻塞线程，等待任务完成</span></span><br><span class="line">    task_queue.join()</span><br><span class="line">    ret_queue.join()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 当任务完成后，主线程退出，子线程也随之退出</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    logging.debug(<span class="string">&quot;开始运行.......&quot;</span>)</span><br><span class="line">    main()</span><br><span class="line">    logging.debug(<span class="string">&#x27;运行完成.....&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>例程2： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一个对象多个线程方式</span></span><br><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> Thread</span><br><span class="line"><span class="keyword">from</span> queue <span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line">logging.basicConfig(level=logging.DEBUG,<span class="built_in">format</span>=<span class="string">&#x27;(%(threadName)-9s) %(message)s&#x27;</span>,)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n&lt;=<span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> fib(n-<span class="number">1</span>)+fib(n-<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Producer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, task_queue, out_queue, threadCount=<span class="number">3</span></span>):</span><br><span class="line">        self.__task_queue = task_queue</span><br><span class="line">        self.__out_queue = out_queue        </span><br><span class="line">        self.__thrdCount = threadCount</span><br><span class="line">        self.__threads = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(threadCount):</span><br><span class="line">            p = Thread(name=<span class="string">&quot;生产者&#123;:02d&#125;&quot;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>),target=self.thread_worker)</span><br><span class="line">            p.setDaemon(<span class="literal">True</span>)            </span><br><span class="line">            self.__threads.append(p)</span><br><span class="line">            p.start()        </span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">thread_worker</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            logging.info(<span class="string">&#x27;P: 任务队列大小  &#123;&#125;，缓冲队列大小 &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(self.__task_queue.qsize(),self.__out_queue.qsize()))</span><br><span class="line">            <span class="comment">#if not self.__out_queue.full():</span></span><br><span class="line">            item = self.__task_queue.get()</span><br><span class="line">            result = self.job(item)</span><br><span class="line">            logging.info(<span class="string">&quot;P: 值= &#123;&#125; , 结果= &#123;&#125; &quot;</span>.<span class="built_in">format</span>(item,result))</span><br><span class="line">            self.__out_queue.put(result)            </span><br><span class="line">            logging.info(<span class="string">&quot;P: -------------压入缓冲队列 &#123;&#125;--------------&quot;</span>.<span class="built_in">format</span>(item))</span><br><span class="line">            self.__task_queue.task_done()</span><br><span class="line">            <span class="comment">#else:</span></span><br><span class="line">            <span class="comment">#    logging.info(&#x27;P: ---缓冲队列已满，等待中zzzZZZ...&#x27;)</span></span><br><span class="line">            time.sleep(random.randint(<span class="number">1</span>,<span class="number">5</span>)/<span class="number">40</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">job</span>(<span class="params">self,data</span>):</span><br><span class="line">        logging.debug(<span class="string">&quot;P开始处理数据(in job)： &#123;&#125;&quot;</span>.<span class="built_in">format</span>(data))</span><br><span class="line">        <span class="comment">#time.sleep(random.randint(1,5)/40)</span></span><br><span class="line">        d = data*<span class="number">3</span>        </span><br><span class="line">        logging.debug(<span class="string">&quot;P数据处理完成(in job)：&#123;&#125;*3=&#123;&#125; &quot;</span>.<span class="built_in">format</span>(data,d))</span><br><span class="line">        <span class="keyword">return</span> d</span><br><span class="line">                </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Consumer</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, task_queue, threadCount=<span class="number">4</span></span>):</span><br><span class="line">        self.__task_queue= task_queue</span><br><span class="line">        self.__thrdCount = threadCount</span><br><span class="line">        self.__threads = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(threadCount):</span><br><span class="line">            c = Thread(name=<span class="string">&quot;消费者&#123;:02d&#125;&quot;</span>.<span class="built_in">format</span>(i+<span class="number">1</span>),target=self.thread_worker)</span><br><span class="line">            c.setDaemon(<span class="literal">True</span>)            </span><br><span class="line">            self.__threads.append(c)</span><br><span class="line">            c.start()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">thread_worker</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            logging.info(<span class="string">&#x27;C: 任务队列大小  &#123;&#125; &#x27;</span>.<span class="built_in">format</span>(self.__task_queue.qsize()))</span><br><span class="line">            item = self.__task_queue.get()</span><br><span class="line">            logging.info(<span class="string">&#x27;C:-------------取出任务数据 &#123;&#125;(&#123;&#125;)--------------&#x27;</span>.<span class="built_in">format</span>(item,item//<span class="number">3</span>))</span><br><span class="line">            result = self.job(item)</span><br><span class="line">            logging.info(<span class="string">&quot;C: 值= &#123;&#125; , 结果= &#123;&#125; &quot;</span>.<span class="built_in">format</span>(item,result))</span><br><span class="line">            self.__task_queue.task_done()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">job</span>(<span class="params">self,data</span>):</span><br><span class="line">        logging.debug(<span class="string">&quot;C开始处理数据(in job)： &#123;&#125;&quot;</span>.<span class="built_in">format</span>(data))</span><br><span class="line">        time.sleep(random.randint(<span class="number">1</span>,<span class="number">5</span>)/<span class="number">40</span>)</span><br><span class="line">        d = fib(data)</span><br><span class="line">        logging.debug(<span class="string">&quot;C数据处理完成(in job)： --------------(&#123;&#125;)fib(&#123;&#125;)=&#123;&#125;----------&quot;</span>.<span class="built_in">format</span>(data//<span class="number">3</span>,data,d))</span><br><span class="line">        <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    logging.info(<span class="string">&quot;任务开始.........&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    BUFFER_SIZE=<span class="number">2</span></span><br><span class="line">    tasks_queue = Queue()</span><br><span class="line">    ret_queue = Queue(maxsize=BUFFER_SIZE)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">5</span>):</span><br><span class="line">        tasks_queue.put(i)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    p = Producer(task_queue=tasks_queue,out_queue=ret_queue,threadCount=<span class="number">3</span>)</span><br><span class="line">    c = Consumer(task_queue=ret_queue,threadCount=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    tasks_queue.join()</span><br><span class="line">    ret_queue.join()</span><br><span class="line">    </span><br><span class="line">    logging.info(<span class="string">&quot;任务完成！&quot;</span>)</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/" title="Python多线程之生产者消费者">https://njuferret.github.io/2018/07/20/python_multithread_producer_consumer/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"><i class="fa fa-tag"></i> 多线程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/07/08/texlive_config/" rel="prev" title="TexLive的配置和使用">
+                  <i class="fa fa-angle-left"></i> TexLive的配置和使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/07/31/python_logging/" rel="next" title="Python之logging日志">
+                  Python之logging日志 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

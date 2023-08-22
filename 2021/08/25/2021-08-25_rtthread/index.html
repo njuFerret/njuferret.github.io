@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="RTOS在嵌入式开发大行其道，RT-Thread有很丰富的外设驱动，遂折腾以下RT-Thread(本文的RT-Thread均指RT-Thread Nano)。  环境： Win10x64, STM32CubeIDE v1.7.0 开发板： DevEBox STM32F407VE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32之RT Thread">
+<meta property="og:url" content="https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="RTOS在嵌入式开发大行其道，RT-Thread有很丰富的外设驱动，遂折腾以下RT-Thread(本文的RT-Thread均指RT-Thread Nano)。  环境： Win10x64, STM32CubeIDE v1.7.0 开发板： DevEBox STM32F407VE">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-25T06:46:32.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.699Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="stm32">
+<meta property="article:tag" content="rt-thread">
+<meta property="article:tag" content="STM32CubeIDE">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/","path":"2021/08/25/2021-08-25_rtthread/","title":"STM32之RT Thread"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>STM32之RT Thread | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#stm32f407ve%E5%BC%80%E5%8F%91%E6%9D%BF%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0"><span class="nav-text">1、STM32F407VE开发板基本参数。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#specifications"><span class="nav-text">(1) Specifications</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exposed-port-pins"><span class="nav-text">(2) Exposed Port Pins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#peripherals"><span class="nav-text">(3) Peripherals</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tftoled-j4"><span class="nav-text">TFT&#x2F;OLED (J4)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spi-flash-w25q16-u3"><span class="nav-text">SPI Flash W25Q16 (U3)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#swd-debug-j1"><span class="nav-text">SWD debug (J1)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#usb-j5"><span class="nav-text">USB (J5)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#micro-sd-u5"><span class="nav-text">Micro SD (U5)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#user-button-k1"><span class="nav-text">User Button (K1)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#user-led-d2"><span class="nav-text">User LED (D2)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#battery-b1"><span class="nav-text">Battery (B1)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E5%88%9B%E5%BB%BA%E4%B8%8E%E4%BF%AE%E6%94%B9"><span class="nav-text">2、工程创建与修改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%B9%B6%E5%9C%A8%E5%B7%A5%E7%A8%8B%E4%B8%AD%E5%AF%BC%E5%85%A5rt-thread-nano%E5%8C%85"><span class="nav-text">(1)
+安装并在工程中导入RT-Thread Nano包，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cubeide%E4%B8%AD%E9%85%8D%E7%BD%AErt-thread-nano%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="nav-text">(2)
+CubeIde中配置RT-Thread Nano需要注意的几个问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="STM32之RT Thread | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STM32之RT Thread
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-08-25 14:46:32" itemprop="dateCreated datePublished" datetime="2021-08-25T14:46:32+08:00">2021-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">编程开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">开发工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><code>RTOS</code>在嵌入式开发大行其道，<code>RT-Thread</code>有很丰富的外设驱动，遂折腾以下<code>RT-Thread</code>(本文的<code>RT-Thread</code>均指<code>RT-Thread Nano</code>)。</p>
+<ul>
+<li>环境： <code>Win10x64, STM32CubeIDE v1.7.0</code></li>
+<li>开发板： <code>DevEBox STM32F407VE</code></li>
+</ul>
+<span id="more"></span>
+<h2
+id="stm32f407ve开发板基本参数">1、<code>STM32F407VE</code>开发板基本参数。</h2>
+<h3 id="specifications">(1) Specifications</h3>
+<ul>
+<li>STM32F407VET6 ARM Cortex M4</li>
+<li>168MHz, 210 DMIPS / 1.25 DMIPS / MHz</li>
+<li>1.8V - 3.6V operating voltage</li>
+<li>8MHz system crystal</li>
+<li>32.768KHz RTC crystal</li>
+<li>2.54mm pitch pins</li>
+<li>SWD header</li>
+<li>512 KByte Flash, 192 + 4 KByte SRAM</li>
+<li>3x SPI, 3x USART, 2x UART, 2x I2S, 3x I2C</li>
+<li>1x FSMC, 1x SDIO, 2x CAN</li>
+<li>1x USB 2.0 FS / HS controller (with dedicated DMA)</li>
+<li>1x USB HS ULPI (for external USB HS PHY)</li>
+<li>Micro SD</li>
+<li>Winbond W25Q16 16Mbit SPI Flash</li>
+<li>1x 10/100 Ethernet MAC</li>
+<li>1x 8 to 12-bit Parallel Camera interface</li>
+<li>3x ADC (12-bit / 16-channel)</li>
+<li>2x DAC (12-bit)</li>
+<li>12x general timers, 2x advanced timers</li>
+<li>AMS1117-3.3V: 3.3V LDO voltage regulator, max current 800mA</li>
+<li>Micro USB for power and comms</li>
+<li>Power LED D1</li>
+<li>User LED D2 (PA1) active low</li>
+<li>Reset button, 1x user buttons K0</li>
+<li>2x22 side header</li>
+<li>SPI TFT/OLED header (3V3, GND, MOSI, SCK, CS, MISO, RST, BL)</li>
+<li>RTC battery header B1 beside SD card</li>
+<li>M3 mounting holes</li>
+<li>Dimensions: 40.89mm x 68.59mm</li>
+</ul>
+<h3 id="exposed-port-pins">(2) Exposed Port Pins</h3>
+<ul>
+<li>PA0-PA15</li>
+<li>PB0-PB3, PB5-PB15 (PB4 SPI1_MISO used exclusively with SPI
+Flash)</li>
+<li>PC0-PC13 (PC14 OSC32_IN and PC15 OSC32_OUT not broken out)</li>
+<li>PD0-PD15</li>
+<li>PE0-PE15</li>
+</ul>
+<h3 id="peripherals">(3) Peripherals</h3>
+<h4 id="tftoled-j4">TFT/OLED (J4)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">3V3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">PB12</td>
+<td style="text-align: center;">CS</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">PB14</td>
+<td style="text-align: center;">MISO</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">PB15</td>
+<td style="text-align: center;">MOSI</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">PC5</td>
+<td style="text-align: center;">RS</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">PB13</td>
+<td style="text-align: center;">SCK</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">PB1</td>
+<td style="text-align: center;">BLK</td>
+</tr>
+</tbody>
+</table>
+<h4 id="spi-flash-w25q16-u3">SPI Flash W25Q16 (U3)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PA15</td>
+<td style="text-align: center;">F_CS</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">PB5</td>
+<td style="text-align: center;">SPI1_MOSI</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">PB4</td>
+<td style="text-align: center;">SPI1_MISO</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">PB3</td>
+<td style="text-align: center;">SPI1_SCK</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">WP</td>
+<td style="text-align: center;">3V3</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">HOLD</td>
+<td style="text-align: center;">3V3</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">VCC</td>
+<td style="text-align: center;">3V3</td>
+</tr>
+</tbody>
+</table>
+<h4 id="swd-debug-j1">SWD debug (J1)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Boot0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">PA13</td>
+<td style="text-align: center;">SWDIO</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">3V3</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">PA14</td>
+<td style="text-align: center;">SWCLK</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="usb-j5">USB (J5)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">VCC</td>
+<td style="text-align: center;">5V</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">NC</td>
+<td style="text-align: center;">ID</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">PA11</td>
+<td style="text-align: center;">USB_DM</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">PA12</td>
+<td style="text-align: center;">USB_DP</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="micro-sd-u5">Micro SD (U5)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PC10</td>
+<td style="text-align: center;">SDIO_D2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">PC11</td>
+<td style="text-align: center;">SDIO_D3</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">PC8</td>
+<td style="text-align: center;">SDIO_D0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">PD2</td>
+<td style="text-align: center;">SDIO_CMD</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">PC9</td>
+<td style="text-align: center;">SDIO_D1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">3V3</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">NC</td>
+<td style="text-align: center;">SD_NC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">PC12</td>
+<td style="text-align: center;">SDIO_SCK</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="user-button-k1">User Button (K1)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PA0</td>
+<td style="text-align: center;">WK_UP</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="user-led-d2">User LED (D2)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">PA1</td>
+<td style="text-align: center;">User LED</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="battery-b1">Battery (B1)</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+<th style="text-align: center;">index</th>
+<th style="text-align: center;">Pin</th>
+<th style="text-align: center;">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">BAT54C</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">GND</td>
+</tr>
+</tbody>
+</table>
+<h2 id="工程创建与修改">2、工程创建与修改</h2>
+<p>使用<code>STM32CubeIDE</code>(以下简称<code>CubeIde</code>)创建工程的过程非常程序化，选芯片-&gt;配置外设-&gt;配置时钟-&gt;配置所用的库，具体过程网上很多，此处略过。以下核心记录<code>RT-Thread</code>的使用方法。</p>
+<h3 id="安装并在工程中导入rt-thread-nano包">(1)
+安装并在工程中导入<code>RT-Thread Nano</code>包，</h3>
+<p>基本过程请参考<a
+target="_blank" rel="noopener" href="https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-nano/nano-port-cube/an0041-nano-port-cube">RT-Thread
+文档</a>。重点是在<code>CubeIde</code>中通过连接<code>https://www.rt-thread.org/download/cube/RealThread.RT-Thread.pdsc</code>安装，并在工程中配置。</p>
+<h3 id="cubeide中配置rt-thread-nano需要注意的几个问题">(2)
+<code>CubeIde</code>中配置<code>RT-Thread Nano</code>需要注意的几个问题</h3>
+<ol type="1">
+<li>如文档所述，
+<code>RT-Thread</code>重定义<code>HardFault_Handler</code>、<code>PendSV_Handler</code>、<code>SysTick_Handler</code>
+中断函数，为了避免重复定义的问题，需要在<code>NVIC-&gt;Code generate</code>中禁止生成<code>Hard fault interrupt</code>,
+<code>Pendable request</code>,
+<code>Time base :System tick timer</code>三个函数。实际操作中，如果选择了定时器作为时基，那么只需要禁止生成<code>Hard fault interrupt</code>即可。</li>
+<li>启用<code>RT_USING_HEAP</code>、<code>RT_USING_DEVICE</code>和<code>finsh</code>。前两个直接在<code>CubeIde</code>点选即可，最后一个需要打开<code>rtconfig.h</code>编辑。</li>
+</ol>
+<blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;h&gt;Enable FinSH Configuration</span></span><br><span class="line"><span class="comment">// &lt;c1&gt;include shell config</span></span><br><span class="line"><span class="comment">//  &lt;i&gt; Select this choice if you using FinSH</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;finsh_config.h&quot;</span></span></span><br><span class="line"><span class="comment">// &lt;/c&gt;</span></span><br><span class="line"><span class="comment">// &lt;/h&gt;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<ol start="3" type="1">
+<li>编译器参数修改，<code>Project-&gt;properties-&gt;C/C++ Build-&gt;Settings-&gt;Tool Settings</code>，在<code>MCU GCC Assembler-&gt;Miscellaneous</code>添加<code>-Wa,-mimplicit-it=thumb</code>。<code>MCU GCC Compiler-&gt;Include paths</code>添加相应的头文件(如果没有，貌似<code>nano 3.1.5</code>已经自动添加了<code>5</code>个相关头文件路径)</li>
+<li>修改启动文件<code>Core/Startup/startup_stm32f407vetx.s</code>，第<code>100</code>行<code>bl main =&gt; bl entry</code>。（注第<code>98</code>行<code>bl __libc_init_array</code>在<code>RT-Thread Studio</code>自带的代码中，是注释的，不过此处保留后，尚未遇到问题）</li>
+<li>修改<code>STM32F407VETX_FLASH.ld</code>文件，开启自动初始化，并使<code>finsh</code>正常工作。
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  . = ALIGN(4);</span><br><span class="line">  _etext = .;        /* define a global symbols at end of code */</span><br><span class="line">  /**************添加以下内容*************/</span><br><span class="line">  /* section information for finsh shell */</span><br><span class="line">   . = ALIGN(4);</span><br><span class="line">   __fsymtab_start = .;</span><br><span class="line">   KEEP(*(FSymTab))</span><br><span class="line">   __fsymtab_end = .;</span><br><span class="line">   . = ALIGN(4);</span><br><span class="line">   __vsymtab_start = .;</span><br><span class="line">   KEEP(*(VSymTab))</span><br><span class="line">   __vsymtab_end = .;</span><br><span class="line">   . = ALIGN(4);</span><br><span class="line">   </span><br><span class="line">   /* section information for initial. */</span><br><span class="line">   . = ALIGN(4);</span><br><span class="line">   __rt_init_start = .;</span><br><span class="line">   KEEP(*(SORT(.rti_fn*)))</span><br><span class="line">   __rt_init_end = .;</span><br><span class="line">   . = ALIGN(4);</span><br><span class="line">  /**************添加内容结束*************/     </span><br><span class="line">&#125; &gt;FLASH</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="参考">参考</h2>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-nano/nano-port-cube/an0041-nano-port-cube">RT-Thread
+Nano 文档</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/lzs2327/article/details/113825154">STM32CubeIDE
+使用RTThread-Nano无法自动初始化</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/" title="STM32之RT Thread">https://njuferret.github.io/2021/08/25/2021-08-25_rtthread/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/stm32/" rel="tag"><i class="fa fa-tag"></i> stm32</a>
+              <a href="/tags/rt-thread/" rel="tag"><i class="fa fa-tag"></i> rt-thread</a>
+              <a href="/tags/STM32CubeIDE/" rel="tag"><i class="fa fa-tag"></i> STM32CubeIDE</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/07/28/2021-07-28_micropython/" rel="prev" title="STM32之MicroPython">
+                  <i class="fa fa-angle-left"></i> STM32之MicroPython
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/08/12/2022-08-12_keilmdk/" rel="next" title="STM32之Keil v5 MDK">
+                  STM32之Keil v5 MDK <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

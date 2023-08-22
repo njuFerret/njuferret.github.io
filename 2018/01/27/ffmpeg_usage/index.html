@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="以前进行视频转换，用这个那个工具，最后发现神器FFmpeg太强大了。FFmpeg参数众多，以下记录ffmpeg的一些用法。 1.FFmpeg简介 以下内容来自维基百科 &gt; FFmpeg是一个自由软件，可以运行音频和视频多种格式的录影、转换、流功能，包含了libavcodec——这是一个用于多个项目中音频和视频的解码器库，以及libavformat——一个音频与视频格式转换库。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神器FFmpeg的使用">
+<meta property="og:url" content="https://njuferret.github.io/2018/01/27/ffmpeg_usage/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="以前进行视频转换，用这个那个工具，最后发现神器FFmpeg太强大了。FFmpeg参数众多，以下记录ffmpeg的一些用法。 1.FFmpeg简介 以下内容来自维基百科 &gt; FFmpeg是一个自由软件，可以运行音频和视频多种格式的录影、转换、流功能，包含了libavcodec——这是一个用于多个项目中音频和视频的解码器库，以及libavformat——一个音频与视频格式转换库。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-27T02:19:02.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.742Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="ffmpeg">
+<meta property="article:tag" content="视频">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2018/01/27/ffmpeg_usage/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2018/01/27/ffmpeg_usage/","path":"2018/01/27/ffmpeg_usage/","title":"神器FFmpeg的使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>神器FFmpeg的使用 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg%E7%AE%80%E4%BB%8B"><span class="nav-text">1.FFmpeg简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%BB%84%E6%88%90"><span class="nav-text">2. FFmpeg命令行工具组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg%E7%9A%84%E4%B8%8B%E8%BD%BD"><span class="nav-text">3. FFmpeg的下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-text">4. FFmpeg命令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-text">5. 主要参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%8F%82%E6%95%B0"><span class="nav-text">6. 视频参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9F%B3%E9%A2%91%E5%8F%82%E6%95%B0"><span class="nav-text">7. 音频参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%B9%95%E5%8F%82%E6%95%B0"><span class="nav-text">8. 字幕参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8F%82%E6%95%B0"><span class="nav-text">9. 其他参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg-%E5%AE%9E%E7%94%A8%E4%BE%8B%E5%AD%90"><span class="nav-text">10.FFmpeg 实用例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E5%B9%B6%E8%A7%86%E9%A2%91"><span class="nav-text">10.1 合并视频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%89%B2%E8%A7%86%E9%A2%91"><span class="nav-text">10.2 分割视频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2"><span class="nav-text">10.3 批量格式转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%9B%BE%E6%B0%B4%E5%8D%B0"><span class="nav-text">10.4 静态图水印</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gif%E6%B0%B4%E5%8D%B0"><span class="nav-text">10.5 GIF水印</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E6%8C%82%E5%AD%97%E5%B9%95"><span class="nav-text">10.6 外挂字幕</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%B5%8C%E5%AD%97%E5%B9%95"><span class="nav-text">10.7 内嵌字幕</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E5%A4%9A%E4%B8%AA%E5%9B%BE%E7%89%87%E5%88%B6%E4%BD%9C%E4%B8%BA%E8%A7%86%E9%A2%91"><span class="nav-text">10.8 将多个图片制作为视频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%AA%E5%8F%96%E8%A7%86%E9%A2%91%E7%89%87%E6%AE%B5"><span class="nav-text">10.9 截取视频片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDm3u8%E8%A7%86%E9%A2%91%E6%B5%81"><span class="nav-text">10.10 下载m3u8视频流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95windows-%E7%9A%84-fonts.conf"><span class="nav-text">11. 附录：Windows 的 fonts.conf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2018/01/27/ffmpeg_usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="神器FFmpeg的使用 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          神器FFmpeg的使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-27 10:19:02" itemprop="dateCreated datePublished" datetime="2018-01-27T10:19:02+08:00">2018-01-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>以前进行视频转换，用这个那个工具，最后发现神器<code>FFmpeg</code>太强大了。<code>FFmpeg</code>参数众多，以下记录<code>ffmpeg</code>的一些用法。</p>
+<h2 id="ffmpeg简介">1.FFmpeg简介</h2>
+<p>以下内容来自<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/FFmpeg">维基百科</a> &gt;
+FFmpeg是一个自由软件，可以运行音频和视频多种格式的录影、转换、流功能，包含了libavcodec——这是一个用于多个项目中音频和视频的解码器库，以及libavformat——一个音频与视频格式转换库。</p>
+<span id="more"></span>
+<h2 id="ffmpeg命令行工具组成">2. FFmpeg命令行工具组成</h2>
+<p>FFmpeg命令行工具包含以下三个基本工具： 1)
+<code>ffmpeg</code>：视频文件转换命令行工具，支持经过实时电视卡抓取和编码成视频文件；
+2)
+<code>ffserver</code>：基于HTTP、RTSP用于实时广播的多媒体服务器。也支持时间平移；
+3) <code>ffplay</code>：用 SDL和FFmpeg库开发的一个简单的媒体播放器；</p>
+<h2 id="ffmpeg的下载">3. FFmpeg的下载</h2>
+<p>FFmpeg的下载地址：<a
+target="_blank" rel="noopener" href="https://ffmpeg.zeranoe.com/builds/">FFmpeg下载</a>
+，一般下载static版本，解压后设置环境变量即可使用。</p>
+<h2 id="ffmpeg命令格式">4. FFmpeg命令格式</h2>
+<p>FFmpeg工具的基本格式为： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg [global_options] [[infile options] -i infile]... &#123;[outfile options] outfile&#125;...</span><br></pre></td></tr></table></figure> 其中，<code>-i</code>
+参数表示输入参数；之后的参数是输出参数。</p>
+<p>ffmpeg
+的一般工作流，是从源文件开始，依次经过分流器、解码器、编码器、混流器，最后完成输出文件。下图是官网给出的示意：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> _______              ______________</span><br><span class="line">|       |            |              |</span><br><span class="line">| input |  demuxer   | encoded data |   decoder</span><br><span class="line">| file  | ---------&gt; | packets      | -----+</span><br><span class="line">|_______|            |______________|      |</span><br><span class="line">                                           v</span><br><span class="line">                                       _________</span><br><span class="line">                                      |         |</span><br><span class="line">                                      | decoded |</span><br><span class="line">                                      | frames  |</span><br><span class="line">                                      |_________|</span><br><span class="line"> ________             ______________       |</span><br><span class="line">|        |           |              |      |</span><br><span class="line">| output | &lt;-------- | encoded data | &lt;----+</span><br><span class="line">| file   |   muxer   | packets      |   encoder</span><br><span class="line">|________|           |______________|</span><br></pre></td></tr></table></figure></p>
+<p>一些基本的概念： -
+流（stream）：视频文件中，一般具有视频流与音频流，有的具有字幕流。它们需要不同的解码/编码器。想要混合/分离视频与音频，就需要混流/分流器。
+-
+流复制（stream）：如果某种数据流的内容不需要任何改动，那么可以直接跳过该数据流的解码与编码步骤。分离出该数据流后，直接等待参与混流即可。</p>
+<p>ffmpeg
+在有多个流的情况下，不会全部保留；默认只会选择同类流中<strong>质量最佳的</strong>。如果质量同样，那么选择索引号靠前的流。你可以选择手动控制流的选择，这需要额外的参数，我们下文介绍。</p>
+<h2 id="主要参数">5. 主要参数</h2>
+<p>下表中： 1. 以 <code>&lt;&gt;</code> 包裹的表示由用户具体指定；以
+<code>[]</code> 包裹的表示是可选参数，可以指定也可以省略。 2. 括号内的
+<code>i</code> 表示该参数用于输入流，<code>o</code>
+表示用于输出流，<code>i/o</code> 表示均可，<code>global</code>
+表示全局参数。 3. 关键字 <code>duration</code>, <code>position</code> 或
+<code>offset</code> 满足：<code>[-][HH:]MM:SS[.m...]</code>
+这种时间戳格式。或者以秒为单位的 <code>SS[.m...]</code> 格式。</p>
+<p>常用的如下： - <code>-b[:stream_specifier] (o)</code>：输出比特率。 -
+<code>-f &lt;fmt&gt; (i/o)</code>：指定 <code>fmt</code>
+作为输入或输出的视频格式。一般会根据文件扩展名自动选择，但有时需要手动指定。<br />
+- <code>-i &lt;filename&gt; (i)</code>：指定 <code>filename</code>
+作为源文件。<br />
+- <code>-y (global)</code>：文件存在时直接覆盖。<br />
+- <code>-n (global)</code>：文件存在时不覆盖并立即退出。<br />
+-
+<code>-bsf[:stream_specifier] &lt;bitstream_filters&gt; (o)</code>：设置比特流滤镜。<code>bitstream_filters</code>
+是一个逗号分隔的滤镜列表。 -
+<code>-stream_loop &lt;num&gt; (i)</code>：指定输入流的循环次数。0
+表示不循环，-1 表示无限循环。<br />
+-
+<code>-c[:stream_specifier] &lt;codec&gt; (i/o)</code>：<code>-c</code>可写为<code>-codec</code>。选择一个
+<code>codec</code> ，即编码器（输出时）或一个解码器（输入时），参与到
+<code>stream_specifier</code>
+指定的一个或多个流的编码/解码中。在输出时，<code>&lt;codec&gt;</code>
+可以被指定为 <code>copy</code>，表示复制数据流。<br />
+- <code>-t &lt;duration&gt; (i/o)</code>：（在参数 <code>-i</code>
+之前指定）工作持续 <code>duration</code>
+时长。一般用于指定剪辑数据流的范围。 它与 <code>-to</code>
+参数相互冲突，但本参数优先。<br />
+- <code>-to &lt;position&gt; (o)</code>：到 <code>position</code>
+位置后，终止输出。与 <code>-t</code> 参数冲突，本参数优先级低。 -
+<code>-fs &lt;limit_size&gt; (o)</code>：输出文件大小达到
+<code>limit_size</code> 后停止输出，单位是 byte.<br />
+- <code>-ss &lt;position&gt; (i/o)</code>：（在参数 <code>-i</code>
+之前指定）从 <code>position</code>
+指定的位置开始工作。<em>注意：大多数情形下，工作起始位置是不精确的。ffmpeg会找到其前部的一个点作为真正的起始，并在结束工作后将该点与用户指定点之间的内容抛弃。然而，如果你使用了
+copy 参数，这部分内容却会被保留。</em><br />
+- <code>-sseof &lt;position&gt; (i/o)</code>：类似 <code>-ss</code>
+参数，只不过是从数据流末端向前寻找 <code>position</code>。此时 0
+表示数据流末。<br />
+- <code>-itsoffset &lt;offset&gt; (i)</code>：指定输入流以原时间戳加上
+<code>offset</code> 作为其输入时间戳。<br />
+-
+<code>-metadata[:metadata_specifier] key=value (o)</code>：以键值对的形式设置元数据。<br />
+- <code>-frames[:stream_specifier] &lt;num&gt; (o)</code>：在输出
+<code>num</code> 帧后停止写入。 -
+<code>-qscale[:stream_specifier] q (o)</code>：使用固定质量(VBR)。<br />
+- <code>stats (global)</code>：输出编码过程，是系统默认值。可以使用
+<code>-nostats</code> 关闭。<br />
+- <code>-attach &lt;filename&gt; (o)</code>：将 <code>filename</code>
+文件附加到输出文件。附件流作为文件的最后一个流，只有很少的文件类型被支持（例如字体）。</p>
+<h2 id="视频参数">6. 视频参数</h2>
+<ul>
+<li><code>-vframes &lt;num&gt;</code>：文件的总帧数。<code>-frames:v</code>
+的别名。</li>
+<li><code>-r[:steam_specifier] &lt;fps&gt; (i/o)</code>：文件的帧率。</li>
+<li><code>-s[:steam_specifier] &lt;size&gt; (i/o)</code>：帧尺寸。参数
+<code>size</code> 需要满足格式
+<code>&lt;width&gt;x&lt;height&gt;</code>，例如<code>320x240</code>。
+-<code>aspect[:steam_specifier] &lt;asp&gt; (o)</code>：宽高比，例如
+<code>4:3</code>。如果使用了
+<code>-vcodec copy</code>，那么指定容器的宽高比而不是视频的。</li>
+<li><code>-vn (o)</code>：禁止输出视频。</li>
+<li><code>-vcodec &lt;codec&gt; (o)</code>：设置视频编码器。<code>-codec:v</code>
+的别名。</li>
+<li><code>-pass[:stream_specifier] &lt;n&gt;</code>：选择当前编码数（1或者2），常用于二次编码的情况。在第一次编码中，音频输出往往被设置为
+NULL，对于 Windows 与 Unix 系统分别是： <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i foo.mov -c:v libxvid -pass <span class="number">1</span> -an -f rawvideo -y <span class="built_in">NUL</span></span><br><span class="line">ffmpeg -i foo.mov -c:v libxvid -pass <span class="number">1</span> -an -f rawvideo -y /dev/null</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="音频参数">7. 音频参数</h2>
+<ul>
+<li><code>-aframes &lt;num&gt; (o)</code>：文件的总帧数。<code>-frames:a</code>
+的别名。</li>
+<li><code>-ar[:stream_specifier] &lt;freq&gt; (i/o)</code>：采样率。默认输出等于输入。仅当输入文件为真实设备或者
+raw 数据时，该参数才能用于输入过程。</li>
+<li><code>-aq &lt;q&gt; (o)</code>：音频品质（VBR）。 <code>-q:a</code>
+的别名。</li>
+<li><code>-ac[:stream_specifier] &lt;channel&gt; (i/o)</code>：设置音频通道数。默认输出等于输入。仅当输入文件为真实设备或者
+raw 数据时，该参数才能用于输入过程。</li>
+<li><code>-an (o)</code>：禁止输出音频。</li>
+<li><code>-acode &lt;codec&gt; (i/o)</code>：设置音频的解码器或编码器。<code>-codec:a</code>
+的别名。</li>
+</ul>
+<h2 id="字幕参数">8. 字幕参数</h2>
+<ul>
+<li><code>-scodec &lt;codec&gt; (i/o)</code>：字幕解码器或编码器。<code>codec:s</code>
+的别名。</li>
+<li><code>-sn (o)</code>：禁止输出字幕。</li>
+<li><code>canvas_size &lt;size&gt;</code>：设置字幕渲染区域的尺寸。</li>
+</ul>
+<h2 id="其他参数">9. 其他参数</h2>
+<p>以下直接在 <code>ffmpeg</code>
+后使用，例如：<code>ffmpeg -version</code>。</p>
+<ul>
+<li><code>-bsfs</code>：可用的比特流滤镜。</li>
+<li><code>-h [arg]</code>：帮助。arg 的内容可以是：
+<ul>
+<li><code>decoders</code>：可用的解码器。或特指：<code>decoder=&lt;name&gt;</code>。</li>
+<li><code>encoders</code>：可用的编码器。或特指：<code>encoder=&lt;name&gt;</code>。</li>
+<li><code>filters</code>：所有滤镜。或特指：<code>filter=&lt;name&gt;</code>。</li>
+<li><code>formats</code>：可用的分流器与混流器。或特指分流器：<code>demuxer=&lt;name&gt;</code>，或特指混流器：<code>muxer=&lt;name&gt;</code>。</li>
+</ul></li>
+<li><code>-protocols</code>：支持的协议。</li>
+<li><code>-version</code>：版本信息。</li>
+</ul>
+<h2 id="ffmpeg-实用例子">10.FFmpeg 实用例子</h2>
+<h3 id="合并视频">10.1 合并视频</h3>
+<p>参考：<a target="_blank" rel="noopener" href="https://trac.ffmpeg.org/wiki/Concatenate">FFmpeg Wiki
+- Concatenate</a></p>
+<p>第一种方案：将这几个视频放在一个新文件夹内，Shift 右键运行
+cmd，输入（<em>注意：如果要保存为批处理文件，请循环变量的双写百分号。</em>）：
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">for</span> %i <span class="keyword">in</span> (*.flv) <span class="keyword">do</span> @<span class="built_in">echo</span> file &#x27;%i&#x27;) &gt; mylist.txt</span><br><span class="line">ffmpeg -f concat -i mylist.txt -c <span class="built_in">copy</span> output.flv</span><br></pre></td></tr></table></figure> 这样速度很快也没有中间文件，原则上要求文件规格相近。</p>
+<p>另一种方案：先将这几个视频无损地转为 mpegts 文件，再通过 concat
+协议合并。以常见的 H.264 视频与 aac 音频为例：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i &quot;<span class="number">1</span>.flv&quot; -c <span class="built_in">copy</span> -bsf:v h264_mp4toannexb -f mpegts <span class="number">1</span>.ts</span><br><span class="line">ffmpeg -i &quot;<span class="number">2</span>.flv&quot; -c <span class="built_in">copy</span> -bsf:v h264_mp4toannexb -f mpegts <span class="number">2</span>.ts</span><br><span class="line">ffmpeg -i &quot;concat:<span class="number">1</span>.ts|<span class="number">2</span>.ts&quot; -c <span class="built_in">copy</span> -bsf:a aac_adtstoasc &quot;All.mp4&quot;</span><br></pre></td></tr></table></figure>
+<p>这种方案是早期方案，支持更广，包括非 mpeg 容器的 mpeg
+编码内容（H.264, MPEG4, MPEG2, AAC,
+MP3等）。不过这样会产生中间文件。</p>
+<h3 id="分割视频">10.2 分割视频</h3>
+<p>指定视频的起始与持续时长就可以分割视频了。下例截取了视频的前 5
+秒（00:05:00），注意<code>-t</code>后接“截取视频段长度”而不是“截取终点时刻”：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i &quot;input.mp4&quot; -ss <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> -t <span class="number">5</span> -c <span class="built_in">copy</span> &quot;output.mp4&quot;</span><br></pre></td></tr></table></figure>
+<p>建议使用规范的 mp4 格式文件，否则可能出现视频无法正常混流的现象。</p>
+<h3 id="批量格式转换">10.3 批量格式转换</h3>
+<p>比如，对于数据流用 mpeg 编码的一个 flv 文件，可以这样转为 mp4 文件：
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i &quot;input.flv&quot; -c <span class="built_in">copy</span> &quot;output.mp4&quot;</span><br></pre></td></tr></table></figure></p>
+<p>因此一个批量转换也很容易通过 for 语句实现（<code>%~n</code>
+表示保留不含扩展名的文件名）： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for %i in (*.mp4) do ffmpeg -i &quot;%i&quot; -c copy &quot;%~ni.flv&quot;</span><br></pre></td></tr></table></figure></p>
+<h3 id="静态图水印">10.4 静态图水印</h3>
+<p>下例添加 png 或其他静态格式的水印，放置在距左侧 20 像素,距顶端 40
+像素的地方。水印与视频的基准点都是左上角点。</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -i wm.png -filter_complex &quot;overlay=<span class="number">20</span>:<span class="number">40</span>&quot; output.mp4</span><br></pre></td></tr></table></figure>
+<p>如果要放在右下角使用<code>overlay= main_w-overlay_w:main_h-overlay_h</code>，参数的含义应该较好理解。</p>
+<p>如果要指定水印的大小，比如 384x216： <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -i wm.png -filter_complex &quot;[<span class="number">1</span>:v]scale=<span class="number">384</span>:<span class="number">216</span>[wm];[<span class="number">0</span>:v][wm]overlay=<span class="number">0</span>:<span class="number">0</span>&quot; output.mp4</span><br></pre></td></tr></table></figure></p>
+<p>参数 <code>0:v</code>
+表示第1个输入的视频流（本例即input.mp4的视频流），<code>1:v</code>
+表示第2个输入的视频流（本例即wm.gif）。分号前的[wm]用于引用。</p>
+<h3 id="gif水印">10.5 GIF水印</h3>
+<p>添加 gif 水印与静态图水印有一些不同之处： - 需要将
+<code>ignore_loop</code> 参数指明为 0，表示 gif 无限循环。 -
+需要用到复合过滤器 <code>filter_complex</code>。 - 需要过滤器的
+<code>shortest=1</code>
+选项，表示至少在一个视频流循环一次后，再终止输出。如果不加该选项，输出将无法自行停止。</p>
+<p>一个指定 50x50 大小 GIF 水印在左上角的例子： <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -y -i input.mp4 -ignore_loop <span class="number">0</span> -i wm.gif -filter_complex &quot;[<span class="number">1</span>:v]scale=<span class="number">50</span>:<span class="number">50</span>[wm];[<span class="number">0</span>:v][wm]overlay=<span class="number">0</span>:<span class="number">0</span>:shortest=<span class="number">1</span>&quot; output.mp4</span><br></pre></td></tr></table></figure></p>
+<h3 id="外挂字幕">10.6 外挂字幕</h3>
+<p>将字幕作为单独的数据流（而不是混入视频流中），封装到容器内。一般对此特性有良好支持的容器是
+mkv。在封装时，一般需要转为 ass 格式。 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -i input.srt -c:v <span class="built_in">copy</span> -c:a <span class="built_in">copy</span> -c:s ass output.mkv</span><br></pre></td></tr></table></figure></p>
+<p>一些注意点： - 字幕文件请用 UTF-8 编码。 - Windows
+系统缺少一个字体接口，因此需要自己配置 fonts.conf 文件，放在
+<code>%FONTCONFIG_PATH%</code>
+这个环境用户变量里（往往需要你自己新建）。该变量应该指向<code>C:\Users\用户名\</code>。</p>
+<p>网上流传了一份 fonts.conf
+文件内容（见附录），请复制后粘贴到你对应文件夹的 fonts.conf 文件中。</p>
+<h3 id="内嵌字幕">10.7 内嵌字幕</h3>
+<p>在播放器不支持独立字幕流的场合，需要将字幕混入视频流中（因此需要重编码）。
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -vf subtitles=input.srt output.mp4</span><br></pre></td></tr></table></figure></p>
+<p>如果字幕以字幕流的形式位于一个视频文件中，可以直接调用：
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i input.mkv -vf subtitles=input.mkv output.mp4</span><br></pre></td></tr></table></figure></p>
+<p>如果希望在嵌入字幕时保留以前多个音轨，可以使用： <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i &quot;input.mp4&quot; -map <span class="number">0</span>:<span class="number">0</span> -map <span class="number">0</span>:<span class="number">1</span> -map <span class="number">0</span>:<span class="number">2</span> -vf subtitles=input.Chs.srt output.mp4</span><br><span class="line"></span><br><span class="line"># 一个实际的例子</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> I <span class="keyword">in</span> `ls ../*.mp4`;<span class="keyword">do</span> ffmpeg -y -i &quot;../$I&quot; -map <span class="number">0</span>:<span class="number">0</span> -map <span class="number">0</span>:<span class="number">1</span> -map <span class="number">0</span>:<span class="number">2</span> -vf subtitles=../$&#123;I%.*&#125;.Chs.srt &quot;$&#123;I##*/&#125;&quot;;done</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>同样，Windows 用户需要配置 fonts.conf 文件（参加附录11）。</p>
+<h3 id="将多个图片制作为视频">10.8 将多个图片制作为视频</h3>
+<p>使用Python绘制了一系列顺序命名的图像，现在将其转为视频:
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -r <span class="number">25</span> -f image2 -s <span class="number">1200</span>x800 -i result_png/epo_%<span class="number">05</span>d.png -vcodec libx264 -crf <span class="number">25</span>  -pix_fmt yuv420p test.mp4</span><br></pre></td></tr></table></figure> <code>result_png/epo_%05d.png</code>表示
+<code>result_png</code>目录下的<code>epo_xxxxx.png</code>文件，<code>xxxxx</code>从<code>00000</code>到<code>99999</code>。
+<code>-r</code> 帧率(fps)； <code>-crf</code>
+画质，越低表示质量越好，通常 15-25 已经不错了； <code>-s</code> 解析度
+<code>-pix_fmt yuv420p</code>指定pixel format, 根据需要修改 输出文件名为
+test.mp4。</p>
+<h3 id="截取视频片段">10.9 截取视频片段</h3>
+<p>自开始时间（<code>-ss</code>参数，格式为<code>HH:MM:SS</code>）到结束时间（<code>-to</code>参数,格式为<code>HH:MM:SS</code>）截取视频，
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -ss <span class="number">00</span>:<span class="number">02</span>:<span class="number">40</span> -i &quot;old_file.mp4&quot; -to <span class="number">00</span>:<span class="number">43</span>:<span class="number">24</span>  -vcodec <span class="built_in">copy</span> -acodec <span class="built_in">copy</span> &quot;new_file.mp4&quot;</span><br></pre></td></tr></table></figure>
+当需要获取视频时长时，可以使用<code>ffprobe 文件名</code>进行检测。Python脚本参见<a
+href="/2018/01/03/ffmpeg_video_strip/">博文链接</a></p>
+<h3 id="下载m3u8视频流">10.10 下载m3u8视频流</h3>
+<p>用法比较简单，如下所示，该命令有时无法下载视频： <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i http://...../abc.m3u8 &quot;输出文件名.mp4&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="附录windows-的-fonts.conf">11. 附录：Windows 的 fonts.conf</h2>
+<p>参考页面：<a
+target="_blank" rel="noopener" href="https://github.com/FiveYellowMice/how-to-convert-videos-with-ffmpeg-zh/blob/master/etc/fontconfig-windows/fonts.conf">该用户的
+Github</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">fontconfig</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dir</span>&gt;</span>C:\WINDOWS\Fonts<span class="tag">&lt;/<span class="name">dir</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">match</span> <span class="attr">target</span>=<span class="string">&quot;pattern&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">qual</span>=<span class="string">&quot;any&quot;</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>mono<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">edit</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">mode</span>=<span class="string">&quot;assign&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">edit</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">match</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">match</span> <span class="attr">target</span>=<span class="string">&quot;pattern&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">qual</span>=<span class="string">&quot;all&quot;</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">compare</span>=<span class="string">&quot;not_eq&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>sans-serif<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">qual</span>=<span class="string">&quot;all&quot;</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">compare</span>=<span class="string">&quot;not_eq&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>serif<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">qual</span>=<span class="string">&quot;all&quot;</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">compare</span>=<span class="string">&quot;not_eq&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">edit</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">mode</span>=<span class="string">&quot;append_last&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>sans-serif<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">edit</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">match</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>Times<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Times New Roman<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">default</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>serif<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">default</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>Helvetica<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Arial<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">default</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>sans<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">default</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>Courier<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Courier New<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">default</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">default</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>serif<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Times New Roman<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>sans<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Arial<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">family</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">family</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">prefer</span>&gt;</span><span class="tag">&lt;<span class="name">family</span>&gt;</span>Andale Mono<span class="tag">&lt;/<span class="name">family</span>&gt;</span><span class="tag">&lt;/<span class="name">prefer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">alias</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">match</span> <span class="attr">target</span>=<span class="string">&quot;pattern&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">compare</span>=<span class="string">&quot;eq&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>Courier New<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">edit</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">mode</span>=<span class="string">&quot;prepend&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">edit</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">match</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">match</span> <span class="attr">target</span>=<span class="string">&quot;pattern&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">test</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">compare</span>=<span class="string">&quot;eq&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>Courier<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">test</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">edit</span> <span class="attr">name</span>=<span class="string">&quot;family&quot;</span> <span class="attr">mode</span>=<span class="string">&quot;prepend&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">string</span>&gt;</span>monospace<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">edit</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">match</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">fontconfig</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考">参考</h2>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="http://hamelot.io/visualization/using-ffmpeg-to-convert-a-set-of-images-into-a-video/">Using
+ffmpeg to convert a set of images into a video</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://wklchris.github.io/FFmpeg.html">FFmpeg命令行</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2018/01/27/ffmpeg_usage/" title="神器FFmpeg的使用">https://njuferret.github.io/2018/01/27/ffmpeg_usage/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ffmpeg/" rel="tag"><i class="fa fa-tag"></i> ffmpeg</a>
+              <a href="/tags/%E8%A7%86%E9%A2%91/" rel="tag"><i class="fa fa-tag"></i> 视频</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/04/2018-first-snow/" rel="prev" title="2018-第一场雪">
+                  <i class="fa fa-angle-left"></i> 2018-第一场雪
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/01/28/overfitting-underfitting/" rel="next" title="机器学习中的过拟合与欠拟合">
+                  机器学习中的过拟合与欠拟合 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

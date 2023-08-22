@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="买了2块mini开发板，一块STM32F407VE，另一块STM32H743VI。无他，唯体积小。看到OpenMV大行其道，开始折腾MicroPython。  环境： Ubuntu 16.04 x64 开发板： DevEBox STM32H7XX_M Ver:V2.0 SN:1907">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32之MicroPython">
+<meta property="og:url" content="https://njuferret.github.io/2021/07/28/2021-07-28_micropython/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="买了2块mini开发板，一块STM32F407VE，另一块STM32H743VI。无他，唯体积小。看到OpenMV大行其道，开始折腾MicroPython。  环境： Ubuntu 16.04 x64 开发板： DevEBox STM32H7XX_M Ver:V2.0 SN:1907">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-28T10:38:32.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.677Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="stm32">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="micropython">
+<meta property="article:tag" content="ubuntu">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2021/07/28/2021-07-28_micropython/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2021/07/28/2021-07-28_micropython/","path":"2021/07/28/2021-07-28_micropython/","title":"STM32之MicroPython"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>STM32之MicroPython | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85make%E5%92%8Cgcc"><span class="nav-text">1、安装make和gcc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDmicropython%E6%BA%90%E7%A0%81"><span class="nav-text">2、下载micropython源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%BC%80%E5%8F%91%E6%9D%BF%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%A0%81"><span class="nav-text">3、下载开发板的配置代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-text">4、编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%83%A7%E5%85%A5%E5%BC%80%E5%8F%91%E6%9D%BF"><span class="nav-text">5、烧入开发板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-text">6、使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-text">7、例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9D%BF%E8%BD%BDflash-vs-mcu%E5%86%85%E7%BD%AEflash"><span class="nav-text">8、使用板载Flash vs
+MCU内置Flash</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E7%AE%A1%E8%84%9A%E5%AE%9A%E4%B9%89"><span class="nav-text">8.1 增加管脚定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%A8qspi%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0"><span class="nav-text">8.2 补全QSPI实现函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%A8%E7%AE%A1%E8%84%9A%E5%AE%9A%E4%B9%89"><span class="nav-text">8.3 补全管脚定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91-1"><span class="nav-text">8.4 编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mini-f407ve%E6%9D%BF"><span class="nav-text">9、 Mini F407VE板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2021/07/28/2021-07-28_micropython/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="STM32之MicroPython | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STM32之MicroPython
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-07-28 18:38:32" itemprop="dateCreated datePublished" datetime="2021-07-28T18:38:32+08:00">2021-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">编程开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/python/usages/" itemprop="url" rel="index"><span itemprop="name">usages</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>买了2块mini开发板，一块<code>STM32F407VE</code>，另一块<code>STM32H743VI</code>。无他，唯体积小。看到<code>OpenMV</code>大行其道，开始折腾<code>MicroPython</code>。</p>
+<ul>
+<li>环境： <code>Ubuntu 16.04 x64</code></li>
+<li>开发板： <code>DevEBox STM32H7XX_M Ver:V2.0 SN:1907</code></li>
+</ul>
+<span id="more"></span>
+<p><code>STM32H743VI</code>开发板外观如下（<code>STM32F407VE</code>板样子都一样）。</p>
+
+<h2 id="安装make和gcc">1、安装<code>make</code>和<code>gcc</code></h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装gcc相关</span></span><br><span class="line">sudo add-apt-repository ppa:ubuntu-toolchain-r/test</span><br><span class="line">sudo apt-get update </span><br><span class="line"><span class="comment"># 顺便安装g++-9</span></span><br><span class="line">sudo apt-get install make gcc-9 g++-9</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装交叉编译相关</span></span><br><span class="line">sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install gcc-arm-embedded</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="下载micropython源码">2、下载<code>micropython</code>源码</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;SRC_ROOT&gt;</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/micropython/micropython.git</span><br><span class="line"><span class="built_in">cd</span> micropython</span><br><span class="line">git submodule update --init</span><br><span class="line"></span><br><span class="line"><span class="comment"># （更新）拉取远程库</span></span><br><span class="line"><span class="comment"># git pull --progress -v --no-rebase &quot;origin&quot;   </span></span><br></pre></td></tr></table></figure>
+<h2 id="下载开发板的配置代码">3、下载开发板的配置代码</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;SRC_ROOT&gt;/micropython/ports/stm32/boards</span><br><span class="line"><span class="comment"># H743的移植文件</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/mcauser/MCUDEV_DEVEBOX_H7XX_M.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># F407VE的一移植文件</span></span><br><span class="line"><span class="comment"># git clone https://github.com/mcauser/MCUDEV_DEVEBOX_F407VET6.git</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改后：</span></span><br><span class="line"><span class="comment">#  H743: https://github.com/njuFerret/MCUDEV_DEVEBOX_H7XX_M.git</span></span><br><span class="line"><span class="comment">#  F407Ve https://github.com/njuFerret/MCUDEV_DEVEBOX_F407VET6</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此处编译出错，按照<code>MCUDEV_DEVEBOX_H7XX_M</code>中的<code>Issues/1</code>说明，编辑
+<code>MCUDEV_DEVEBOX_H7XX_M/mpconfigboard.h</code>如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*-----------------------------------原定义----------------------------------------*/</span></span><br><span class="line"><span class="comment">// // HSE is 25MHz</span></span><br><span class="line"><span class="comment">// #define MICROPY_HW_CLK_PLLM (25) // divide external clock by this to get 1MHz</span></span><br><span class="line"><span class="comment">// #define MICROPY_HW_CLK_PLLN (160) // PLL clock in MHz</span></span><br><span class="line"><span class="comment">// #define MICROPY_HW_CLK_PLLP (RCC_PLLP_DIV2) // divide PLL clock by this to get core clock</span></span><br><span class="line"><span class="comment">// #define MICROPY_HW_CLK_PLLQ (4) // divide core clock by this to get 40MHz</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*---------------------------------修改后定义---------------------------------------*/</span></span><br><span class="line"><span class="comment">// The board has an 25MHz HSE, the following gives 480MHz CPU speed</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLLM (5)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLLN (192)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLLP (2)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLLQ (5)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLLR (2)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The USB clock is set using PLL3</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLL3M (5)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLL3N (48)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLL3P (2)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLL3Q (5)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_CLK_PLL3R (2)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="编译">4、编译</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;SRC_ROOT&gt;/micropython</span><br><span class="line">make -C mpy-cross</span><br><span class="line"><span class="built_in">cd</span> ports/stm32</span><br><span class="line">make submodules</span><br><span class="line">make BOARD=MCUDEV_DEVEBOX_H7XX_M clean</span><br><span class="line">make BOARD=MCUDEV_DEVEBOX_H7XX_M</span><br></pre></td></tr></table></figure>
+<h2 id="烧入开发板">5、烧入开发板</h2>
+<p>编译完成后，在<code>micropython/ports/stm32</code>目录下会出现<code>build-MCUDEV_DEVEBOX_H7XX_M</code>目录，找到固件文件<code>firmware.hex</code>，使用<code>STM32 ST-LINK Utility</code>烧入即可。</p>
+<p>烧写完成后出现<code>low power</code>的情况，插入<code>usb</code>之后会出现windows安装设备等提示，以一个U盘形式出现。</p>
+<h2 id="使用方法">6、使用方法</h2>
+<p>两种模式，解释器模式和文件模式。前者使用<code>putty</code>打开串口，与其他解释器一样使用。后者直接修改<code>main.py</code>文件。<code>IDE</code>方面，<code>VScode</code>略显不便，可以采用<code>Thonny</code>，写完代码可以直接烧入开发板，比较方便。</p>
+<h2 id="例子">7、例子</h2>
+<p>查看当前运行主频：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> machine</span><br><span class="line">machine.freq()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; import pyb</span></span><br><span class="line"><span class="comment">#&gt;&gt;&gt; pyb.freq()</span></span><br><span class="line"><span class="comment">#(480000000, 240000000, 120000000, 120000000)</span></span><br></pre></td></tr></table></figure>
+<p>首先点个灯：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyb</span><br><span class="line"></span><br><span class="line">tim = pyb.Timer(<span class="number">4</span>,freq=<span class="number">2</span>)	<span class="comment"># 2Hz ,500ms</span></span><br><span class="line">tim.callback(<span class="keyword">lambda</span> t:pyb.LED(<span class="number">1</span>).toggle())</span><br><span class="line"><span class="comment"># tim.callback(None) # 停止回调</span></span><br></pre></td></tr></table></figure>
+<p>如果用<code>sleep</code>函数，必须等待其执行完成，或
+<code>Ctrl+C</code>终止执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">30</span>):</span><br><span class="line"><span class="meta">... </span>    pyb.LED(<span class="number">1</span>).toggle()</span><br><span class="line"><span class="meta">... </span>    time.sleep(<span class="number">0.5</span>)</span><br></pre></td></tr></table></figure>
+<p>再来一个PWM：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyb </span><br><span class="line"></span><br><span class="line">p = pyb.Pin(<span class="string">&#x27;D12&#x27;</span>)	<span class="comment"># Tim4, PWM ch1, PD12</span></span><br><span class="line">tim = pyb.Timer(<span class="number">4</span>, freq=<span class="number">1000</span>)</span><br><span class="line">ch = tim.channel(<span class="number">1</span>, pyb.Timer.PWM, pin=p)</span><br><span class="line">ch.pulse_width_percent(<span class="number">50</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="使用板载flash-vs-mcu内置flash">8、使用板载<code>Flash</code> vs
+<code>MCU</code>内置<code>Flash</code></h2>
+<p>上述编译中，使用的是<code>MCU</code>内置<code>flash</code>，<code>hex</code>固件约<code>1.26M</code>，烧完之后，几乎没啥空间了，考虑折腾板载的外置<code>Flash</code>。</p>
+<p><code>H7xx</code>开发板板载一颗<code>W25Q64</code>的<code>8MByte flash</code>，F407开发板板载的是<code>W25Q16</code>的<code>2MByte flash</code>。前者支持<code>QSPI</code>，后者不支持。</p>
+<blockquote>
+<p><code>SPI</code>协议包括：<code>Standard SPI</code>、<code>Dual SPI</code>和<code>Queued SPI</code>三种协议，分别对应<code>3-wire</code>,
+<code>4-wire</code>, <code>6-wire</code>。</p>
+<ol type="1">
+<li><p><code>Standard SPI</code>，有4根信号线，分别为CLK、CS、MOSI和MISO。数据线工作在全双工。</p></li>
+<li><p><code>Dual SPI</code>，只针对SPI
+Flash而言，不是针对所有SPI外设。对于SPI
+Flash，全双工并不常用，因此扩展了mosi和miso的用法，让它们工作在半双工，用以加倍数据传输。也就是对于Dual
+SPI Flash，可以发送一个命令字节进入dual mode，这样mosi变成SIO0（serial
+io 0），mosi变成SIO1（serial io
+1）,这样一个时钟周期内就能传输2个bit数据，加倍了数据传输。</p></li>
+<li><p>类似的，<code>QSPI</code>也是针对<code>SPI Flash</code>，<code>Qual SPI Flash</code>增加了两根I/O线（SIO2,SIO3），目的是一个时钟内传输4个bit</p></li>
+</ol>
+</blockquote>
+<h3 id="增加管脚定义">8.1 增加管脚定义</h3>
+<p><code>micropython</code>自带的<code>PYBD_SF</code>开发板是很好的参考资料，位于<code>ports\stm32\boards\PYBD_SF2</code></p>
+<blockquote>
+<ol type="1">
+<li>可参考<code>ports/stm32/boards/PYBD_SF2</code>中相关内容</li>
+<li>也可参考 <code>MCUDEV_DEVEBOX_F407VET6</code>中相关内容</li>
+</ol>
+</blockquote>
+<p>打开<code>MCUDEV_DEVEBOX_H7XX_M/mpconfigboard.h</code>，增加如下内容：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1 = use internal flash (2048 KByte)</span></span><br><span class="line"><span class="comment">// 0 = use onboard SPI flash (8 MByte) Winbond W25Q64 with QSPI</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (0)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// If using onboard SPI flash</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_SPIFLASH_ENABLE_CACHE (1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Winbond W25Q16 SPI Flash = 64 Mbit (8 MByte)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_SPIFLASH_SIZE_BITS (64 * 1024 * 1024)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_SIZE_BITS_LOG2 (26)</span></span><br><span class="line"><span class="comment">// 引脚参照原理图</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_CS         (pin_B6)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_SCK        (pin_B2)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_IO0        (pin_D11)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_IO1        (pin_D12)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_IO2        (pin_E2)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_QSPIFLASH_IO3        (pin_D13)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_BOARD_EARLY_INIT    Mcudev_Devebox_H743VI_board_early_init</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Mcudev_Devebox_H743VI_board_early_init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="type">const</span> <span class="class"><span class="keyword">struct</span> _<span class="title">mp_spiflash_config_t</span> <span class="title">spiflash_config</span>;</span></span><br><span class="line"><span class="keyword">extern</span> <span class="class"><span class="keyword">struct</span> _<span class="title">spi_bdev_t</span> <span class="title">spi_bdev</span>;</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_BDEV_IOCTL(op, arg) ( \</span></span><br><span class="line"><span class="meta">    (op) == BDEV_IOCTL_NUM_BLOCKS ? (MICROPY_HW_SPIFLASH_SIZE_BITS / 8 / FLASH_BLOCK_SIZE) : \</span></span><br><span class="line"><span class="meta">    (op) == BDEV_IOCTL_INIT ? spi_bdev_ioctl(&amp;spi_bdev, (op), (uint32_t)&amp;spiflash_config) : \</span></span><br><span class="line"><span class="meta">    spi_bdev_ioctl(&amp;spi_bdev, (op), (arg)) \</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_BDEV_READBLOCKS(dest, bl, n) spi_bdev_readblocks(&amp;spi_bdev, (dest), (bl), (n))</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_BDEV_WRITEBLOCKS(src, bl, n) spi_bdev_writeblocks(&amp;spi_bdev, (src), (bl), (n))</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="补全qspi实现函数">8.2 补全<code>QSPI</code>实现函数</h3>
+<p>增加<code>bdev.c</code>和<code>board_init.c</code>文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bdev.c</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;storage.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// External SPI flash uses QSPI interface</span></span><br><span class="line">STATIC <span class="type">const</span> <span class="type">mp_soft_qspi_obj_t</span> qspi_bus = &#123;</span><br><span class="line">    .cs  = MICROPY_HW_QSPIFLASH_CS,</span><br><span class="line">    .clk = MICROPY_HW_QSPIFLASH_SCK,</span><br><span class="line">    .io0 = MICROPY_HW_QSPIFLASH_IO0,</span><br><span class="line">    .io1 = MICROPY_HW_QSPIFLASH_IO1,</span><br><span class="line">    .io2 = MICROPY_HW_QSPIFLASH_IO2,</span><br><span class="line">    .io3 = MICROPY_HW_QSPIFLASH_IO3,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">STATIC <span class="type">mp_spiflash_cache_t</span> spi_bdev_cache;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">mp_spiflash_config_t</span> spiflash_config = &#123;</span><br><span class="line">    .bus_kind = MP_SPIFLASH_BUS_QSPI,</span><br><span class="line">    .bus.u_qspi.data = (<span class="type">void</span>*)&amp;qspi_bus,</span><br><span class="line">    .bus.u_qspi.proto = &amp;mp_soft_qspi_proto, </span><br><span class="line"><span class="meta">#<span class="keyword">if</span> MICROPY_HW_SPIFLASH_ENABLE_CACHE</span></span><br><span class="line">    .cache = &amp;spi_bdev_cache,</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">spi_bdev_t</span> spi_bdev;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// board_init.c</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;py/mphal.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Mcudev_Devebox_H743VI_board_early_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;py/mphal.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Mcudev_Devebox_H743VI_board_early_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// set SPI flash CS pin high</span></span><br><span class="line">    <span class="comment">// mp_hal_pin_output(pin_A15);</span></span><br><span class="line">    <span class="comment">// mp_hal_pin_write(pin_A15, 0);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="补全管脚定义">8.3 补全管脚定义</h3>
+<p>打开<code>MCUDEV_DEVEBOX_H7XX_M/pins.csv</code>，增加如下内容</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QSPIFLASH_CS,PB6</span><br><span class="line">QSPIFLASH_SCK,PB2</span><br><span class="line">QSPIFLASH_IO0,PD11</span><br><span class="line">QSPIFLASH_IO1,PD12</span><br><span class="line">QSPIFLASH_IO2,PE2</span><br><span class="line">QSPIFLASH_IO3,PD13</span><br></pre></td></tr></table></figure>
+<h3 id="编译-1">8.4 编译</h3>
+<p>可根据情况，选取是否使用<code>SPI Flash</code>，修改宏定义后，重新编译即可。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1 = use internal flash (2048 KByte)</span></span><br><span class="line"><span class="comment">// 0 = use onboard SPI flash (8 MByte) Winbond W25Q64 with QSPI</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (0)</span></span><br></pre></td></tr></table></figure>
+<h2 id="mini-f407ve板">9、 <code>Mini F407VE</code>板</h2>
+<ul>
+<li><code>F407VE</code>板已经自带了<code>bdev.c</code>和<code>board_init.c</code>，只是缺少一个开启<code>cache</code>的宏，可以参考<code>PYBD_SF2</code>在<code>bdev.c</code>中分开加，也可以参考<code>STM32L476DISC</code>在<code>mpconfigboard.h</code>中一次性加入。</li>
+<li>另外需要注意的是，<code>F407VE</code>板使用的是标准<code>SPI</code>，可以直接copy<code>STM32L476DISC</code>内容，只是需要增加一个开启关闭使用外部<code>Flash</code>的宏，最后注意<code>SPI</code>低电平有效，需要预先将管脚位置低。</li>
+</ul>
+<p>最后放上<code>patch</code>。</p>
+<figure class="highlight patch"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"> board_init.c    |  3 ++-</span><br><span class="line"> mpconfigboard.h | 19 +++++++++++--------</span><br><span class="line"> 2 files changed, 13 insertions(+), 9 deletions(-)</span><br><span class="line"></span><br><span class="line"><span class="comment">diff --git a/board_init.c b/board_init.c</span></span><br><span class="line"><span class="comment">index c60141e..896f698 100644</span></span><br><span class="line"><span class="comment">--- a/board_init.c</span></span><br><span class="line"><span class="comment">+++ b/board_init.c</span></span><br><span class="line"><span class="meta">@@ -3,5 +3,6 @@</span></span><br><span class="line"> void Mcudev_Devebox_F407VE_board_early_init(void) &#123;</span><br><span class="line">     // set SPI flash CS pin high</span><br><span class="line">     mp_hal_pin_output(pin_A15);</span><br><span class="line"><span class="deletion">-    mp_hal_pin_write(pin_A15, 1);</span></span><br><span class="line"><span class="addition">+    // mp_hal_pin_write(pin_A15, 1);</span></span><br><span class="line"><span class="addition">+    mp_hal_pin_write(pin_A15, 0);</span></span><br><span class="line"> &#125;</span><br><span class="line"><span class="comment">diff --git a/mpconfigboard.h b/mpconfigboard.h</span></span><br><span class="line"><span class="comment">index 13f6306..e7a2b31 100644</span></span><br><span class="line"><span class="comment">--- a/mpconfigboard.h</span></span><br><span class="line"><span class="comment">+++ b/mpconfigboard.h</span></span><br><span class="line"><span class="meta">@@ -1,10 +1,6 @@</span></span><br><span class="line"> #define MICROPY_HW_BOARD_NAME       &quot;MCUDEV DEVEBOX STM32F407VE&quot;</span><br><span class="line"> #define MICROPY_HW_MCU_NAME         &quot;STM32F407VE&quot;</span><br><span class="line"><span class="deletion">-#define MICROPY_HW_FLASH_FS_LABEL   &quot;DEVEBOXF407VE&quot;</span></span><br><span class="line"><span class="deletion">-</span></span><br><span class="line"><span class="deletion">-// 1 = use internal flash (512 KByte)</span></span><br><span class="line"><span class="deletion">-// 0 = use onboard SPI flash (2 MByte) Winbond W25Q16</span></span><br><span class="line"><span class="deletion">-#define MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (1)</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_FLASH_FS_LABEL   &quot;MiniF407VE&quot;</span></span><br><span class="line"> </span><br><span class="line"> #define MICROPY_HW_HAS_SWITCH       (1)		// has 1 button KEY0</span><br><span class="line"> #define MICROPY_HW_HAS_FLASH        (1)</span><br><span class="line"><span class="meta">@@ -15,9 +11,9 @@</span></span><br><span class="line"> #define MICROPY_HW_ENABLE_SDCARD    (0)		// it has a sd scard, but i am not sure what the detect pin is, yet</span><br><span class="line"> </span><br><span class="line"> // HSE is 8MHz</span><br><span class="line"><span class="deletion">-#define MICROPY_HW_CLK_PLLM (8) // divide external clock by this to get 1MHz</span></span><br><span class="line"><span class="deletion">-#define MICROPY_HW_CLK_PLLN (336) // PLL clock in MHz</span></span><br><span class="line"><span class="deletion">-#define MICROPY_HW_CLK_PLLP (RCC_PLLP_DIV2) // divide PLL clock by this to get core clock</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_CLK_PLLM (4) // divide external clock by this to get 1MHz</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_CLK_PLLN (168) // PLL clock in MHz</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_CLK_PLLP (2) // divide PLL clock by this to get core clock</span></span><br><span class="line"> #define MICROPY_HW_CLK_PLLQ (7) // divide core clock by this to get 48MHz</span><br><span class="line"> </span><br><span class="line"> // The board has a 32kHz crystal for the RTC</span><br><span class="line"><span class="meta">@@ -106,9 +102,16 @@</span></span><br><span class="line"> #define MICROPY_HW_LED_ON(pin)      (mp_hal_pin_low(pin))</span><br><span class="line"> #define MICROPY_HW_LED_OFF(pin)     (mp_hal_pin_high(pin))</span><br><span class="line"> </span><br><span class="line"><span class="addition">+// 1 = use internal flash (512 KByte)</span></span><br><span class="line"><span class="addition">+// 0 = use onboard SPI flash (2 MByte) Winbond W25Q16</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE (0)</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> // If using onboard SPI flash</span><br><span class="line"> #if !MICROPY_HW_ENABLE_INTERNAL_FLASH_STORAGE</span><br><span class="line"> </span><br><span class="line"><span class="addition">+// fix &quot;error: unknown type name &#x27;mp_spiflash_cache_t&#x27;&quot;</span></span><br><span class="line"><span class="addition">+#define MICROPY_HW_SPIFLASH_ENABLE_CACHE (1)</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> // Winbond W25Q16 SPI Flash = 16 Mbit (2 MByte)</span><br><span class="line"> #define MICROPY_HW_SPIFLASH_SIZE_BITS (16 * 1024 * 1024)</span><br><span class="line"> #define MICROPY_HW_SPIFLASH_CS      (pin_A15)</span><br></pre></td></tr></table></figure>
+<h2 id="参考">参考</h2>
+<ol type="1">
+<li>https://blog.csdn.net/liaoze22/article/details/106708796</li>
+<li>https://blog.csdn.net/wangguchao/article/details/105593303</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2021/07/28/2021-07-28_micropython/" title="STM32之MicroPython">https://njuferret.github.io/2021/07/28/2021-07-28_micropython/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/stm32/" rel="tag"><i class="fa fa-tag"></i> stm32</a>
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/micropython/" rel="tag"><i class="fa fa-tag"></i> micropython</a>
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/01/20/20210120_raspib4/" rel="prev" title="树莓派的使用">
+                  <i class="fa fa-angle-left"></i> 树莓派的使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/08/25/2021-08-25_rtthread/" rel="next" title="STM32之RT Thread">
+                  STM32之RT Thread <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

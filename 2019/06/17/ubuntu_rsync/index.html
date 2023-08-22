@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="rsync是常用的数据镜像备份工具，它可以：  可以镜像保存整个目录树和文件系统。 可以很容易做到保持原来文件的权限、时间、软硬链接等等。 无须特殊权限即可安装。  　　本文记录使用rsync进行系统备份的基本方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用rsync进行同步备份">
+<meta property="og:url" content="https://njuferret.github.io/2019/06/17/ubuntu_rsync/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="rsync是常用的数据镜像备份工具，它可以：  可以镜像保存整个目录树和文件系统。 可以很容易做到保持原来文件的权限、时间、软硬链接等等。 无须特殊权限即可安装。  　　本文记录使用rsync进行系统备份的基本方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-06-17T10:55:10.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:07.941Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="rsync">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2019/06/17/ubuntu_rsync/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2019/06/17/ubuntu_rsync/","path":"2019/06/17/ubuntu_rsync/","title":"使用rsync进行同步备份"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用rsync进行同步备份 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E7%9B%AE%E6%A0%87%E6%9C%BAserver%E7%AB%AF%E7%9A%84rsync%E4%B8%BAdaemon%E6%A8%A1%E5%BC%8F"><span class="nav-text">1、修改目标机（Server端）的rsync为daemon模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E4%B8%80%E4%BB%BDrsyncd.conf%E6%96%87%E4%BB%B6%E5%B9%B6%E4%BF%AE%E6%94%B9"><span class="nav-text">2、复制一份rsyncd.conf文件并修改</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%86%E7%A0%81%E6%96%87%E4%BB%B6"><span class="nav-text">3、创建密码文件：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAexclude-list"><span class="nav-text">4、创建exclude list:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%87%8D%E5%90%AFrsync%E6%9C%8D%E5%8A%A1"><span class="nav-text">5、重启rsync服务：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-text">6、运行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8crontab%E8%87%AA%E5%8A%A8%E6%89%A7%E8%A1%8C"><span class="nav-text">7、使用crontab自动执行</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2019/06/17/ubuntu_rsync/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用rsync进行同步备份 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用rsync进行同步备份
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-17 18:55:10" itemprop="dateCreated datePublished" datetime="2019-06-17T18:55:10+08:00">2019-06-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:07" itemprop="dateModified" datetime="2023-08-22T12:01:07+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>　　<code>rsync</code>是常用的数据镜像备份工具，它可以：</p>
+<ol type="1">
+<li>可以镜像保存整个目录树和文件系统。</li>
+<li>可以很容易做到保持原来文件的权限、时间、软硬链接等等。</li>
+<li>无须特殊权限即可安装。</li>
+</ol>
+<p>　　本文记录使用<code>rsync</code>进行系统备份的基本方法。</p>
+<span id="more"></span>
+<h1
+id="修改目标机server端的rsync为daemon模式">1、修改目标机（Server端）的<code>rsync</code>为<code>daemon</code>模式</h1>
+<p>　　编辑<code>/etc/default/rsync</code>文件，将<code>RSYNC_ENABLE=false</code>改为<code>true</code>，然后重新启动<code>rsync</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/default/rsync</span><br></pre></td></tr></table></figure>
+<p>　　修改为<code>daemon</code>模式 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># start rsync in daemon mode from init.d script?</span><br><span class="line">#  only allowed values are &quot;true&quot;, &quot;false&quot;, and &quot;inetd&quot;</span><br><span class="line">#  Use &quot;inetd&quot; if you want to start the rsyncd from inetd,</span><br><span class="line">#  all this does is prevent the init.d script from printing a message</span><br><span class="line">#  about not starting rsyncd (you still need to modify inetd&#x27;s config yourself).</span><br><span class="line"># RSYNC_ENABLE=false</span><br><span class="line">RSYNC_ENABLE=true</span><br></pre></td></tr></table></figure></p>
+<h1
+id="复制一份rsyncd.conf文件并修改">2、复制一份<code>rsyncd.conf</code>文件并修改</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /etc/rsync</span><br><span class="line">sudo <span class="built_in">cp</span> /usr/share/doc/rsync/examples/rsyncd.conf /etc/rsync</span><br><span class="line"><span class="built_in">cd</span> /etc</span><br><span class="line"><span class="comment"># 这里注意，做了一个软连接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s rsync/rsyncd.conf rsyncd.conf</span><br></pre></td></tr></table></figure>
+<p>　　修改后的文件如下，特别注意<code>auth users</code>字段，指允许的用户
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"># sample rsyncd.conf configuration file</span><br><span class="line"></span><br><span class="line"># GLOBAL OPTIONS</span><br><span class="line"></span><br><span class="line">#motd file=/etc/motd</span><br><span class="line">log file=/var/log/rsyncd</span><br><span class="line"># for pid file, do not use /var/run/rsync.pid if</span><br><span class="line"># you are going to run rsync out of the init.d script.</span><br><span class="line"># The init.d script does its own pid file handling,</span><br><span class="line"># so omit the &quot;pid file&quot; line completely in that case.</span><br><span class="line">pid file=/var/run/rsyncd.pid</span><br><span class="line">syslog facility=daemon</span><br><span class="line">#socket options=</span><br><span class="line"></span><br><span class="line"># MODULE OPTIONS</span><br><span class="line"></span><br><span class="line">[ftp_pub]</span><br><span class="line"></span><br><span class="line">    comment = public archive</span><br><span class="line">    path = /wd_4t_sda/ftpService/pub/</span><br><span class="line">    use chroot = yes</span><br><span class="line">#   max connections=10</span><br><span class="line">    lock file = /var/lock/rsyncd</span><br><span class="line"># the default for read only is yes...</span><br><span class="line">    read only = yes</span><br><span class="line">    list = yes</span><br><span class="line">    uid = nobody</span><br><span class="line">    gid = nogroup</span><br><span class="line">#   exclude =</span><br><span class="line">    exclude from = /etc/rsync/exclude_rules_pub.conf</span><br><span class="line">#   include =</span><br><span class="line">#   include from =</span><br><span class="line">    auth users = user</span><br><span class="line">    secrets file = /etc/rsync/rsyncd.secrets</span><br><span class="line">    strict modes = yes</span><br><span class="line">    hosts allow = 10.3.89.98</span><br><span class="line">    hosts deny = *</span><br><span class="line">#   ignore errors = no</span><br><span class="line">    ignore errors = yes</span><br><span class="line">    ignore nonreadable = yes</span><br><span class="line">#   transfer logging = no</span><br><span class="line">    transfer logging = yes</span><br><span class="line">    log format = %t: host %h (%a) %o %f (%l bytes). Total %b bytes.</span><br><span class="line">    timeout = 600</span><br><span class="line">    refuse options = checksum dry-run</span><br><span class="line">    dont compress = *.gz *.tgz *.zip *.z *.rpm *.deb *.iso *.bz2 *.tbz *.7z</span><br><span class="line"></span><br><span class="line">[ftp_other]</span><br><span class="line">    comment = public archive</span><br><span class="line">    path = /wd_4t_sda/ftpService/</span><br><span class="line">    use chroot = yes</span><br><span class="line">#   max connections=10</span><br><span class="line">    lock file = /var/lock/rsyncd</span><br><span class="line"># the default for read only is yes...</span><br><span class="line">    read only = yes</span><br><span class="line">    list = yes</span><br><span class="line">    uid = nobody</span><br><span class="line">    gid = nogroup</span><br><span class="line">#   exclude =</span><br><span class="line">    exclude from = /etc/rsync/exclude_rules_other.conf</span><br><span class="line">#   include =</span><br><span class="line">#   include from =</span><br><span class="line">    auth users = user</span><br><span class="line">    secrets file = /etc/rsync/rsyncd.secrets</span><br><span class="line">    strict modes = yes</span><br><span class="line">    hosts allow = 10.3.89.98</span><br><span class="line">    hosts deny = *</span><br><span class="line">#   ignore errors = no</span><br><span class="line">    ignore errors = yes</span><br><span class="line">    ignore nonreadable = yes</span><br><span class="line">#   transfer logging = no</span><br><span class="line">    transfer logging = yes</span><br><span class="line">    log format = %t: host %h (%a) %o %f (%l bytes). Total %b bytes.</span><br><span class="line">    timeout = 600</span><br><span class="line">    refuse options = checksum dry-run</span><br><span class="line">    dont compress = *.gz *.tgz *.zip *.z *.rpm *.deb *.iso *.bz2 *.tbz *.7z</span><br></pre></td></tr></table></figure></p>
+<p>　　上述配置文件中，配置了2个模块，<code>ftp_pub</code>和<code>ftp_other</code>，这两个模块同步位置各有不同。</p>
+<h1 id="创建密码文件">3、创建密码文件：</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/rsync/rsyncd.secrets</span><br></pre></td></tr></table></figure>
+<p>内容如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 用户名:密码</span><br><span class="line">user:123456</span><br></pre></td></tr></table></figure></p>
+<h1 id="创建exclude-list">4、创建<code>exclude list</code>:</h1>
+<p>　　分别创建以下两个`list</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/rsync/exclude_rules_other.conf</span><br><span class="line">sudo vi /etc/rsync/exclude_rules_pub.conf</span><br></pre></td></tr></table></figure>
+<p>　　文件内容根据需要，一行一个路径，注意，路径均是针对配置文件中<code>path</code>的相对路径，绝对路径为<code>$(path)/exclude_path...</code>。</p>
+<h1 id="重启rsync服务">5、重启<code>rsync</code>服务：</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service rsync restart</span><br></pre></td></tr></table></figure>
+<p>　　以上服务端配置完成，客户端几乎无配置，只需要配置一个本地的密码文件，设该文件为<code>/etc/rsync/rsync.pwd</code>，内容为访问用户的密码：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">123456</span><br></pre></td></tr></table></figure></p>
+<p>　　!注意：下面这两步操作是必须的,没有足够权限同步就会不成功
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> 0600 /etc/rsync/rsync.pwd</span><br><span class="line">sudo <span class="built_in">chown</span> user:usergroup /etc/rsync/rsync.pwd</span><br></pre></td></tr></table></figure></p>
+<h1 id="运行">6、运行</h1>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rsync -avlrtopg --progress --delete user@10.3.89.196::ftp_pub/ --password-file=/etc/rsync/rsync.pwd /wd_1t/ftpService/pub/ </span><br><span class="line">rsync -avlrtopg --progress --delete user@10.3.89.196::ftp_other/ --password-file=/etc/rsync/rsync.pwd /wd_10t_sdc/ftpService/others/ </span><br></pre></td></tr></table></figure>
+<h1 id="使用crontab自动执行">7、使用<code>crontab</code>自动执行</h1>
+<p>　　将第6点中的两个命令保存为一个<code>shell</code>脚本文件，设文件名为<code>~/rsync_job.sh</code>，编辑任务列表，并添加合适的周期：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+<p>　　配置文件如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># Edit this file to introduce tasks to be run by cron.</span><br><span class="line">#</span><br><span class="line"># Each task to run has to be defined through a single line</span><br><span class="line"># indicating with different fields when the task will be run</span><br><span class="line"># and what command to run for the task</span><br><span class="line">#</span><br><span class="line"># To define the time you can provide concrete values for</span><br><span class="line"># minute (m), hour (h), day of month (dom), month (mon),</span><br><span class="line"># and day of week (dow) or use &#x27;*&#x27; in these fields (for &#x27;any&#x27;).#</span><br><span class="line"># Notice that tasks will be started based on the cron&#x27;s system</span><br><span class="line"># daemon&#x27;s notion of time and timezones.</span><br><span class="line">#</span><br><span class="line"># Output of the crontab jobs (including errors) is sent through</span><br><span class="line"># email to the user the crontab file belongs to (unless redirected).</span><br><span class="line">#</span><br><span class="line"># For example, you can run a backup of all your user accounts</span><br><span class="line"># at 5 a.m every week with:</span><br><span class="line"># 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/</span><br><span class="line">#</span><br><span class="line"># For more information see the manual pages of crontab(5) and cron(8)</span><br><span class="line">#</span><br><span class="line"># m h  dom mon dow   command</span><br><span class="line"># 每周一、周四和周六，凌晨2点执行脚本</span><br><span class="line">0 2 * * 1,4,6 bash /home/user/rsync_job.sh</span><br></pre></td></tr></table></figure>
+<p>　　配置完成编辑后，重新载入<code>cron</code>
+服务，使配置生效，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service cron restart</span><br></pre></td></tr></table></figure>
+<p>　　关于时间格式的补充说明：</p>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x27;*&#x27; ：表示所有可能的值，例如month字段使用*，在满足其它字段的制约条件后每月都执行该命令操作。</span><br><span class="line">&#x27;,&#x27; ：用于指定多个单独值，例如，“1,2,5,7,8,9”，</span><br><span class="line">&#x27;-&#x27; ：用于连接两个整数，表示整数范围，例如“2-6”表示“2,3,4,5,6”</span><br><span class="line">&#x27;/&#x27; ：指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。如果&#x27;*&#x27;与之一起使用，表示每个xx，例如 &#x27; */10&#x27;，表示每隔10(分钟/小时/等)执行一次。</span><br></pre></td></tr></table></figure>
+<hr />
+<p><strong>参考：</strong></p>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/yimingsilence/article/details/52153732">https://blog.csdn.net/yimingsilence/article/details/52153732</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2019/06/17/ubuntu_rsync/" title="使用rsync进行同步备份">https://njuferret.github.io/2019/06/17/ubuntu_rsync/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/rsync/" rel="tag"><i class="fa fa-tag"></i> rsync</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/05/19/ubuntu_1804/" rel="prev" title="Ubuntu 18.04的使用">
+                  <i class="fa fa-angle-left"></i> Ubuntu 18.04的使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/07/26/2019-07-26-covariance/" rel="next" title="方差、协方差和相关系数">
+                  方差、协方差和相关系数 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

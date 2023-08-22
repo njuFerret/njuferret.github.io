@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="在机器学习算法中，经常会遇到两个问题：欠拟合（underfitting）和过拟合（overfitting）。所谓欠拟合就是算法没有学习到足够的特征，预测结果较差，即拟合程度不够；过拟合则刚好相反，算法除了学习到一般特征外，也学习到了样本个体的局部特征，即拟合过度。 造成这两种结果的原因主要有两个： 　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习中的过拟合与欠拟合">
+<meta property="og:url" content="https://njuferret.github.io/2018/01/28/overfitting-underfitting/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="在机器学习算法中，经常会遇到两个问题：欠拟合（underfitting）和过拟合（overfitting）。所谓欠拟合就是算法没有学习到足够的特征，预测结果较差，即拟合程度不够；过拟合则刚好相反，算法除了学习到一般特征外，也学习到了样本个体的局部特征，即拟合过度。 造成这两种结果的原因主要有两个： 　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-01-28T03:21:02.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.754Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="overfitting">
+<meta property="article:tag" content="正则化">
+<meta property="article:tag" content="Dropout">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2018/01/28/overfitting-underfitting/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2018/01/28/overfitting-underfitting/","path":"2018/01/28/overfitting-underfitting/","title":"机器学习中的过拟合与欠拟合"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>机器学习中的过拟合与欠拟合 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%99%BD%E5%A4%A9%E9%B9%85%E4%B8%8E%E9%BB%91%E5%A4%A9%E9%B9%85%E9%97%AE%E9%A2%98"><span class="nav-text">1、白天鹅与黑天鹅问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E6%AC%A0%E6%8B%9F%E5%90%88%E7%9A%84%E4%BA%A7%E7%94%9F%E5%8E%9F%E5%9B%A0"><span class="nav-text">2、过拟合与欠拟合的产生原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E8%BF%87%E6%8B%9F%E5%90%88%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-text">3、解决过拟合的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#early-stopping"><span class="nav-text">3.1 Early Stopping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E6%89%A9%E5%A2%9E"><span class="nav-text">3.2 数据集扩增</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-text">3.3 正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#l0%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-text">3.3.1 L0正则化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#l1%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-text">3.3.2 L1正则化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#l2%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-text">3.3.2 L2正则化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96%E5%B0%8F%E7%BB%93"><span class="nav-text">3.3.4 正则化小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dropout"><span class="nav-text">3.4 Dropout</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="nav-text">4、参考文档</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2018/01/28/overfitting-underfitting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="机器学习中的过拟合与欠拟合 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习中的过拟合与欠拟合
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-28 11:21:02" itemprop="dateCreated datePublished" datetime="2018-01-28T11:21:02+08:00">2018-01-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">基础知识</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>　　在机器学习算法中，经常会遇到两个问题：<strong>欠拟合（underfitting）</strong>和<strong>过拟合（overfitting）</strong>。所谓欠拟合就是算法没有学习到足够的特征，预测结果较差，即拟合程度不够；过拟合则刚好相反，算法除了学习到一般特征外，也学习到了样本个体的局部特征，即拟合过度。</p>
+<p>造成这两种结果的原因主要有两个：</p>
+<p>　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易欠拟合。<br/>
+　　（2）参数设置和调整有问题。特别存在学习率的方法，学习率调整不当，容易引起这两种结果。</p>
+<span id="more"></span>
+<h1 id="白天鹅与黑天鹅问题">1、白天鹅与黑天鹅问题</h1>
+<p>　　过拟合的一个形象的例子是白天鹅与黑天鹅例子。给一群天鹅让机器来学习天鹅的特征，经过训练后，算法学习到了以下特征：</p>
+<p>　　（1）天鹅有翅膀，天鹅的嘴巴是长长的弯曲的，天鹅的脖子是长长的有点曲度，天鹅的整个体型像一个“2”且略大于鸭子。</p>
+<p>　　这时，算法已经基本能区别天鹅和其他动物了。很不巧，训练样本中天鹅的羽毛全是白色的，这时：</p>
+<p>　　（2）算法经过学习后，会认为天鹅的羽毛都是白的。当预测对象是黑色羽毛的黑天鹅时，算法会认为预测对象不是天鹅。</p>
+<p>　　上面这个例子中，<strong>(1)</strong>中的规律都是对的，是所有天鹅都具备特征，也就是所谓的<strong>全局特征</strong>；<strong>(2)</strong>中的规律：天鹅的羽毛是白色的。这实际上只是样本的个体特征，并非所有天鹅的特征，也就是<strong>局部特征</strong>。如果算法只学习到了部分全局特征（即<strong>欠拟合</strong>），或者在学习到全局特征的同时，又学习到了局部特征（即<strong>过拟合</strong>），会导致无法识别黑天鹅的情况。</p>
+<h1 id="过拟合与欠拟合的产生原因">2、过拟合与欠拟合的产生原因</h1>
+<p>　　利用机器学习对训练集样本进行训练、学习样本数据的特征时，算法除学习到样本数据一般的、共性的特征外，也会学到仅训练样本特有的个体特征（视为噪声）。通常，前者称为全局特征，后者称为局部特征。</p>
+<p>　　机器学习算法在学习过程中，无法区别局部特征和全局特征。在训练完成后，算法除学到全局特征外，也可能会学到一些训练样本的局部特征。由于新样本未含有训练样本所特有的局部特征，因此，算法学到的局部特征占比越高，对新样本预测正确的概率越低，即所谓的“泛化性”（或“鲁棒性”）变差，这是过拟合造成的最大问题。</p>
+<p>　　过拟合是算法学习的太彻底，把训练样本的所有特征几乎都学到了。过多的局部特征（由于噪声带来的假特征），造成模型的“泛化性”和识别正确率较低。</p>
+<p>　　一般，解决过拟合问题，从两方面入手：首先是训练样本，要具有代表性，局部特征尽量少。另一方面，算法在训练时，不能学习的太过彻底，降低学到局部特征和错误特征的几率，使得识别正确率得到优化。</p>
+<h1 id="解决过拟合的方法">3、解决过拟合的方法</h1>
+<p>　　解决过拟合的常见方法有：early stopping、数据集扩增（Data
+augmentation）、正则化（Regularization）、Dropout等。</p>
+<h2 id="early-stopping">3.1 Early Stopping</h2>
+<p>　　算法训练的过程，本质上是对算法参数进行迭代更新的过程，如梯度下降（Gradient
+descent）算法。Early
+stopping通过在算法对数据集训练收敛前停止迭代，来防止过拟合。具体方法是，在每一个Epoch结束时（1个Epoch是对所有训练数据遍历一轮）计算validation
+data的accuracy，当accuracy不再提高时，就停止训练。</p>
+<p>　　Early
+Stopping方法很符合直观感受，因为accurary都不再提高了，继续训练也是无益的，只会拉长训练时间。该方法的一个重点是，怎样才认为accurary不再提高了呢？并不是说accuracy一降下来便认为不再提高了，因为可能经过这个Epoch后，accuracy降低了，但是随后的Epoch又让accuracy又上去了，所以不能根据一两次的连续降低就判断不再提高。一般的做法是，在训练的过程中，记录到目前为止最好的accuracy，当连续10次Epoch（或者更多次）没达到最佳accuracy时，则可以认为accuracy不再提高了。此时便可以停止迭代了（Early
+Stopping）。这种策略也称为“No-improvement-in-N”，N即Epoch的次数，可以根据实际情况取，如10、20、30……</p>
+<h2 id="数据集扩增">3.2 数据集扩增</h2>
+<p>　　数据集扩增即需要得到更多的符合要求的数据，即和已有的数据是独立同分布的，或者近似独立同分布的。一般有以下方法：</p>
+<ol type="1">
+<li>从数据源头采集更多数据</li>
+<li>复制原有数据并加上随机噪声</li>
+<li>重采样</li>
+<li>根据当前数据集估计数据分布参数，使用该分布产生更多数据等</li>
+</ol>
+<h2 id="正则化">3.3 正则化</h2>
+<p>　　正则化方法是指在进行目标函数或代价函数优化时，在目标函数或代价函数后面加上一个正则化项，一般有L1正则化与L2正则化等。</p>
+<ul>
+<li>L0正则化的值是模型参数中非零参数的个数。</li>
+<li>L1正则化表示各个参数绝对值之和。</li>
+<li>L2正则化标识各个参数的平方的和的开方值。</li>
+</ul>
+<p>　　正则化会导致参数稀疏，一个好处是可以简化模型，避免过拟合。因为一个模型中真正重要的参数可能并不多，如果模型中所有参数都起作用，那么会过于偏重训练数据本身特征（局部特征），从而导致模型的范化能力较差。另一个好处是参数变少可以使整个模型获得更好的可解释性。且参数越小，模型就会越简单，这是因为越复杂的模型，越是会尝试对所有的样本进行拟合，甚至包括一些异常样本点（噪声），很容易造成在较小的区间里预测值产生较大的波动，这种较大的波动也反映了在这个区间里的导数很大，而只有较大的参数值才能产生较大的导数。因此复杂的模型，其参数值会比较大。</p>
+<p>　　L1正则化趋向于使模型中起作用的参数减少（权值为0），而L2正则化则趋向于使得模型中各个参数的权值较小，甚至趋于0(但不会为0)。权值越小则对应特征对模型的影响就较小。这相当于对这部分无关特征做了一个惩罚，即使它们的值波动比较大，受限于参数值很小，也不会对模型的输出结果造成太大影响，也就使得模型不会习得这部分特征而发生过拟合。</p>
+<p>　　简单的总结：L1正则化会趋向于产生少量的特征，而其他的特征都是0，可用于特征选择；L2正则化会选择更多的特征，但这些特征的权值都会接近于0。</p>
+<h3 id="l0正则化">3.3.1 L0正则化</h3>
+<p>　　由于稀疏的参数可以防止过拟合，因此用L0范数（非零参数的个数）来做正则化项是可以防止过拟合的。</p>
+<p>　　直观上看，利用非零参数的个数，可以很好的来选择特征，实现特征稀疏的效果，具体操作时选择参数非零的特征即可。但因为L0正则化很难求解，是个NP难问题，因此一般采用L1正则化。L1正则化是L0正则化的最优凸近似，比L0容易求解，并且也可以实现稀疏的效果。</p>
+<h3 id="l1正则化">3.3.2 L1正则化</h3>
+<p>　　L1正则化在实际中往往替代L0正则化，来防止过拟合，也称为Lasso。</p>
+<p>　　L1正则化之所以可以防止过拟合，是因为L1范数就是各个参数的绝对值相加得到的，而参数值大小和模型复杂度是成正比的。因此复杂的模型，其L1范数就大，最终导致损失函数就大，说明这个模型就不够好。</p>
+<p>　　通常，L1正则化在目标函数后面加上参数的L1范数和项，即参数绝对值和与参数的积项，即：</p>
+<p><span class="math display">\[
+\begin{equation}
+C=C_0+\frac{\lambda}{n} \sum_w |w|
+\end{equation}
+\]</span> 　　其中<span
+class="math inline">\(C_0\)</span>代表原始的代价函数，<span
+class="math inline">\(n\)</span>是样本数，<span
+class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span
+class="math inline">\(C_0\)</span>项的比重。最后一项即为L1正则项。使用L1正则化后，计算梯度时，<span
+class="math inline">\(w\)</span>和<span
+class="math inline">\(b\)</span>的梯度变为：</p>
+<p><span class="math display">\[
+\begin{equation}
+\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial
+w}+\frac{\lambda}{n} sgn(w) \label {weight-gradient}
+\end{equation}
+\]</span></p>
+<p><span class="math display">\[\begin {equation} \frac{\partial
+C}{\partial b} = \frac{\partial C_0}{\partial b} \label {bias-gradient}
+\end {equation}
+\]</span></p>
+<p>　　其中，<span class="math inline">\(sgn\)</span>是符号函数，即<span
+class="math inline">\(w\)</span>是正数时<span
+class="math inline">\(sng(w)\)</span>为<span
+class="math inline">\(+1\)</span>，而<span
+class="math inline">\(w\)</span>为负数时<span
+class="math inline">\(sng(w)\)</span>为<span
+class="math inline">\(-1\)</span>。注意式(<span
+class="math inline">\(\ref
+{bias-gradient}\)</span>)中，正则化项对bias项无贡献。参数更新使用下式：</p>
+<p><span class="math display">\[\begin{equation}
+w := w + \alpha \frac{\partial C_0}{\partial w} + \beta
+\frac{\lambda}{n} sgn(w)
+\label{L1_weight_update}
+\end{equation}\]</span> <span class="math display">\[ \begin {equation}
+b: = b + \alpha \frac{\partial C_0}{\partial b} \label {L1-bias-update}
+\end {equation}\]</span></p>
+<p>　　其中，梯度下降算法中，<span class="math inline">\(\alpha &lt;
+0\)</span>，<span class="math inline">\(\beta &lt;
+0\)</span>，而在梯度上升算法中则相反。</p>
+<p>　　与式(<span class="math inline">\(\ref
+{L1_weight_update}\)</span>)做个比较，未经正则化的线性回归中，权值项<span
+class="math inline">\(w\)</span>的更新方程为：</p>
+<p><span class="math display">\[\begin{equation}
+w := w + \alpha \frac{\partial C_0}{\partial w}
+\label{normal_weight_update}
+\end{equation}\]</span></p>
+<p>　　注意，未正则化的线性回归中，权值参数<span
+class="math inline">\(w\)</span>的更新(式(<span
+class="math inline">\(\ref
+{normal_weight_update}\)</span>))，没有式(<span
+class="math inline">\(\ref
+{L1_weight_update}\)</span>)等号右侧第二项（即正则化项）；包含了L1正则化项的线性回归称为<span
+class="math inline">\(Lasso\)</span>回归。常数项<span
+class="math inline">\(b\)</span>的更新方程同式<span
+class="math inline">\((\ref {L1-bias-update})\)</span>。</p>
+<p>　　可以看出，当<span
+class="math inline">\(w\)</span>为正时，更新后<span
+class="math inline">\(w\)</span>会变小；当<span
+class="math inline">\(w\)</span>为负时，更新后<span
+class="math inline">\(w\)</span>会变大；因此L1正则化项令那些原先处于<span
+class="math inline">\(0\)</span>（即<span
+class="math inline">\(|w|≈0\)</span>）附近的参数<span
+class="math inline">\(w\)</span>往<span
+class="math inline">\(0\)</span>移动，使得部分参数为<span
+class="math inline">\(0\)</span>，从而降低模型的复杂度（模型的复杂度由参数决定），从而防止过拟合，提高模型的泛化能力。</p>
+<p>　　L1正则化有个问题：L1范数在<span
+class="math inline">\(0\)</span>处不可导，即<span
+class="math inline">\(|w|\)</span>在<span
+class="math inline">\(0\)</span>处不可导，因此在<span
+class="math inline">\(w\)</span>为0时，使用原来的未经正则化的更新方程来对<span
+class="math inline">\(w\)</span>进行更新，即令<span
+class="math inline">\(sgn(0)=0\)</span>，即：</p>
+<p><span class="math display">\[
+\begin{equation}
+sgn(w) =
+\left \{
+    \begin{matrix}
+        1 &amp; (w&gt;0)\\
+        0 &amp; (w=0)\\
+        -1 &amp; (w&lt;0)
+    \end{matrix}
+\right.
+\end{equation}
+\]</span></p>
+<h3 id="l2正则化">3.3.2 L2正则化</h3>
+<p>　　L2正则化就是在代价函数后面再加上一个基于L2范数的正则化项，即：
+<span
+class="math display">\[\begin{equation}C=C_0+\frac{\lambda}{2n}\sum_w
+w^2 \label{L2-regulation-1}\end{equation}\]</span> 　　式(<span
+class="math inline">\(\ref
+{L2-regulation-1}\)</span>)中，等号右侧第一项<span
+class="math inline">\(C_0\)</span>为原始的代价函数，第一项是L2正则化项，它是这样来的：所有参数<span
+class="math inline">\(w\)</span>的平方的和，除以训练集的样本大小<span
+class="math inline">\(n\)</span>。<span
+class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span
+class="math inline">\(C_0\)</span>项的比重。正则化项中的系数<span
+class="math inline">\(\frac
+{1}{2}\)</span>，主要是为了计算方便，正则化项求导时会产生一个<span
+class="math inline">\(2\)</span>，与<span class="math inline">\(\frac
+{1}{2}\)</span>相乘刚好凑整。</p>
+<p>　　使用L2正则化后，梯度的计算与L1正则化类似，<span
+class="math inline">\(w\)</span>的梯度变为：</p>
+<p><span class="math display">\[
+\begin{equation}
+\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial
+w}+\frac{\lambda}{n} w \label {weight-gradient-2}
+\end{equation}
+\]</span></p>
+<p>　　参数<span class="math inline">\(b\)</span>的梯度表达式与式(<span
+class="math inline">\(\ref
+{bias-gradient}\)</span>)相同，且正则化项对bias项同样无贡献。</p>
+<p>　　L2正则化使用下式对权值参数<span
+class="math inline">\(w\)</span>进行更新： <span class="math display">\[
+\begin{equation}
+w := w + \alpha \frac {\partial \theta}{\partial w} + \beta
+\frac{\lambda}{n}w \label{L2-weight-update}
+\end{equation}\]</span> 　　其中，梯度下降算法中，<span
+class="math inline">\(\alpha &lt; 0\)</span>，<span
+class="math inline">\(\beta &lt;
+0\)</span>，而在梯度上升算法中则相反。</p>
+<p>　　仍然以线性回归为例，将式(<span class="math inline">\(\ref
+{L2-weight-update}\)</span>)与式(<span class="math inline">\(\ref
+{normal_weight_update}\)</span>)做个比较，类似L1正则化，未正则化的线性回归不包含式(<span
+class="math inline">\(\ref
+{L2-weight-update}\)</span>)等号右侧第二项(L2正则化项)。包含L2正则化项的线性回归称为岭回归(<span
+class="math inline">\(Ridge \ Regression\)</span>)或权值衰减(<span
+class="math inline">\(weight \ decay\)</span>)。</p>
+<p>　　与L1正则化类似，L2正则化项倾向于减小权值参数<span
+class="math inline">\(w\)</span>（但不为0）。</p>
+<p>　　顺便提一下参数的更新，在对模型参数进行学习更新时，常用mini-batch（小批量更新）和
+full-batch（全批量更新）两种方式。mini-batch在每轮学习（称为1个epoch或1次迭代，即把训练样本全部轮一遍）过程中，分批处理，使用部分样本进行参数更新，直到全部样本训练完成。这种方法的好处是数据量少，资源消耗少，速度快。每轮次的损失函数为所有mini
+batch的平均损失值。如果每次mini
+batch中样本个数为m，那么参数的更新方程中的正则化项需修正为：</p>
+<p>　　L1正则化项：<span class="math inline">\(\displaystyle
+\frac{\lambda}{m}\sum_w |w|\)</span>， L2正则化项：<span
+class="math inline">\(\displaystyle \frac{\lambda}{2m}\sum_w
+w^2\)</span>。full-batch不用修正。</p>
+<h3 id="正则化小结">3.3.4 正则化小结</h3>
+<p>　　正则化可以降低模型的复杂度，避免模型过分拟合训练数据，包括噪声与异常点（outliers）。另一方面，正则化即是假设模型参数服从一定的先验概率，即为模型参数添加先验（不同的正则化方式为不同的先验分布）。这就规定了参数的分布，使得模型的复杂度降低（简言之，限定条件越多，模型的复杂度越低），这样模型对于噪声与异常点的抗干扰性的能力增强，从而提高模型的泛化能力。　</p>
+<p>　
+　　L1正则化与L2正则化的区别在于：L1正则化是拉普拉斯先验，而L2正则化是高斯先验。它们都是服从均值为0，协方差为<span
+class="math inline">\(\frac{1}{\lambda}\)</span>。当<span
+class="math inline">\(\lambda =
+0\)</span>时（即没有先验，没有正则化项），相当于先验分布具有无穷大的协方差，则先验约束非常弱，模型为了拟合所有的训练集数据，
+参数<span
+class="math inline">\(w\)</span>可以变得任意大从而使得模型不稳定，即方差大而偏差小。<span
+class="math inline">\(\lambda\)</span>越大，表明先验分布的协方差越小、偏差越大，模型越稳定。也就是说，正则化项是在偏差bias与方差variance之间做平衡的tradeoff。图1为L1与L2正则化的区别：</p>
+
+<p>　　图1中的模型是线性回归，有两个特征，要优化的参数分别是<span
+class="math inline">\(w_1\)</span>和<span
+class="math inline">\(w_2\)</span>，左图是L2正则化，右图是L1正则化。蓝色线是优化过程中遇到的等高线，一圈代表一个目标函数值，圆心是某一个样本观测值，半径为误差值。正则化相当于增加了受限条件（红色边界），二者相交处是最优参数。可见L1正则化的最优参数只可能在坐标轴上，从而出现0权重参数，使得模型稀疏。
+ </p>
+<h2 id="dropout">3.4 Dropout</h2>
+<p>  正则化是通过在代价函数后面加上正则化项来防止模型过拟合，Dropout方法是通过修改人工神经网络（ANN）中隐藏层的神经元个数来防止过拟合。该方法是在对网络进行训练时用一种技巧（trick），对于如下所示的三层人工神经网络：</p>
+
+<p>　　对于图2的神经网络，在训练开始时，随机删除一些（可以设定为一半，也可以为1/3，1/4等）隐藏层神经元，即认为这些神经元不存在，同时保持输入层与输出层神经元的个数不变，这样便得到如下的ANN：</p>
+
+<p>　　然后按照BP学习算法对ANN中的参数进行学习更新（虚线连接的单元不更新，因为认为这些神经元被临时删除了）。这样一次迭代更新便完成了。下一次迭代中，同样随机删除一些神经元。后续训练过程循环进行这一操作，直至训练结束。</p>
+<p>　　Dropout能够有助于防止过拟合的简单解释，运用了dropout的训练过程，相当于训练了很多个只有部分隐层单元的神经网络（简称“部分网络”）。每一个这样的部分网络，都可以给出一个分类结果，这些结果有的是正确的，有的是错误的。随着训练的进行，大部分半数网络都可以给出正确的分类结果，那么少数的错误分类结果就不会对最终结果造成大的影响。</p>
+<hr />
+<h1 id="参考文档">4、参考文档</h1>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="http://blog.csdn.net/btbujhj/article/details/73468993">机器学习中防止过拟合的处理方法</a></li>
+<li><a
+target="_blank" rel="noopener" href="http://blog.csdn.net/u012162613/article/details/44261657">正则化方法：L1和L2
+regularization、数据集扩增、dropout</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2018/01/28/overfitting-underfitting/" title="机器学习中的过拟合与欠拟合">https://njuferret.github.io/2018/01/28/overfitting-underfitting/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/overfitting/" rel="tag"><i class="fa fa-tag"></i> overfitting</a>
+              <a href="/tags/%E6%AD%A3%E5%88%99%E5%8C%96/" rel="tag"><i class="fa fa-tag"></i> 正则化</a>
+              <a href="/tags/Dropout/" rel="tag"><i class="fa fa-tag"></i> Dropout</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/27/ffmpeg_usage/" rel="prev" title="神器FFmpeg的使用">
+                  <i class="fa fa-angle-left"></i> 神器FFmpeg的使用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/02/04/tensorflow_upgrade_with_cuda9_cudnn7/" rel="next" title="Ubuntu 16.04下1.5版TensorFlow-gpu升级记录">
+                  Ubuntu 16.04下1.5版TensorFlow-gpu升级记录 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

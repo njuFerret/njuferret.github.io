@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="记录Qt中的一些小方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt之点滴">
+<meta property="og:url" content="https://njuferret.github.io/2020/09/24/2020-09-24_qt/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="记录Qt中的一些小方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-24T03:53:32.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.676Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="qt">
+<meta property="article:tag" content="qmake">
+<meta property="article:tag" content="cmake">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2020/09/24/2020-09-24_qt/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2020/09/24/2020-09-24_qt/","path":"2020/09/24/2020-09-24_qt/","title":"Qt之点滴"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Qt之点滴 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#qt%E4%B9%8B%E5%B7%A5%E7%A8%8B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.pro"><span class="nav-text">1 Qt之工程配置文件(.pro)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%8B%E7%BC%96%E8%AF%91%E5%89%8D%E5%A4%8D%E5%88%B6%E9%9C%80%E8%A6%81%E7%9A%84%E6%96%87%E4%BB%B6"><span class="nav-text">1.1 之编译前复制需要的文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qt%E4%B9%8B%E7%BC%96%E8%AF%91"><span class="nav-text">2 qt之编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0qt%E8%87%AA%E5%B8%A6%E7%9A%84freetype"><span class="nav-text">2.1 更新qt自带的freetype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#qmake%E7%94%A8%E6%B3%95"><span class="nav-text">2.2　qmake用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qt%E5%AE%B9%E5%99%A8%E7%B1%BB%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8E%E8%8C%83%E5%9B%B4%E7%9A%84for%E5%BE%AA%E7%8E%AFrange-based-for-loops"><span class="nav-text">3
+Qt容器类使用基于范围的for循环(Range-Based for Loops)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qt%E4%B9%8B%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9Astructured-bindings"><span class="nav-text">4 Qt之结构化绑定(Structured
+bindings)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2020/09/24/2020-09-24_qt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Qt之点滴 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt之点滴
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-09-24 11:53:32" itemprop="dateCreated datePublished" datetime="2020-09-24T11:53:32+08:00">2020-09-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">编程开发</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B%E5%BC%80%E5%8F%91/Qt/" itemprop="url" rel="index"><span itemprop="name">Qt</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>记录Qt中的一些小方法。</p>
+<span id="more"></span>
+<h2 id="qt之工程配置文件.pro">1 Qt之工程配置文件(.pro)</h2>
+<h3 id="之编译前复制需要的文件">1.1 之编译前复制需要的文件</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># 获取绝对路径</span><br><span class="line"># 也可以使用 clean_path 来获取相对“干净”的路径 (去除 .. 和 .)</span><br><span class="line">GSL_DIR = $$<span class="built_in">absolute_path</span>($$PWD/../<span class="number">3</span>rdParty/gsl<span class="number">-2.6</span>)</span><br><span class="line">INCLUDEPATH += $$GSL_DIR/include</span><br><span class="line">LIBS        += \</span><br><span class="line">            -L$$GSL_DIR/lib -lgsl \</span><br><span class="line">            -L$$GSL_DIR/lib -lgslcblas</span><br><span class="line"></span><br><span class="line"># 复制动态链接库.</span><br><span class="line">win32 &#123;</span><br><span class="line">   # 获取路径下的所有dll文件，第二个参数如果为<span class="literal">true</span>：递归子目录</span><br><span class="line">   GSL_DLLs = $$<span class="built_in">files</span>($$GSL_DIR/bin<span class="comment">/*.dll, false)</span></span><br><span class="line"><span class="comment">   for(gsl_dll, GSL_DLLs)&#123;</span></span><br><span class="line"><span class="comment">      # windows下路径为\\，以下替换路径里的 / 为 \\</span></span><br><span class="line"><span class="comment">      gsl_dll ~= s,/,\\,g</span></span><br><span class="line"><span class="comment">      # copy命令，注意必须有escape_expend</span></span><br><span class="line"><span class="comment">      cmd = copy /Y $$shell_quote($$gsl_dll) $$shell_quote(..\\Dest) $$escape_expand(\\n\\t)</span></span><br><span class="line"><span class="comment">      QMAKE_PRE_LINK += $$cmd</span></span><br><span class="line"><span class="comment">#      message($$cmd)</span></span><br><span class="line"><span class="comment">   &#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">else &#123;</span></span><br><span class="line"><span class="comment">   # <span class="doctag">TODO:</span> Unices</span></span><br><span class="line"><span class="comment">&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="qt之编译">2 qt之编译</h2>
+<h3 id="更新qt自带的freetype">2.1 更新qt自带的freetype</h3>
+<p>　　Qt的源码中自带的<code>import_from_tarball.sh</code>脚本，可用于更新Qt内含的freetype库。Qt使用的Freetype库，位于<code>$&#123;QT_SRC&#125;/qtbase/src/3rdparty/freetype</code>，在该目录下有一个导入第三方库脚本：<code>import_from_tarball.sh</code>，可以使用msys2将新版本的freetype导入到Qt中。</p>
+<p>　　msys2命令格式，设 Qt src 位于
+<code>E:\qt\qt_build\qt-everywhere-src-5.15.1</code> <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sh import_from_tarball.sh freetype_src_dir freetype_to_dir</span></span><br><span class="line"></span><br><span class="line">sh import_from_tarball.sh freetype-2.10.2 /E/qt/qt_build/qt-everywhere-src-5.15.1/qtbase/src/3rdparty/freetype</span><br></pre></td></tr></table></figure>
+　　Qt编译时创建的freetype库为：
+<code>$&#123;QT_INSTALL_DIR&#125;/lib/libqtfreetype.a</code></p>
+<p>　　使用时，需复制头文件(<code>$&#123;QT_SRC&#125;/qtbase/src/3rdparty/freetype/include</code>)至指定的位置，此处为
+Qt
+安装路径下的<code>3rdParty</code>目录，以下内容抄自<code>%&#123;cmake&#125;/share/cmake-3.18/Modules/FindFreetype.cmake</code>文件</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(QT_DIR D:/Dev/Qt/<span class="number">5.15</span>.<span class="number">1</span>/qt)</span><br><span class="line"><span class="keyword">set</span>(FREETYPE_DIR <span class="variable">$&#123;QT_DIR&#125;</span>/../<span class="number">3</span>rdParty/freetype)</span><br><span class="line"><span class="keyword">set</span>(FREETYPE_INCLUDE_DIR_freetype2 <span class="variable">$&#123;FREETYPE_DIR&#125;</span>/<span class="keyword">include</span>)</span><br><span class="line"><span class="keyword">set</span>(FREETYPE_INCLUDE_DIR_ft2build <span class="variable">$&#123;FREETYPE_DIR&#125;</span>/<span class="keyword">include</span>)</span><br><span class="line"><span class="keyword">set</span>(FREETYPE_LIBRARIES qtfreetype qtlibpng)   <span class="comment"># 必须加上png库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;FREETYPE_DIR&#125;</span>/<span class="keyword">include</span>)</span><br><span class="line"><span class="keyword">link_directories</span>(<span class="variable">$&#123;QT_DIR&#125;</span>/lib)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最后别忘记链接库</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJ_NAME&#125;</span> 其他库... <span class="variable">$&#123;FREETYPE_LIBRARIES&#125;</span> )</span><br></pre></td></tr></table></figure>
+<h3 id="qmake用法">2.2　<code>qmake</code>用法</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Qt 内置常量，可通过 qmake -query 查询</span><br><span class="line">INCLUDEPATH += $$clean_path($$[QT_INSTALL_PREFIX]/../3rdParty/freetype/include)</span><br><span class="line">LIBS += -L$$[QT_INSTALL_LIBS]</span><br><span class="line">LIBS += -lqtfreetype -lqtlibpng</span><br></pre></td></tr></table></figure>
+<h2 id="qt容器类使用基于范围的for循环range-based-for-loops">3
+Qt容器类使用基于范围的<code>for</code>循环(Range-Based for Loops)</h2>
+<p><code>C++11</code>规范引入了基于范围的<code>for</code>循环，例如对<code>std:vector</code>:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> name: names) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>C++11</code>编译器将上述内容翻译为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> name: names) &#123;</span><br><span class="line">    <span class="keyword">auto</span> &amp;&amp; __range = names;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> __begin = <span class="built_in">begin</span>(names), __end = <span class="built_in">end</span>(names); __begin != __end; ++__begin) &#123;</span><br><span class="line">        <span class="keyword">auto</span>&amp;&amp; name = *__begin;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译器使用<code>begin</code>/<code>end</code>迭代器遍历整个<code>names</code>集合。</p>
+<p>由于Qt采用<code>copy-on-write</code>的隐式共享特性，在Qt容器类中使用基于范围的<code>for</code>循环时，由于<code>for</code>循环内部调用<code>begin()</code>和<code>end()</code>函数，会产生一个非<code>const</code>的容器对象从隐式共享的数据中分离出来(cause
+a non-const container to detach from shared
+data)，从而出现容器类<code>深拷贝</code>的情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QDir dir;</span><br><span class="line"><span class="comment">//c++11 range-loop might detach Qt container (QStringList) [clazy-range-loop]</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> &amp;file : dir.<span class="built_in">entryList</span>()) &#123;	</span><br><span class="line">  <span class="built_in">qDebug</span>() &lt;&lt; file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解决方案很简单：</p>
+<ol type="1">
+<li>如果容器类是一个 <code>non-const</code> 的右值(<code>rvalue</code>),
+定义一个<code>const</code>变量保存之，然后再遍历:</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="keyword">auto</span> strings = <span class="built_in">functionReturningQStringList</span>();</span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> QString &amp;s : strings)</span><br><span class="line">    <span class="built_in">doSomethingWith</span>(s);</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>如果容器类是一个 <code>non-const</code> 的左值(<code>lvalue</code>),
+先使该容器对象成为<code>const</code>,然后再遍历，如果无法解决，则使用<code>std::as_const()</code>(<code>C++17</code>后支持)或<code>qAsConst()</code>:</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> QString &amp;s : <span class="built_in">qAsConst</span>(container))</span><br><span class="line">    <span class="built_in">doSomethingWith</span>(s);</span><br></pre></td></tr></table></figure>
+<p>上述处理后，没有分离，也没有非必须的"深拷贝"，使性能和可读性最大化。</p>
+<h2 id="qt之结构化绑定structured-bindings">4 Qt之结构化绑定(Structured
+bindings)</h2>
+<p><code>Python</code>中常用类似解绑做法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python</span></span><br><span class="line">values = <span class="built_in">tuple</span>(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">x,y = values		<span class="comment"># 解绑</span></span><br></pre></td></tr></table></figure>
+<p>从<code>C++17</code>开始，C++支持类似操作，称为结构化绑定：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QPair&lt;QString, QString&gt; values = &#123;<span class="string">&quot;new&quot;</span>, <span class="string">&quot;old&quot;</span>&#125;;</span><br><span class="line"><span class="keyword">auto</span> [x, y] = values;</span><br><span class="line"><span class="built_in">qDebug</span>()&lt;&lt;x&lt;&lt;y;		<span class="comment">// x=&quot;new&quot;,y=&quot;old&quot;</span></span><br></pre></td></tr></table></figure>
+<p>由于与<code>std::map</code>的API不兼容，<code>QMap</code>/<code>QHash</code>无法使用结构化绑定实现参数解绑，问题在于Qt的迭代器仅返回值而非<code>std</code>中的键值对：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">QMap&lt;QString, QString&gt; map = &#123;&#123;<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;no1&quot;</span>&#125;, &#123;<span class="string">&quot;hi&quot;</span>, <span class="string">&quot;no2&quot;</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> &amp;v : map) &#123;</span><br><span class="line">  <span class="built_in">qDebug</span>() &lt;&lt; v;</span><br><span class="line">&#125;				</span><br><span class="line"><span class="comment">// 返回： no1,no2</span></span><br></pre></td></tr></table></figure>
+<p><code>Qt</code>自 <code>5.10</code> 起提供了
+<code>key_value_iterator</code>和
+<code>const_key_value_iterator</code>迭代器:</p>
+<blockquote>
+<p>The QMap::key_value_iterator typedef provides an STL-style iterator
+for QMap and QMultiMap.</p>
+<p>QMap::key_value_iterator is essentially the same as QMap::iterator
+with the difference that operator*() returns a key/value pair instead of
+a value.</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">QMap&lt;QString, QString&gt; map = &#123;&#123;<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;no1&quot;</span>&#125;, &#123;<span class="string">&quot;hi&quot;</span>, <span class="string">&quot;no2&quot;</span>&#125;&#125;;</span><br><span class="line"><span class="keyword">auto</span> [key, value] = *map.<span class="built_in">keyValueBegin</span>();</span><br><span class="line"><span class="built_in">qDebug</span>() &lt;&lt; key &lt;&lt; value;</span><br><span class="line"><span class="comment">// 返回： &quot;hello&quot; &quot;no1&quot;</span></span><br></pre></td></tr></table></figure>
+<p>因此使用一个封装类做一个简单的转换，将<code>keyValueBegin</code>/<code>keyValueEnd</code>转换为<code>begin</code>/<code>end</code>，就可以使用基于范围的<code>for</code>循环结合结构化绑定，直接实现变量解绑：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keyword">class</span> <span class="title class_">asKeyValueRange</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">asKeyValueRange</span>(T &amp;data) : m_data&#123;data&#125; &#123;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">auto</span> <span class="title">begin</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> m_data.<span class="built_in">keyValueBegin</span>(); &#125;</span><br><span class="line">  <span class="function"><span class="keyword">auto</span> <span class="title">end</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> m_data.<span class="built_in">keyValueEnd</span>(); &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T &amp;m_data;		<span class="comment">// 引用，值可修改</span></span><br><span class="line">    <span class="comment">// const T &amp;m_data	//常引用，无法修改</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">QMap&lt;QString, QString&gt; map = &#123;&#123;<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;no1&quot;</span>&#125;, &#123;<span class="string">&quot;hi&quot;</span>, <span class="string">&quot;no2&quot;</span>&#125;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> [key, value]: <span class="built_in">asKeyValueRange</span>(map)) &#123;</span><br><span class="line">    <span class="built_in">qDebug</span>()&lt;&lt;key&lt;&lt;value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回：</span></span><br><span class="line"><span class="comment">// &quot;hello&quot; &quot;no1&quot;</span></span><br><span class="line"><span class="comment">// &quot;hi&quot; &quot;no2&quot;</span></span><br><span class="line"><span class="comment">// QMap((&quot;hello&quot;, &quot;no1&quot;)(&quot;hi&quot;, &quot;no2&quot;))</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>注意，无论是否使用<code>const</code>关键字，key和value均为非<code>const</code>引用，由于<code>T &amp;m_data</code>非<code>const</code>，对上述值的修改，会影响原来的容器</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> [key, value]: <span class="built_in">asKeyValueRange</span>(map)) &#123;</span><br><span class="line">    <span class="built_in">qDebug</span>()&lt;&lt;key&lt;&lt;value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回：</span></span><br><span class="line"><span class="comment">// &quot;hello&quot; &quot;hello[no1]&quot;</span></span><br><span class="line"><span class="comment">// &quot;hi&quot; &quot;hi[no2]&quot;</span></span><br><span class="line"><span class="comment">// QMap((&quot;hello&quot;, &quot;hello[no1]&quot;)(&quot;hi&quot;, &quot;hi[no2]&quot;))</span></span><br></pre></td></tr></table></figure>
+<p>修改也很简单，将 <code>T &amp;m_data</code> 定义改为
+<code>const T &amp;m_data</code>即可保证是常引用。 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 const T &amp;m_data 时：</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> [k, v] : <span class="built_in">asKeyValueRange</span>(map)) &#123;</span><br><span class="line">  v = k + <span class="string">&quot;[&quot;</span> + v + <span class="string">&quot;]&quot;</span>;		<span class="comment">// 报错</span></span><br><span class="line">  <span class="built_in">qDebug</span>() &lt;&lt; k &lt;&lt; v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考">参考</h2>
+<ol type="1">
+<li><code>Qt, range-based for loops and structured bindings</code>(<a
+target="_blank" rel="noopener" href="https://www.kdab.com/qt-range-based-for-loops-and-structured-bindings/">https://www.kdab.com/qt-range-based-for-loops-and-structured-bindings/</a>)</li>
+<li><code>Goodbye, Q_FOREACH</code> (<a
+target="_blank" rel="noopener" href="https://www.kdab.com/goodbye-q_foreach/">https://www.kdab.com/goodbye-q_foreach/</a>)</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2020/09/24/2020-09-24_qt/" title="Qt之点滴">https://njuferret.github.io/2020/09/24/2020-09-24_qt/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/qt/" rel="tag"><i class="fa fa-tag"></i> qt</a>
+              <a href="/tags/qmake/" rel="tag"><i class="fa fa-tag"></i> qmake</a>
+              <a href="/tags/cmake/" rel="tag"><i class="fa fa-tag"></i> cmake</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/09/22/2019-09-22_cpp_basic/" rel="prev" title="C++之点点滴滴">
+                  <i class="fa fa-angle-left"></i> C++之点点滴滴
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/10/07/2020-10-07_plantuml_graphviz/" rel="next" title="plantuml + graphviz配置">
+                  plantuml + graphviz配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

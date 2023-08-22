@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.css" integrity="sha256-RvRHGSuWAxZpXKV9lLDt2e+rZ+btzn48Wp4ueS3NZKs=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近要用Ubuntu，以前用SUSE的经验貌似很少能用在这里， Ubuntu版本：10.10，内核2.6.35.24(由老内核2.6.35.22升级而来） 发这篇blog记录一下用法，顺便赞一下Ubuntu，偶笔记本的无线网卡终于可以干活了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu的使用">
+<meta property="og:url" content="https://njuferret.github.io/2011/01/30/F7064423780201103014710258/index.html">
+<meta property="og:site_name" content="有点博客">
+<meta property="og:description" content="最近要用Ubuntu，以前用SUSE的经验貌似很少能用在这里， Ubuntu版本：10.10，内核2.6.35.24(由老内核2.6.35.22升级而来） 发这篇blog记录一下用法，顺便赞一下Ubuntu，偶笔记本的无线网卡终于可以干活了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2011-01-30T05:47:10.000Z">
+<meta property="article:modified_time" content="2023-08-22T04:01:06.708Z">
+<meta property="article:author" content="Ferret@NJTech">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="ok6410">
+<meta property="article:tag" content="交叉编译">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://njuferret.github.io/2011/01/30/F7064423780201103014710258/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://njuferret.github.io/2011/01/30/F7064423780201103014710258/","path":"2011/01/30/F7064423780201103014710258/","title":"Ubuntu的使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Ubuntu的使用 | 有点博客</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">有点博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu%E4%B8%8B%E4%BD%BF%E7%94%A8alias"><span class="nav-text">1、ubuntu下使用alias</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85ssh%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-text">2、安装ssh服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85cross-4.2.2"><span class="nav-text">3、安装cross-4.2.2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu-%E6%9E%B6%E8%A8%ADnfs-server"><span class="nav-text">4、Ubuntu 架設nfs server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%BD%93%E7%BB%99%E5%8A%9B%E7%9A%84find%E5%91%BD%E4%BB%A4"><span class="nav-text">5、相当给力的find命令：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ftp%E9%85%8D%E7%BD%AE"><span class="nav-text">6 FTP配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vsftpd%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">6.1、VsFTPd的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proftpd%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">6.2、ProFTPd的配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu%E5%A4%9A%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E7%9B%B8%E5%85%B3"><span class="nav-text">7、Ubuntu多系统启动相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC%E7%9A%84%E5%87%A0%E4%B8%AA%E6%8A%80%E5%B7%A7"><span class="nav-text">8、shell脚本的几个技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#k6410%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%91%BD%E4%BB%A4"><span class="nav-text">9、0k6410的两个命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu10.10%E8%AE%BE%E7%BD%AE%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%90%AF%E5%8A%A8%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="nav-text">10、Ubuntu（10.10）设置命令行启动与恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ubuntu-server-12.04-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%88%E4%BB%BD%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BA%E9%94%99%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-text">11、Ubuntu
+Server 12.04 “初始化月份字符串出错”的解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%99%E7%B3%BB%E7%BB%9F%E6%89%93%E8%A1%A5%E4%B8%81%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-text">12、给系统打补丁的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%B8%A6%E6%9C%89%E4%B8%BB%E7%9B%AE%E5%BD%95%E5%92%8C%E8%83%BD%E5%A4%9F%E6%89%A7%E8%A1%8C%E5%9F%BA%E6%9C%AC%E8%84%9A%E6%9C%AC%E7%9A%84%E7%94%A8%E6%88%B7"><span class="nav-text">13、创建一个带有主目录和能够执行基本脚本的用户：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3ubuntu-12.04%E5%8D%87%E7%BA%A7%E5%88%B014.04%E6%97%B6fontconfig%E9%94%99%E8%AF%AF"><span class="nav-text">14、解决Ubuntu
+12.04升级到14.04时，fontConfig错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E5%90%AF%E5%8A%A8%E6%97%B6%E6%89%A7%E8%A1%8C%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-text">15、增加启动时执行的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%97%A0%E7%BA%BF%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%B9%B6%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95wifi"><span class="nav-text">16、安装无线网卡驱动并开机自动登录WiFi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E9%87%8D%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6"><span class="nav-text">19、批量重命名文件</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ferret@NJTech"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ferret@NJTech</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://njuferret.github.io/2011/01/30/F7064423780201103014710258/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ferret@NJTech">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有点博客">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Ubuntu的使用 | 有点博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ubuntu的使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2011-01-30 13:47:10" itemprop="dateCreated datePublished" datetime="2011-01-30T13:47:10+08:00">2011-01-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-22 12:01:06" itemprop="dateModified" datetime="2023-08-22T12:01:06+08:00">2023-08-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/skill/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近要用Ubuntu，以前用SUSE的经验貌似很少能用在这里，
+Ubuntu版本：10.10，内核2.6.35.24(由老内核2.6.35.22升级而来）
+发这篇blog记录一下用法，顺便赞一下Ubuntu，偶笔记本的无线网卡终于可以干活了。
+<span id="more"></span>
+以下内容均为网上Google来，并经过测试，留存在这里，方便以后查找</p>
+<h2 id="ubuntu下使用alias">1、ubuntu下使用alias</h2>
+<p>把 alias 语句写入 <code>~/.bashrc</code>中即可方便使用。
+命令：<code>sudo vi ~/.bashrc</code>进入即可,编辑了
+<code>~/.bashrc</code> 后, 使用 <code>source ~/.bashrc</code>
+即可让它立刻生效。</p>
+<p>bashrc文件中有这么一段说明，貌似是将所有的alias可以定义在一个叫做.bash_aliases的文件中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Alias definitions.</span></span><br><span class="line"><span class="comment"># You may want to put all your additions into a separate file like</span></span><br><span class="line"><span class="comment"># ~/.bash_aliases, instead of adding them here directly.</span></span><br><span class="line"><span class="comment"># See /usr/share/doc/bash-doc/examples in the bash-doc package.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ -f ~/.bash_aliases ]; <span class="keyword">then</span></span><br><span class="line">    . ~/.bash_aliases</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这个功能不错，把自己常用的alias定义保存后，直接复制，以后到哪里都能用了。
+附上几个自己用的alias： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># some more ls aliases</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">&#x27;ls -aluhp&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> lt=<span class="string">&#x27;ls -alFrSht&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> lf=<span class="string">&#x27;ls -alFrSh&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> <span class="built_in">cd</span>..=<span class="string">&#x27;cd ..&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> alg=<span class="string">&#x27;arm-linux-gcc&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> alr=<span class="string">&#x27;arm-linux-readelf&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> agi=<span class="string">&#x27;apt-get install&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> agg=<span class="string">&#x27;apt-get&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#该命令是直接进入ftp文件夹，并列出该文件夹下的内容</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> g2ftp=<span class="string">&#x27;cd /usr/local/arm/exports/ftp &amp;&amp; ll&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#该命令将复制文件到指定的目录，这里是ftp目录</span></span><br><span class="line"><span class="comment">#用法 &quot;c2ftp 文件名&quot;即可</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">cp2ftp</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">cp</span> <span class="variable">$1</span> /usr/local/arm/exports/ftp/</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">alias</span> c2ftp=cp2ftp</span><br><span class="line"><span class="built_in">alias</span> lsftp=<span class="string">&#x27;ls /usr/local/arm/exports/ftp&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> llftp=<span class="string">&#x27;ll /usr/local/arm/exports/ftp&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> duu=<span class="string">&#x27;du -h --max-depth=1&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> ecpath=<span class="string">&#x27;echo $PATH&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> g2armRoot=<span class="string">&#x27;cd /usr/local/arm/exports/export&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> aqmake=<span class="string">&#x27;/opt/qte-4.7.1/bin/qmake&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> g2src=<span class="string">&#x27;cd/usr/local/arm/source/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">alias</span> en1=<span class="string">&#x27;export LANG=&quot;en_US:UTF-8&quot;&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> en2=<span class="string">&#x27;export LANGUAGE=&quot;en_US:en&quot;&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> tree=<span class="string">&#x27;tree -N&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> ags=<span class="string">&#x27;apt-cache search&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> netreboot=<span class="string">&#x27;/etc/init.d/networking restart&#x27;</span> </span><br><span class="line"><span class="built_in">alias</span> ftpreboot=<span class="string">&#x27;service proftpd restart&#x27;</span> </span><br><span class="line"><span class="built_in">alias</span> wwwreboot=<span class="string">&#x27;service apache2 restart&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># ffstr :Find File with String of.. </span></span><br><span class="line"><span class="comment"># 在当前路径下搜索包含指定字符串的文件，并显示 </span></span><br><span class="line"><span class="comment"># grep 参数-n：列出行号，-i：不区分大小写</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">alias</span> ffstr=<span class="string">&#x27;find . -type f -print | xargs grep -n -i&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">7zaa</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    7z a <span class="variable">$1</span>.7z <span class="variable">$1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 7z压缩</span></span><br><span class="line"><span class="built_in">alias</span> 7za=<span class="string">&#x27;7zaa&#x27;</span></span><br><span class="line"><span class="comment"># 7z 将目录下所有文件和目录分别压缩</span></span><br><span class="line"><span class="built_in">alias</span> 7zz=<span class="string">&#x27;for ITEM in `ls`; do 7za $ITEM ; done&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> aip=<span class="string">&#x27;arping -A 10.3.89.122 -I eth0&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="安装ssh服务器">2、安装ssh服务器</h2>
+<p>在“系统”-&gt;“系统管理”-&gt;“更新管理器”中，点击“设置”，并选中“Ubuntu软件”,将“下载自”一栏选择为“主服务器”，先修改更新服务器地址（默认安装的澳洲服务器挂了）。
+然后就很简单了，使用<code>apt-get install ssh</code>安装吧.安装完成之后，<code>ps -e|grep ssh</code>，一定要看到<code>sshd</code>的进程，这就说明ssh服务器装好了，然后就很简单，可以使用putty的ssh登录搞了，</p>
+<h2 id="安装cross-4.2.2">3、安装cross-4.2.2</h2>
+<p>这个很easy，就是下载之后解压，命令式<code>tar jxvf cross-4.2.2-eabi.tar.bz2 -C /usr/local/arm</code>，<code>cross-4.2.2-eabi.tar.bz2</code>
+下载地址：<a
+target="_blank" rel="noopener" href="http://code.google.com/p/ldd6410/downloads/detail?name=cross-4.2.2-eabi.tar.bz2&amp;can=2&amp;q=">这里</a>，安装说明：<a
+target="_blank" rel="noopener" href="http://code.google.com/p/ldd6410/wiki/S3C6410ToolChainBuilding">这里</a>
+（用Google直接搜索cross-4.2.2-eabi，直接出来的第一第二个就是上面两个链接）</p>
+<p>2012年7月28日更新： 今天遇到一个奇怪的问题：
+运行编译器出错，arm-linux-gcc:
+没有这个文件或者目录。Google了一下，发现了这个解决方法：apt-get install
+lsb-core解决，原文地址在<a
+target="_blank" rel="noopener" href="http://blog.csdn.net/zjb9605025/article/details/6412821">这里</a>。
+仔细思考了一下，以前的都是32位系统，没出现这个问题，现在是64位，估计缺少依赖库。</p>
+<h2 id="ubuntu-架設nfs-server">4、Ubuntu 架設nfs server</h2>
+<ol type="1">
+<li><p>Install <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install nfs-common</span><br><span class="line">$ sudo apt-get install nfs-kernel-server</span><br></pre></td></tr></table></figure></p></li>
+<li><p>设定 /etc/exports (For example: 將/mnt/iso share給all net使用)
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/exports</span><br><span class="line">/mnt/iso *(ro,<span class="built_in">sync</span>)</span><br></pre></td></tr></table></figure></p></li>
+<li><p>启动 nfs server <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo /etc/init.d/nfs-kernel-server start</span><br></pre></td></tr></table></figure></p></li>
+<li><p>检查 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ showmount -e localhost</span><br></pre></td></tr></table></figure> 成功的话应该可以看到这样的信息:
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Export list <span class="keyword">for</span> localhost:</span><br><span class="line">/mnt/iso *</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<h2 id="相当给力的find命令">5、相当给力的find命令：</h2>
+<p>1）查找并删除某个文件(或目录)</p>
+<p>这里以删除当前目录（含子目录）下所有<code>*.svn</code>目录为例
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> find . -name .svn -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure> 2）将包含某文本的所有文件及其对应行显示出来。</p>
+<p>如下命令，在/usr目录中查找所有包含error、并以.log结尾的文件
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /usr -name <span class="string">&#x27;*.log&#x27;</span> | xargs grep <span class="string">&#x27;error&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<p>3）批量命名文件。
+如下命令，查找所有文件名包含“[www.网址111.com]”字符串的文件，并将文件名中的该字符串删除。
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -<span class="built_in">type</span> f | grep <span class="string">&#x27;\[www\.网址111\.com\]&#x27;</span> | xargs rename <span class="string">&#x27;s/&#x27;</span>\[www\.网址111\.com\]<span class="string">&#x27;//&#x27;</span></span><br></pre></td></tr></table></figure> 4) 查找文件，并将对其权限进行修改 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> $(find . -<span class="built_in">type</span> f -name <span class="string">&quot;*&quot;</span>); <span class="keyword">do</span> <span class="built_in">chmod</span> 664 <span class="variable">$l</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure> 5)
+查找当前目录下（含子目录）包含指定字符串的文件名 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#该命令查找当前目录下（含子目录）包含指定字符串的文件名</span></span><br><span class="line"><span class="comment">#用法 “find_files_with_string 文件名”即可</span></span><br><span class="line"><span class="function"><span class="title">find_files_with_string</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    grep -il -R <span class="variable">$1</span> *</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">alias</span> ffwstr=find_files_with_string</span><br></pre></td></tr></table></figure></p>
+<h2 id="ftp配置">6 FTP配置</h2>
+<h3 id="vsftpd的配置">6.1、VsFTPd的配置</h3>
+<p>搞个简易的自己用用（开通匿名账号，并且可以上传、下载、删除）
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">listen=YES</span><br><span class="line">anonymous_enable=YES</span><br><span class="line">write_enable=YES</span><br><span class="line">local_enable=NO</span><br><span class="line">anon_upload_enable=YES</span><br><span class="line">anon_mkdir_write_enable=YES</span><br><span class="line">dirmessage_enable=YES</span><br><span class="line">use_localtime=YES</span><br><span class="line">xferlog_enable=YES</span><br><span class="line">connect_from_port_20=YES</span><br><span class="line">ftpd_banner=Welcome to Ferret&#x27;s FTP service.</span><br><span class="line">secure_chroot_dir=/var/run/vsftpd/empty</span><br><span class="line">pam_service_name=vsftpd</span><br><span class="line">rsa_cert_file=/etc/ssl/private/vsftpd.pem</span><br><span class="line"></span><br><span class="line">#设置匿名账号的主目录</span><br><span class="line">anon_root=/usr/local/arm/exports</span><br><span class="line">#可进行其他操作</span><br><span class="line">anon_other_write_enable=YES</span><br><span class="line"></span><br><span class="line">#这句必须加上，否则只能上传删除等不能下载</span><br><span class="line">anon_umask=022</span><br></pre></td></tr></table></figure> 注意：
+上述配置文件将匿名账号的路径设为<code>/usr/local/arm/exports</code>，在Ubuntu下要该目录改为<code>root</code>所有，在其下的路径都改为ftp匿名账号所有，即可。</p>
+<h3 id="proftpd的配置">6.2、ProFTPd的配置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># /etc/proftpd/proftpd.conf -- This is a basic ProFTPD configuration file.</span><br><span class="line"># To really apply changes reload proftpd after modifications.</span><br><span class="line"># </span><br><span class="line"></span><br><span class="line"># Includes DSO modules</span><br><span class="line">Include /etc/proftpd/modules.conf</span><br><span class="line"></span><br><span class="line"># Set off to disable IPv6 support which is annoying on IPv4 on</span><br><span class="line">ly boxes.</span><br><span class="line">UseIPv6                off</span><br><span class="line"># If set on you can experience a longer connection delay in many cases.</span><br><span class="line">IdentLookups            off</span><br><span class="line"></span><br><span class="line">ServerName            &quot;Ferret&#x27;s FTP Server&quot;</span><br><span class="line">ServerType            standalone</span><br><span class="line">DeferWelcome            off</span><br><span class="line"></span><br><span class="line">MultilineRFC2228        on</span><br><span class="line">DefaultServer            on</span><br><span class="line">ShowSymlinks            on</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TimeoutNoTransfer        180</span><br><span class="line">TimeoutStalled            180</span><br><span class="line">TimeoutIdle            300</span><br><span class="line"></span><br><span class="line">DisplayLogin                    .welcome.msg</span><br><span class="line">DisplayChdir                   .message true</span><br><span class="line">ListOptions                    &quot;-l&quot;</span><br><span class="line"></span><br><span class="line">DenyFilter            \*.*/</span><br><span class="line"></span><br><span class="line"># Use this to jail all users in their homes </span><br><span class="line"> DefaultRoot            /usr/ftpService</span><br><span class="line"></span><br><span class="line"># Users require a valid shell listed in /etc/shells to login.</span><br><span class="line"># Use this directive to release that constrain.</span><br><span class="line"># RequireValidShell        off</span><br><span class="line"></span><br><span class="line"># Port 21 is the standard FTP port.</span><br><span class="line">Port                21</span><br><span class="line"></span><br><span class="line"># In some cases you have to specify passive ports range to by-pass</span><br><span class="line"># firewall limitations. Ephemeral ports can be used for that, but</span><br><span class="line"># feel free to use a more narrow range.</span><br><span class="line"># PassivePorts                  49152 65534</span><br><span class="line"></span><br><span class="line"># If your host was NATted, this option is useful in order to</span><br><span class="line"># allow passive tranfers to work. You have to use your public</span><br><span class="line"># address and opening the passive ports used on your firewall as well.</span><br><span class="line"># MasqueradeAddress        1.2.3.4</span><br><span class="line"></span><br><span class="line"># This is useful for masquerading address with dynamic IPs:</span><br><span class="line"># refresh any configured MasqueradeAddress directives every 8 hours</span><br><span class="line">&lt;IfModule mod_dynmasq.c&gt;</span><br><span class="line"># DynMasqRefresh 28800</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"># To prevent DoS attacks, set the maximum number of child processes</span><br><span class="line"># to 30.  If you need to allow more than 30 concurrent connections</span><br><span class="line"># at on</span><br><span class="line">ce, simply increase this value.  Note that this ON</span><br><span class="line">LY works</span><br><span class="line"># in standalone mode, in inetd mode you should use an inetd server</span><br><span class="line"># that allows you to limit maximum number of processes per service</span><br><span class="line"># (such as xinetd)</span><br><span class="line">MaxInstances            10</span><br><span class="line"></span><br><span class="line"># Set the user and group that the server normally runs at.</span><br><span class="line">#User                proftpd</span><br><span class="line">User                ftp</span><br><span class="line">Group                nogroup</span><br><span class="line"></span><br><span class="line"># Umask 022 is a good standard umask to prevent new files and dirs</span><br><span class="line"># (second parm) from being group and world writable.</span><br><span class="line">Umask                022  022</span><br><span class="line"># Normally, we want files to be overwriteable.</span><br><span class="line">AllowOverwrite            on</span><br><span class="line"></span><br><span class="line">AllowStoreRestart on</span><br><span class="line"></span><br><span class="line"># Uncomment this if you are using NIS or LDAP via NSS to retrieve passwords:</span><br><span class="line"># PersistentPasswd        off</span><br><span class="line"></span><br><span class="line"># This is required to use both PAM-based authentication and local passwords</span><br><span class="line"># AuthOrder            mod_auth_pam.c* mod_auth_unix.c</span><br><span class="line"></span><br><span class="line"># Be warned: use of this directive impacts CPU average load!</span><br><span class="line"># Uncomment this if you like to see progress and transfer rate with ftpwho</span><br><span class="line"># in downloads. That is not needed for uploads rates.</span><br><span class="line">#</span><br><span class="line"># UseSendFile            off</span><br><span class="line"></span><br><span class="line">TransferLog /var/log/proftpd/xferlog</span><br><span class="line">SystemLog   /var/log/proftpd/proftpd.log</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_quotatab.c&gt;</span><br><span class="line">QuotaEngine off</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_ratio.c&gt;</span><br><span class="line">Ratios off</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Delay engine reduces impact of the so-called Timing Attack described in</span><br><span class="line"># http://security.lss.hr/index.php?page=details&amp;ID=LSS-2004-10-02</span><br><span class="line"># It is on by default. </span><br><span class="line">&lt;IfModule mod_delay.c&gt;</span><br><span class="line">DelayEngine on</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_ctrls.c&gt;</span><br><span class="line">ControlsEngine        off</span><br><span class="line">ControlsMaxClients    2</span><br><span class="line">ControlsLog           /var/log/proftpd/controls.log</span><br><span class="line">ControlsInterval      5</span><br><span class="line">ControlsSocket        /var/run/proftpd/proftpd.sock</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_ctrls_admin.c&gt;</span><br><span class="line">AdminControlsEngine off</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Alternative authentication frameworks</span><br><span class="line">#</span><br><span class="line">#Include /etc/proftpd/ldap.conf</span><br><span class="line">#Include /etc/proftpd/sql.conf</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># This is used for FTPS connections</span><br><span class="line">#</span><br><span class="line">#Include /etc/proftpd/tls.conf</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Useful to keep VirtualHost/VirtualRoot directives separated</span><br><span class="line">#</span><br><span class="line">#Include /etc/proftpd/virtuals.con</span><br><span class="line"></span><br><span class="line"># A basic anonymous configuration, no upload directories.</span><br><span class="line"></span><br><span class="line">&lt;Limit SITE_CHMOD&gt;</span><br><span class="line">    DenyAll</span><br><span class="line">&lt;/Limit&gt;</span><br><span class="line"></span><br><span class="line">&lt;Directory /wd_1t/ftpService&gt;</span><br><span class="line">    &lt;Limit ALL&gt;</span><br><span class="line">        DenyAll</span><br><span class="line">    &lt;/Limit&gt;</span><br><span class="line">&lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># &lt;Anonymous ~ftp&gt;</span><br><span class="line"> &lt;Anonymous /wd_1t/ftpService/pub&gt;</span><br><span class="line">   User                ftp</span><br><span class="line">   Group                nogroup</span><br><span class="line">#   # We want clients to be able to login with &quot;anonymous&quot; as well as &quot;ftp&quot;</span><br><span class="line">   UserAlias            anonymous ftp</span><br><span class="line">#   # Cosmetic changes, all files belongs to ftp user</span><br><span class="line">   DirFakeUser    on ftp</span><br><span class="line">   DirFakeGroup on ftp</span><br><span class="line"># </span><br><span class="line">   RequireValidShell        off</span><br><span class="line"># </span><br><span class="line">#   # Limit the maximum number of anonymous logins</span><br><span class="line">   MaxClients            10</span><br><span class="line"># </span><br><span class="line">#   # We want &#x27;welcome.msg&#x27; displayed at login, and &#x27;.message&#x27; displayed</span><br><span class="line">#   # in each newly chdired directory.</span><br><span class="line">   DisplayLogin            welcome.msg</span><br><span class="line">#   DisplayChdir        .message</span><br><span class="line"># </span><br><span class="line">#   # Limit WRITE everywhere in the anonymous chroot</span><br><span class="line">   &lt;Directory /wd_1t/ftpService/pub&gt;</span><br><span class="line">     &lt;Limit WRITE&gt;</span><br><span class="line">       DenyAll</span><br><span class="line">     &lt;/Limit&gt;</span><br><span class="line">   &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">   &lt;Directory /wd_1t/ftpService/upload&gt;</span><br><span class="line">    &lt;Limit ALL&gt;</span><br><span class="line">        DenyAll</span><br><span class="line">    &lt;/Limit&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;Limit DIRS WRITE CMD RMD STOR&gt;</span><br><span class="line">        AllowAll</span><br><span class="line">    &lt;/Limit&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Limit DELE&gt;</span><br><span class="line">        DenyAll</span><br><span class="line">    &lt;/Limit&gt;</span><br><span class="line">    </span><br><span class="line">#        &lt;Limit WRITE&gt;</span><br><span class="line">#       AllowAll</span><br><span class="line">#    &lt;/Limit&gt; #如果不想让下载，只让上载 可以加上</span><br><span class="line">#     &lt;Limit READ&gt;</span><br><span class="line">#        DenyAll</span><br><span class="line">#    &lt;/Limit&gt;</span><br><span class="line">   &lt;/Directory&gt; #到这差不多就完了，每个目录可以写 .ftpaccess 设置权限</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   &lt;Directory /wd_1t/ftpService/www&gt;</span><br><span class="line">     &lt;Limit ALL&gt;</span><br><span class="line">    DenyAll</span><br><span class="line">     &lt;/Limit&gt;</span><br><span class="line">   &lt;/Directory&gt; </span><br><span class="line"></span><br><span class="line"># </span><br><span class="line">#   # Uncomment this if you&#x27;re brave.</span><br><span class="line">#   # &lt;Directory incoming&gt;</span><br><span class="line">#   #   # Umask 022 is a good standard umask to prevent new files and dirs</span><br><span class="line">#   #   # (second parm) from being group and world writable.</span><br><span class="line">#   #   Umask                022  022</span><br><span class="line">#   #            &lt;Limit READ WRITE&gt;</span><br><span class="line">#   #            DenyAll</span><br><span class="line">#   #            &lt;/Limit&gt;</span><br><span class="line">#   #            &lt;Limit STOR&gt;</span><br><span class="line">#   #            AllowAll</span><br><span class="line">#   #            &lt;/Limit&gt;</span><br><span class="line">#   # &lt;/Directory&gt;</span><br><span class="line"># </span><br><span class="line"> &lt;/Anonymous&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;Anonymous /wd_1t/ftpService&gt;</span><br><span class="line">    User   ferret</span><br><span class="line">    Group   nogroup</span><br><span class="line">#    Umask 022</span><br><span class="line">     &lt;Directory *&gt;</span><br><span class="line">      &lt;Limit ALL&gt;</span><br><span class="line">       AllowAll</span><br><span class="line">      &lt;/Limit&gt;</span><br><span class="line">     &lt;/Directory&gt;     </span><br><span class="line">&lt;/Anonymous&gt;</span><br><span class="line"></span><br><span class="line">#&lt;Anonymous /usr/ftpService/www&gt;</span><br><span class="line">#      User   ferret</span><br><span class="line">#      Group   nogroup</span><br><span class="line">#  #   Umask 022</span><br><span class="line">#       &lt;Directory *&gt;</span><br><span class="line">#        &lt;Limit ALL&gt;</span><br><span class="line">#         AllowAll</span><br><span class="line">#        &lt;/Limit&gt;</span><br><span class="line">#       &lt;/Directory&gt;</span><br><span class="line"># &lt;/Anonymous&gt;</span><br><span class="line"></span><br><span class="line">&lt;Anonymous /wd_1t/ftpService/Movies&gt;</span><br><span class="line">    User xmj</span><br><span class="line">    Group nogroup</span><br><span class="line">#    Umask 022</span><br><span class="line">    &lt;Directory *&gt;</span><br><span class="line">     &lt;Limit READ DIRS CMD RMD STOR&gt;</span><br><span class="line">         AllowAll</span><br><span class="line">     &lt;/Limit&gt;</span><br><span class="line">    </span><br><span class="line">      &lt;Limit WRITE&gt;</span><br><span class="line">        DenyAll</span><br><span class="line">      &lt;/Limit&gt;</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line">&lt;/Anonymous&gt;</span><br><span class="line"></span><br><span class="line">&lt;Anonymous /home/bt/rtorrent/torrents&gt;</span><br><span class="line">    User bt</span><br><span class="line">    Group nogroup</span><br><span class="line">#   Umask 022</span><br><span class="line">    &lt;Directory *&gt;</span><br><span class="line">      &lt;Limit ALL&gt;</span><br><span class="line">        AllowAll</span><br><span class="line">      &lt;/Limit&gt;</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line">&lt;/Anonymous&gt;</span><br></pre></td></tr></table></figure>
+<p>注：Proftpd的错误，今天将服务器有10.10升级至12.04版本，proftpd出现如下错误：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proftpd[3644]: Fatal: LoadModule: error loading module &#x27;mod_vroot.c&#x27;: 不允许的操作 on line 68 of &#x27;/etc/proftpd/modules.conf&#x27;</span><br></pre></td></tr></table></figure> 解决方法：proftpd没有安装依赖库“proftpd-mod-vroot”，
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install proftpd-mod-vroot，</span><br></pre></td></tr></table></figure> 重启ftp，OK</p>
+<h2 id="ubuntu多系统启动相关">7、Ubuntu多系统启动相关</h2>
+<ol type="1">
+<li>更改启动顺序
+登录为root权限，进入<code>/etc/grub.d</code>目录，找到<code>30_os-prober</code>这个文件，把
+<code>30_os-prober</code>这个文件名的数字30改为05到10之间的数字即可(没多少可选06、07、08、09)。
+比如改为<code>08_os-prober</code>，这样创建出来的<code>grub.cfg</code>内的菜单项，windows的排序就会自动在ubuntu之前;</li>
+</ol>
+<p>另一种方法没试验，如下：
+打开<code>/boot/grub/grub.cfg</code>，各个启动项都以<code>menuentry</code>为开头，将<code>menuentry</code>中的内容copy下来,如：menuentry中的<code>"Ubuntu Live Desktop 10.04 32bit zh_TW"</code>抄起來。
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">menuentry &quot;Ubuntu Live Desktop 10.04 32bit zh_TW&quot; &#123;</span><br></pre></td></tr></table></figure>
+然后打开<code>/etc/default/grub</code>，搜索<code>GRUB_DEFAULT=0</code>项，将后面的<code>0</code>，使用上述复制的字符串替换：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GRUB_DEFAULT=&quot;Ubuntu Live Desktop 10.04 32bit zh_TW&quot;</span><br></pre></td></tr></table></figure> 最后更新下grub：<code>update-grub</code>，
+（如要还原成原样，使用<code>GRUB_DEFAULT=0</code>，再重新更新下<code>grub</code>即可）。</p>
+<ol start="2" type="1">
+<li>删除启动项中的多余项（主要是linux升级后的多个内核）
+首先显示系统已安装内核： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg --get-selections | grep linux-image</span><br></pre></td></tr></table></figure> 结果如下（本机）：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@njuFerret:/home/ferret<span class="comment"># dpkg --get-selections | grep linux-image</span></span><br><span class="line">linux-image-2.6.35-22-generic                   install</span><br><span class="line">linux-image-2.6.35-24-generic                   install</span><br><span class="line">linux-image-generic                             install</span><br></pre></td></tr></table></figure> 运行以下命令删除旧内核： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get remove linux-image-2.6.35-22-generic    <span class="comment">#删除旧的内核</span></span><br></pre></td></tr></table></figure>
+更新grub,然后重启就可以了： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-grub     <span class="comment"># 更新grub，（可能不需要）</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>附命令: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dpkg --get-selections [&lt;表达式&gt; ...] 把已选中的软件包列表打印到标准输出</span><br><span class="line">grep linux-image 匹配查找</span><br><span class="line"><span class="built_in">uname</span> -a 查看已安装的linux内核版本</span><br></pre></td></tr></table></figure></p>
+<h2 id="shell脚本的几个技巧">8、shell脚本的几个技巧</h2>
+<p>1）使用命令的返回值： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">a=$(<span class="built_in">pwd</span>)   <span class="comment">#或 a=`pwd`  &quot;`&quot;是撇号，非单引号</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$a</span>&quot;</span> = <span class="string">&quot;/root&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;you are in the root directory&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;you are in the &quot;</span><span class="variable">$a</span><span class="string">&quot; directory&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<p>2）判断目录是否存在    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">export</span> srcPath=$(<span class="built_in">pwd</span>)</span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$srcPath</span>/installing...&quot;</span> ]; <span class="keyword">then</span>      </span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;  ****   tslib未安装  ****  &quot;</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;请先运行1.build_tslib安装tslib&quot;</span></span><br><span class="line">        <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
+<p>3）定义函数并返回字符串 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">getUbootFolder</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    fname=<span class="variable">$1</span></span><br><span class="line">    fname=<span class="variable">$&#123;fname%&quot;.7z&quot;&#125;</span>;     <span class="comment"># &quot;%&quot;表示从右侧开始将匹配的字符串删除</span></span><br><span class="line">    fname=<span class="variable">$&#123;fname%&quot;.bak&quot;&#125;</span>;</span><br><span class="line">    fname=<span class="variable">$&#123;fname%&quot;.tar.bz2&quot;&#125;</span>;</span><br><span class="line">    <span class="built_in">echo</span> <span class="variable">$fname</span>;</span><br><span class="line">&#125;</span><br><span class="line">ubootFolder=$(getUbootFolder <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>&quot;</span>);</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$ubootFolder</span>;</span><br></pre></td></tr></table></figure> 关于字符串的更多操作，详见<a
+target="_blank" rel="noopener" href="http://www.cnblogs.com/chengmo/archive/2010/10/02/1841355.html">这里</a></p>
+<p>4）case语句的一个很经典的用法 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ftype=`file <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>&quot;</span>`   <span class="comment"># Note &#x27; and ` is different</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;<span class="variable">$ftype</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">    <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>: 7-zip archive data&quot;</span>*)</span><br><span class="line">            fullPath=</span><br><span class="line">        　　7z x <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>&quot;</span> &gt; /dev/NULL;;</span><br><span class="line">    <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>: bzip2 compressed&quot;</span>*)</span><br><span class="line">        　　 tar xvf <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>&quot;</span> &gt; /dev/NULL;;</span><br><span class="line">    *) <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$UBOOT_SRC</span>：未知文件类型，请确认该文件为7zip或bzip2压缩&quot;</span>;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+上述命令中，利用file命令来判断文件类型，并根据不同的类型选择不同的处理方法</p>
+<h2 id="k6410的两个命令">9、0k6410的两个命令</h2>
+<p>1)设置本机地址 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置IP地址</span></span><br><span class="line">ifconfig eth0 192.168.10.120 netmask 255.255.255.0</span><br><span class="line"><span class="comment"># 设置默认网关</span></span><br><span class="line">route delete default</span><br><span class="line">route add default gw 192.168.10.1</span><br><span class="line"><span class="comment"># 修改域名服务器</span></span><br><span class="line">将 etc/resolv.conf 文件内容修改如下：</span><br><span class="line">nameserver 192.168.10.1</span><br></pre></td></tr></table></figure></p>
+<p>2)设置mount文件夹，注意-o nolock必须加上 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs 10.0.242.120:/usr/local/arm/exports /tmp -o nolock</span><br></pre></td></tr></table></figure>
+3）设置uboot的nfs引导 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line">setenv bootargs <span class="string">&quot;root=/dev/nfs nfsroot=192.168.10.101:/usr/local/arm/exports/export ip=192.168.10.120:192.168.10.101:192.168.10.1:255.255.255.0:aaa.bbb:eth0:off console=ttySAC0,115200&quot;</span></span><br><span class="line"><span class="built_in">printenv</span>         <span class="comment"># 列出当前的环境变量</span></span><br><span class="line">saveenv          <span class="comment"># 保存环境变量</span></span><br></pre></td></tr></table></figure></p>
+<h2
+id="ubuntu10.10设置命令行启动与恢复">10、Ubuntu（10.10）设置命令行启动与恢复</h2>
+<p>1）打开 <code>/etc/default/grub</code>
+，在<code>GRUB_CMDLINE_LINUX_DEFAULT="quite splash"</code>的末尾添加<code>text</code>：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;quite splash text&quot;</span> </span><br></pre></td></tr></table></figure> 2) 执行 <code>update-grub</code> 命令，重启即可。
+如果需要恢复: 1）启动后，暂时性恢复，执行命令：
+<code>/etc/init.d/gdm start</code>
+（或使用<code>alias</code>，将下句命令添加到<code>~/.bash_aliases</code>中）
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> startGUI=<span class="string">&#x27;/etc/init.d/gdm start&#x27;</span></span><br></pre></td></tr></table></figure>
+2）启动前暂时性恢复，在ubuntu启动，显示启动菜单时按下<code>e</code>，删除kernel命令行中的<code>text</code>即可。
+3）永久性恢复：移除上面添加的<code>text</code>，然后<code>update-grub</code>，再重新启动</p>
+<p>注：貌似11.10版本改了，临时性启动gui命令是<code>/etc/init.d/lightdm start</code>，我这里是10.10，没做测试。
+另外，如果希望恢复桌面，可以使用<code>nxServer</code>，安装后可以通过网络使用远程桌面，很强大。</p>
+<h2 id="ubuntu-server-12.04-初始化月份字符串出错的解决方法">11、Ubuntu
+Server 12.04 “初始化月份字符串出错”的解决方法</h2>
+<p>本部分来源：<a target="_blank" rel="noopener" href="http://www.asmego.com/?p=60">来源1</a>、<a
+target="_blank" rel="noopener" href="http://blog.jiqila.com/category/0/">来源2</a> 1、修改local文件：
+执行：<code>sudo vi /var/lib/locales/supported.d/local</code>
+将文件内容修改如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">en_US.UTF-8 UTF-8</span><br><span class="line">zh_CN.UTF-8 UTF-8</span><br><span class="line">zh_CN.GBK GBK</span><br><span class="line">zh_CN GB2312</span><br></pre></td></tr></table></figure>
+2、更新语言：执行<code>sudo locale-gen</code>
+3、编辑默认locale文件：<code>sudo vi /etc/default/locale</code>，修改文件内容如下：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">LANG=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LANGUAGE=&quot;zh_CN:zh&quot;</span><br><span class="line">LC_NUMERIC=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_TIME=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_MONETARY=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_PAPER=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_NAME=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_ADDRESS=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_TELEPHONE=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_MEASUREMENT=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">LC_IDENTIFICATION=&quot;zh_CN.UTF-8&quot;</span><br></pre></td></tr></table></figure>
+注意：最后一个文件中都是半角英文双引号，在上述两个来源中，均为中文全角双引号。注意修正。</p>
+<h2 id="给系统打补丁的命令">12、给系统打补丁的命令</h2>
+<p>下载了内核之后，进入内核源码所在位置：<code>cd /xxxx/xxx/linux-3.4.6</code>
+使用下面的命令对内核打补丁： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patch -p1 -i ../patch-3.4.6 -R</span><br></pre></td></tr></table></figure>
+<code>-p1</code>是略过最高层，此处是<code>linux-3.4.6</code>，
+<code>-i</code>表示所需要打的补丁文件，<code>patch-3.4.6</code>是补丁文件；
+<code>-R</code>是循环命令，在命令运行时有很多需要用户确认的，此处表示循环确认。</p>
+<h2
+id="创建一个带有主目录和能够执行基本脚本的用户">13、创建一个带有主目录和能够执行基本脚本的用户：</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd -d /home/<span class="string">&quot;username&quot;</span> -g <span class="string">&quot;gid&quot;</span> -u <span class="string">&quot;uid&quot;</span> -m -s /bin/bash <span class="string">&quot;username&quot;</span></span><br><span class="line">passwd <span class="string">&quot;username&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="解决ubuntu-12.04升级到14.04时fontconfig错误">14、解决Ubuntu
+12.04升级到14.04时，fontConfig错误</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Setting up fontconfig (2.11.0-0ubuntu4.1) ...</span><br><span class="line">Regenerating fonts cache... failed.</span><br><span class="line">See /var/log/fontconfig.log <span class="keyword">for</span> more information.</span><br><span class="line">dpkg: error processing package fontconfig (--configure):</span><br><span class="line">subprocess installed post-installation script returned error <span class="built_in">exit</span> status 1</span><br><span class="line">Setting up apt-utils (1.0.1ubuntu2.6) ...</span><br><span class="line">Errors were encountered <span class="keyword">while</span> processing:</span><br><span class="line">fontconfig</span><br><span class="line">E: Sub-process /usr/bin/dpkg returned an error code (1)</span><br></pre></td></tr></table></figure>
+<p>查看日志，出现以下内容： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Fontconfig warning: <span class="string">&quot;/etc/fonts/conf.d/99-language-selector-zh.conf&quot;</span>, line </span><br><span class="line">11: Having multiple values <span class="keyword">in</span> &lt;<span class="built_in">test</span>&gt; isn<span class="string">&#x27;t supported and may not work as  </span></span><br><span class="line"><span class="string">expected</span></span><br><span class="line"><span class="string">/usr/share/fonts: caching, new cache contents: 0 fonts, 1 dirs</span></span><br><span class="line"><span class="string">/usr/share/fonts/truetype: caching, new cache contents: 0 fonts, 1 dirs</span></span><br><span class="line"><span class="string">/usr/share/fonts/truetype/ttf-dejavu: caching, new cache contents: 6 fonts,     0 dirs</span></span><br><span class="line"><span class="string">/usr/X11R6/lib/X11/fonts: skipping, no such directory</span></span><br><span class="line"><span class="string">/usr/local/share/fonts: caching, new cache contents: 0 fonts, 0 dirs</span></span><br><span class="line"><span class="string">/.local/share/fonts: fc-cache: symbol lookup error: fc-cache:</span></span><br><span class="line"><span class="string">undefined symbol: FcStrListFirst</span></span><br></pre></td></tr></table></figure>
+解决方法：运行<code>apt-get remove --purge fontconfig-config</code>，删除
+<code>fontConfig-config</code>即可。
+然后重新运行<code>apt-get upgrade</code>，直接升级，问题解决。
+参考链接：<a
+target="_blank" rel="noopener" href="http://askubuntu.com/questions/576693/failed-upgrading-12-10-14-04-error-with-fontconfig">askubuntu</a></p>
+<h2 id="增加启动时执行的命令">15、增加启动时执行的命令</h2>
+<p>这个网上很多，这里说的主要是为了ftp能够自动将不同硬盘的目录挂接在一起。proftpd中，利用mount命令，将第二块硬盘的一个目录，挂接到ftp的主目录下：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount --<span class="built_in">bind</span> /usr/ftpService/MTV /wd_1t/ftpService/Movies/MTV</span><br></pre></td></tr></table></figure>
+上述命令将<code>usr</code>路径下的目录挂接到<code>wd_1t</code>目录下（<code>wd_1t/ftpService</code>是ftp的主目录），用户在访问<code>wd_1t/.../MTV</code>目录时等同访问<code>usr</code>下的<code>MTV</code>目录。
+启动项的建立比较简单，以<code>#!/bin/sh</code>开头，写上要执行的命令，并给于可执行权限755就可以了。
+1）在<code>/etc/init.d/</code>目录下新建一个脚本<code>my-start-up</code>，如下：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">mount --<span class="built_in">bind</span> /usr/ftpService/MTV /wd_1t/ftpService/Movies/MTV</span><br></pre></td></tr></table></figure> 2）执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-rc.d my-start-up defaults</span><br></pre></td></tr></table></figure> 执行完成之后，系统会提示：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-rc.d: warning: /etc/init.d/my-start-up missing LSB information</span><br></pre></td></tr></table></figure> 原因不详，如果想删除该启动脚本，执行以下命令：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d$ sudo update-rc.d -f my-start-up remove</span><br></pre></td></tr></table></figure> 3）重启即可看到效果</p>
+<h2
+id="安装无线网卡驱动并开机自动登录wifi">16、安装无线网卡驱动并开机自动登录WiFi</h2>
+<p>老笔记本新安装了14.04服务器版Ubuntu。无线网卡是BroadCom的BCM4318（HP
+nx6120），安装时没有网线，也没有WiFi驱动，所有网络都不可用。网络这些东西都是必须要的，首先解决这几个问题（以下均为<strong>管理员权限</strong>下操作）。
+1）插上网线，临时使用网卡。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lspci | grep -i eth    <span class="comment"># 查看网卡</span></span><br><span class="line">iwconfig               <span class="comment"># 列出所有的网络接口interfaces</span></span><br><span class="line">ifconfig eth0 up       <span class="comment"># 确定是eth0之后，启用eth0</span></span><br><span class="line">dhclient eth0          <span class="comment"># 开启dhcp客户端，现在应该可以了</span></span><br></pre></td></tr></table></figure>
+2）能够上网之后，先更新一次（update就行，不用upgrade），然后安装BCM4318的驱动:
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">lspci | grep -i wireless     <span class="comment"># 查看无线网卡的信息</span></span><br><span class="line"><span class="comment"># 上述命令显示</span></span><br><span class="line"><span class="comment"># 02:04.0 Network controller: Broadcom Corporation BCM4318 [AirForce One 54g] 802.11g Wireless LAN Controller (rev 02)</span></span><br><span class="line"><span class="comment"># lspci | grep -i eth        # 显示以太网卡的信息</span></span><br><span class="line"></span><br><span class="line">apt-get purge bcmwl-kernel-source</span><br><span class="line">apt-get install --reinstall b43-fwcutter firmware-b43-installer</span><br></pre></td></tr></table></figure></p>
+<p>安装完成之后，可以使用第一步的方法启用无线网卡，但是一般的WiFi均有密码，很烦。我这里的WiFi使用的是WEP，最简单的一种，因此可以用下面的方法解决。
+3）编辑文件interfaces（注意备份），启动时自动加载网卡。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/network/interfaces</span><br></pre></td></tr></table></figure>
+前两句是原来文件的内容，在这之后，添加后面的内容 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 网络接口名可用iwconfig查看</span></span><br><span class="line">auto wlan0</span><br><span class="line">iface wlan0 inet static</span><br><span class="line">address 192.168.10.105</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.10.1</span><br><span class="line">wireless-essid 路由的SSID</span><br><span class="line">wireless-key 路由访问密码</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">auto eth0</span><br><span class="line">iface eth0 inet dhcp</span><br></pre></td></tr></table></figure> ##
+17、添加用户并将其加入sudo组中 以下命令均在root权限下执行：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adduser <span class="built_in">test</span></span><br><span class="line">usermod -aG sudo <span class="built_in">test</span></span><br></pre></td></tr></table></figure> ## 18、配置nginx服务器使用https加密传输 1）准备工作：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 秘钥和crt文件位置</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> /etc/nginx/ssl</span><br><span class="line"><span class="comment"># 使用openssl创建秘钥和加密文件</span></span><br><span class="line">sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt</span><br><span class="line"><span class="comment"># 填入相应的内容</span></span><br></pre></td></tr></table></figure> 注意：Common Name是网站的域名或者IP <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Country Name (2 letter code) [AU]:CN </span><br><span class="line">State or Province Name (full name) [Some-State]:Jiangsu</span><br><span class="line">Locality Name (eg, city) []:Nanjing</span><br><span class="line">Organization Name (eg, company) [Internet Widgits Pty Ltd]:OrganizationName</span><br><span class="line">Organizational Unit Name (eg, section) []:SectionName</span><br><span class="line">Common Name (e.g. server FQDN or YOUR name) []:10.3.89.127</span><br><span class="line">Email Address []:email@email.com</span><br></pre></td></tr></table></figure>
+2）配置nginx <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/nginx/sites-available/default</span><br></pre></td></tr></table></figure> 按照以下内容修改：
+a）设定将所有http重定向至https <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Default server configuration</span></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server ipv6on</span><br><span class="line">ly=on;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 重定向到 HTTPS</span></span><br><span class="line">    rewrite ^(.*) https://$host<span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> b)
+设定HTTPS的秘钥与凭证路径 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">    <span class="comment"># SSL configuration</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    listen 443 ssl default_server;</span><br><span class="line">    listen [::]:443 ssl default_server;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ssl凭证与秘钥路径</span></span><br><span class="line">    ssl_certificate /etc/nginx/ssl/nginx.crt;</span><br><span class="line">    ssl_certificate_key /etc/nginx/ssl/nginx.key;</span><br><span class="line">    <span class="comment"># 其他设定，保持不变</span></span><br><span class="line">    ...  </span><br></pre></td></tr></table></figure> 3）重启nginx <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service nginx resart</span><br></pre></td></tr></table></figure>
+当使用
+HTTPS浏览时，浏览器会发错凭证不可靠的警告，如果凭证FQDN跟服务器的FQDN不符时，也会出现浏览告警，解决方法是重新使用openssl生成一个与服务器FQDN一致的凭证。</p>
+<h2 id="批量重命名文件">19、批量重命名文件</h2>
+<p>总是遇到重命名的情况，这次一定要记录下来， <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/src_string/target_string/g&#x27;</span> *.txt</span><br></pre></td></tr></table></figure>
+将所有<code>txt</code>文件中，文件名含有的<code>src_string</code>字符串替换为<code>target_string</code>，支持正则表达式。对于含有空格的可以使用<code>'s/ /_/g'</code>做替换，然后重复上述替换步骤。</p>
+<p>本文来自：<a
+target="_blank" rel="noopener" href="http://ferret.blog.163.com/blog/static/64423780201103014710258"
+title="ubuntu的使用">http://ferret.blog.163.com/blog/static/64423780201103014710258</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Ferret@NJTech
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://njuferret.github.io/2011/01/30/F7064423780201103014710258/" title="Ubuntu的使用">https://njuferret.github.io/2011/01/30/F7064423780201103014710258/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ubuntu/" rel="tag"><i class="fa fa-tag"></i> ubuntu</a>
+              <a href="/tags/ok6410/" rel="tag"><i class="fa fa-tag"></i> ok6410</a>
+              <a href="/tags/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/" rel="tag"><i class="fa fa-tag"></i> 交叉编译</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2011/05/07/F016442378020114781035646/" rel="next" title="南京的经纬各条路">
+                  南京的经纬各条路 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Ferret@NJTech</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.20/fancybox/fancybox.umd.js" integrity="sha256-q8XkJ6dj5VwSvzI8+nATCHHQG+Xv/dAZBCgqmu93zOY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
