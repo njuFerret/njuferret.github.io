@@ -27,12 +27,20 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="第07章 数据清洗和准备 在数据分析和建模的过程中，相当多的时间要用在数据准备上：加载、清理、转换以及重塑。这些工作会占到分析师时间的80%或更多。有时，存储在文件和数据库中的数据的格式不适合某个特定的任务。许多研究者都选择使用通用编程语言（如Python、Perl、R或Java）或UNIX文本处理工具（如sed或awk）对数据格式进行专门处理。幸运的是，pandas和内置的Python标准库提">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-1a0f73e5bb26ea21.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-0bf235386a64c3b5.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-4edd39e68f4dc530.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-087fe67bf6db0701.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-d1f0d4ed3e895016.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-efbb80a793759fc0.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-a634364ed6d5d5c5.png">
 <meta property="article:published_time" content="2018-08-02T02:57:33.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:07.394Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="book">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-1a0f73e5bb26ea21.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap07/">
@@ -275,7 +283,7 @@ available。在统计应用中，NA数据可能是不存在的数据或者虽然
 <p>Python内置的None值在对象数组中也可以作为NA：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">13</span>]: string_data[<span class="number">0</span>] = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">14</span>]: string_data.isnull()</span><br><span class="line">Out[<span class="number">14</span>]: </span><br><span class="line"><span class="number">0</span>     <span class="literal">True</span></span><br><span class="line"><span class="number">1</span>    <span class="literal">False</span></span><br><span class="line"><span class="number">2</span>     <span class="literal">True</span></span><br><span class="line"><span class="number">3</span>    <span class="literal">False</span></span><br><span class="line">dtype: <span class="built_in">bool</span></span><br></pre></td></tr></table></figure>
 <p>pandas项目中还在不断优化内部细节以更好处理缺失数据，像用户API功能，例如pandas.isnull，去除了许多恼人的细节。表7-1列出了一些关于缺失数据处理的函数。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-1a0f73e5bb26ea21.png" class="" title="表7-1 NA处理方法">
 <h3 id="滤除缺失数据">7.1.1 滤除缺失数据</h3>
 <p>过滤掉缺失数据的办法有很多种。你可以通过pandas.isnull或布尔索引的手工方法，但dropna可能会更实用一些。对于一个Series，dropna返回一个仅含非空数据和索引值的Series：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">15</span>]: <span class="keyword">from</span> numpy <span class="keyword">import</span> nan <span class="keyword">as</span> NA</span><br><span class="line"></span><br><span class="line">In [<span class="number">16</span>]: data = pd.Series([<span class="number">1</span>, NA, <span class="number">3.5</span>, NA, <span class="number">7</span>])</span><br><span class="line"></span><br><span class="line">In [<span class="number">17</span>]: data.dropna()</span><br><span class="line">Out[<span class="number">17</span>]: </span><br><span class="line"><span class="number">0</span>    <span class="number">1.0</span></span><br><span class="line"><span class="number">2</span>    <span class="number">3.5</span></span><br><span class="line"><span class="number">4</span>    <span class="number">7.0</span></span><br><span class="line">dtype: float64</span><br></pre></td></tr></table></figure>
@@ -301,8 +309,8 @@ available。在统计应用中，NA数据可能是不存在的数据或者虽然
 <p>只要有些创新，你就可以利用fillna实现许多别的功能。比如说，你可以传入Series的平均值或中位数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">43</span>]: data = pd.Series([<span class="number">1.</span>, NA, <span class="number">3.5</span>, NA, <span class="number">7</span>])</span><br><span class="line"></span><br><span class="line">In [<span class="number">44</span>]: data.fillna(data.mean())</span><br><span class="line">Out[<span class="number">44</span>]: </span><br><span class="line"><span class="number">0</span>    <span class="number">1.000000</span></span><br><span class="line"><span class="number">1</span>    <span class="number">3.833333</span></span><br><span class="line"><span class="number">2</span>    <span class="number">3.500000</span></span><br><span class="line"><span class="number">3</span>    <span class="number">3.833333</span></span><br><span class="line"><span class="number">4</span>    <span class="number">7.000000</span></span><br><span class="line">dtype: float64</span><br></pre></td></tr></table></figure>
 <p>表7-2列出了fillna的参考。</p>
-
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-0bf235386a64c3b5.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-4edd39e68f4dc530.png" class="" title="fillna函数参数">
 <h2 id="数据转换">7.2 数据转换</h2>
 <p>本章到目前为止介绍的都是数据的重排。另一类重要操作则是过滤、清理以及其他的转换工作。</p>
 <h3 id="移除重复数据">7.2.1 移除重复数据</h3>
@@ -443,8 +451,8 @@ variable）转换为“哑变量”或“指标矩阵”。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">146</span>]: val.replace(<span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;::&#x27;</span>)</span><br><span class="line">Out[<span class="number">146</span>]: <span class="string">&#x27;a::b::  guido&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">147</span>]: val.replace(<span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">Out[<span class="number">147</span>]: <span class="string">&#x27;ab  guido&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>表7-3列出了Python内置的字符串方法。</p>
 <p>这些运算大部分都能使用正则表达式实现（马上就会看到）。</p>
-
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-087fe67bf6db0701.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-d1f0d4ed3e895016.png" class="">
 <p>casefold
 将字符转换为小写，并将任何特定区域的变量字符组合转换成一个通用的可比较形式。</p>
 <h3 id="正则表达式">7.3.2 正则表达式</h3>
@@ -481,7 +489,7 @@ variable）转换为“哑变量”或“指标矩阵”。</p>
 <p>sub还能通过诸如\1、\2之类的特殊符号访问各匹配项中的分组。符号\1对应第一个匹配的组，\2对应第二个匹配的组，以此类推：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">166</span>]: <span class="built_in">print</span>(regex.sub(<span class="string">r&#x27;Username: \1, Domain: \2, Suffix: \3&#x27;</span>, text))</span><br><span class="line">Dave Username: dave, Domain: google, Suffix: com</span><br><span class="line">Steve Username: steve, Domain: gmail, Suffix: com</span><br><span class="line">Rob Username: rob, Domain: gmail, Suffix: com</span><br><span class="line">Ryan Username: ryan, Domain: yahoo, Suffix: com</span><br></pre></td></tr></table></figure>
 <p>Python中还有许多的正则表达式，但大部分都超出了本书的范围。表7-4是一个简要概括。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-efbb80a793759fc0.png" class="">
 <h3 id="pandas的矢量化字符串函数">7.3.3 pandas的矢量化字符串函数</h3>
 <p>清理待分析的散乱数据时，常常需要做一些字符串规整化工作。更为复杂的情况是，含有字符串的列有时还含有缺失数据：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">167</span>]: data = &#123;<span class="string">&#x27;Dave&#x27;</span>: <span class="string">&#x27;dave@google.com&#x27;</span>, <span class="string">&#x27;Steve&#x27;</span>: <span class="string">&#x27;steve@gmail.com&#x27;</span>,</span><br><span class="line">   .....:         <span class="string">&#x27;Rob&#x27;</span>: <span class="string">&#x27;rob@gmail.com&#x27;</span>, <span class="string">&#x27;Wes&#x27;</span>: np.nan&#125;</span><br><span class="line"></span><br><span class="line">In [<span class="number">168</span>]: data = pd.Series(data)</span><br><span class="line"></span><br><span class="line">In [<span class="number">169</span>]: data</span><br><span class="line">Out[<span class="number">169</span>]: </span><br><span class="line">Dave     dave@google.com</span><br><span class="line">Rob        rob@gmail.com</span><br><span class="line">Steve    steve@gmail.com</span><br><span class="line">Wes                  NaN</span><br><span class="line">dtype: <span class="built_in">object</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">170</span>]: data.isnull()</span><br><span class="line">Out[<span class="number">170</span>]: </span><br><span class="line">Dave     <span class="literal">False</span></span><br><span class="line">Rob      <span class="literal">False</span></span><br><span class="line">Steve    <span class="literal">False</span></span><br><span class="line">Wes       <span class="literal">True</span></span><br><span class="line">dtype: <span class="built_in">bool</span></span><br></pre></td></tr></table></figure>
@@ -496,7 +504,7 @@ variable）转换为“哑变量”或“指标矩阵”。</p>
 <p>你可以利用这种方法对字符串进行截取：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">178</span>]: data.<span class="built_in">str</span>[:<span class="number">5</span>]</span><br><span class="line">Out[<span class="number">178</span>]: </span><br><span class="line">Dave     dave@</span><br><span class="line">Rob      rob@g</span><br><span class="line">Steve    steve</span><br><span class="line">Wes        NaN</span><br><span class="line">dtype: <span class="built_in">object</span></span><br></pre></td></tr></table></figure>
 <p>表7-5介绍了更多的pandas字符串方法。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap07/7178691-a634364ed6d5d5c5.png" class="" title="表7-5 部分矢量化字符串方法">
 <h2 id="总结">7.4 总结</h2>
 <p>高效的数据准备可以让你将更多的时间用于数据分析，花较少的时间用于准备工作，这样就可以极大地提高生产力。我们在本章中学习了许多工具，但覆盖并不全面。下一章，我们会学习pandas的聚合与分组。</p>
 

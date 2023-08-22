@@ -27,12 +27,18 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="第06章 数据加载、存储与文件格式 访问数据是使用本书所介绍的这些工具的第一步。我会着重介绍pandas的数据输入与输出，虽然别的库中也有不少以此为目的的工具。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png">
 <meta property="article:published_time" content="2018-08-02T02:57:34.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:07.193Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="book">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap06/">
@@ -268,7 +274,7 @@
 API操作网络资源。</p>
 <h2 id="读写文本格式的数据">6.1 读写文本格式的数据</h2>
 <p>pandas提供了一些用于将表格型数据读取为DataFrame对象的函数。表6-1对它们进行了总结，其中read_csv和read_table可能会是你今后用得最多的。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-958f849e6067b19b.png" class="" title="表6-1 pandas中的解析函数">
 <p>我将大致介绍一下这些函数在将文本数据转换为DataFrame时所用到的一些技术。这些函数的选项可以划分为以下几个大类：</p>
 <ul>
 <li>索引：将一个或多个列当做返回的DataFrame处理，以及是否从文件、用户获取列名。</li>
@@ -311,9 +317,9 @@ shell命令将文件的原始内容打印到屏幕上。如果你用的是Window
 <p>字典的各列可以使用不同的NA标记值：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">31</span>]: sentinels = &#123;<span class="string">&#x27;message&#x27;</span>: [<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;NA&#x27;</span>], <span class="string">&#x27;something&#x27;</span>: [<span class="string">&#x27;two&#x27;</span>]&#125;</span><br><span class="line"></span><br><span class="line">In [<span class="number">32</span>]: pd.read_csv(<span class="string">&#x27;examples/ex5.csv&#x27;</span>, na_values=sentinels)</span><br><span class="line">Out[<span class="number">32</span>]:</span><br><span class="line">something  a   b     c   d message</span><br><span class="line"><span class="number">0</span>       one  <span class="number">1</span>   <span class="number">2</span>   <span class="number">3.0</span>   <span class="number">4</span>     NaN</span><br><span class="line"><span class="number">1</span>       NaN  <span class="number">5</span>   <span class="number">6</span>   NaN   <span class="number">8</span>   world</span><br><span class="line"><span class="number">2</span>     three  <span class="number">9</span>  <span class="number">10</span>  <span class="number">11.0</span>  <span class="number">12</span>     NaN</span><br></pre></td></tr></table></figure>
 <p>表6-2列出了pandas.read_csv和pandas.read_table常用的选项。</p>
-
-
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-082daf4a00ed9494.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-f2bcc0a703c7236f.png" class="">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-597327ade3e94c7a.png" class="">
 <h3 id="逐块读取文本文件">6.1.1 逐块读取文本文件</h3>
 <p>在处理很大的文件时，或找出大文件中的参数集以便于后续处理时，你可能只想读取文件的一小部分或逐块对文件进行迭代。</p>
 <p>在看大文件之前，我们先设置pandas显示地更紧些：</p>
@@ -362,7 +368,7 @@ shell命令将文件的原始内容打印到屏幕上。如果你用的是Window
 <p>各个CSV语支的参数也可以用关键字的形式提供给csv.reader，而无需定义子类：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reader = csv.reader(f, delimiter=<span class="string">&#x27;|&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <p>可用的选项（csv.Dialect的属性）及其功能如表6-3所示。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap06/7178691-7a1cee622459072b.png" class="">
 <blockquote>
 <p>笔记：对于那些使用复杂分隔符或多字符分隔符的文件，csv模块就无能为力了。这种情况下，你就只能使用字符串的split方法或正则表达式方法re.split进行行拆分和其他整理工作了。</p>
 </blockquote>

@@ -27,12 +27,17 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="前言 　　这篇文章的关注点在于线性回归问题，重点是求解线性回归问题的梯度下降法(Gradient Descent)，之前在学习感知机模型的时候，使用过这个算法，并且还实现了它。可是那只是仅仅停留在使用的层面上，这次是要充分理解梯度下降法的原理及其计算方法。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/24/Gradient-Descent/learning-flow.png">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/24/Gradient-Descent/gradient-descent.png">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/24/Gradient-Descent/batch-descent.png">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/24/Gradient-Descent/sgd.png">
 <meta property="article:published_time" content="2017-08-24T12:03:12.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.714Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="梯度下降">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2017/08/24/Gradient-Descent/learning-flow.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2017/08/24/Gradient-Descent/">
@@ -324,7 +329,7 @@ class="math inline">\(x_2\)</span>，在我们的例子中分别代表Living
 area和bedrooms，<span
 class="math inline">\(h_\theta(x)\)</span>就是输出值，这里是就是Price。现在任务很明确，就是根据已知的数据计算出相应的<span
 class="math inline">\(\theta_i\)</span>参数。整个过程可以用下图表示:</p>
-
+<img src="/2017/08/24/Gradient-Descent/learning-flow.png" class="" title="学习流程图">
 <p>　　上图是整个统计机器学习的流程，不仅仅局限于回归问题。</p>
 <p>　　为了一般化我们的公式，可以引入一个常量<span
 class="math inline">\(x_0=1\)</span>，这样我们的公式就可以表示为:</p>
@@ -371,7 +376,7 @@ title="最小二乘法">最小二乘法</a>的思想。</p>
 <p>　　上面的比较数学化的说法，其实比较直观的说法是这样的:想象你站在一座高山上，你想要用最短的时间下山，但是你每次只能走一步。那你需要做的就是查看你周围360度的范围，找到一个最陡峭的(下降的最快的)方向，然后转移到那个点上；转移到新的位置之后，重复相应的步骤，环顾360度，找到最陡峭的(下降的最快的)方向，然后转移过去，这样每次都是选择最陡峭的方向走，那么很快就能到达山下了。</p>
 <p>　　这就是梯度下降法的基本思路，其中对陡峭的方向就是负梯度的方向。</p>
 <p>　　为了更加易于理解，给出下图:</p>
-
+<img src="/2017/08/24/Gradient-Descent/gradient-descent.png" class="" title="梯度下降">
 <p>　　我们<span class="math inline">\(\theta_{n\times
 1}\)</span>按照梯度下降的方向进行调整，就会使得<span
 class="math inline">\(J(\theta_{n\times
@@ -408,7 +413,7 @@ class="math inline">\(\theta_j\)</span>的变化是这样的(<strong>注意:此�
 <h2 id="批梯度下降法bath-gradient-descent">批梯度下降法(bath gradient
 descent)</h2>
 <p>　　在得到上面的公式之后，我们的算法也就形成了:</p>
-
+<img src="/2017/08/24/Gradient-Descent/batch-descent.png" class="" title="batch梯度下降">
 <p>　　上述算法中的式子是针对所有的训练数据的，这是从公式<span
 class="math inline">\(\ref{1}\)</span>变化而来，只是加入了一个累加的过程，此处不再证明。从公式中可以看到，每次迭代的时候，该算法都会遍历整个训练数据集，这个就被称为<strong>批梯度下降法(batch
 gradient
@@ -422,7 +427,7 @@ id="随机梯度下降法stochastic-gradient-descent">随机梯度下降法(stoc
 gradient descent)</h2>
 <p>　　在利用<strong>批梯度下降法(bath gradient
 descent)</strong>进行计算的时候，你会发现，每计算一个参数分量，都需要遍历整个训练数据集，这样做的效率明显不高，因此我们有一个替代的算法：</p>
-
+<img src="/2017/08/24/Gradient-Descent/sgd.png" class="" title="随机梯度下降">
 <p>　　可以看到，这个算法每次都只利用了一组数据进行计算，这样就大大减少了计算量。这个算法称为<strong>随机梯度下降法(stochastic
 gradient
 descent)</strong>。但是，带来的相应后果就是，它最终得到的解可能是在真正的最小值的附近，而不是最小值本身。因此只有在数据量很大的情况下才会使用这个算法。</p>

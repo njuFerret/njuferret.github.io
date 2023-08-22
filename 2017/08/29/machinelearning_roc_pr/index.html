@@ -27,6 +27,8 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="为了衡量机器学习算法特别是分类算法的优劣，常用精确率(Precision)与召回率(Recall)，RoC曲线与PR曲线等指标，本文具体说明上述各项指标的基本含义。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/29/machinelearning_roc_pr/roc.png">
+<meta property="og:image" content="https://njuferret.github.io/2017/08/29/machinelearning_roc_pr/pr.png">
 <meta property="article:published_time" content="2017-08-29T08:53:02.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.743Z">
 <meta property="article:author" content="Ferret@NJTech">
@@ -36,6 +38,7 @@
 <meta property="article:tag" content="ROC">
 <meta property="article:tag" content="PR">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2017/08/29/machinelearning_roc_pr/roc.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2017/08/29/machinelearning_roc_pr/">
@@ -351,12 +354,12 @@ class="math inline">\(F_1\)</span>的形式。严格的数学定义如下：</p>
 class="math inline">\(y\)</span>轴，以特异性为<span
 class="math inline">\(x\)</span>轴，我们就直接得到了RoC曲线。召回率越高，特异性越小，RoC曲线越靠近左上角，模型和算法就越高效，如图2。另一方面，如果ROC是光滑的，那么基本可以判断没有太大的过拟合（overfitting）。从几何的角度讲，RoC曲线下方的面积越大越大，则模型越优。所以有时候我们用RoC曲线下的面积，即AUC（Area
 Under Curve）值来作为算法和模型好坏的标准。</p>
-
+<img src="/2017/08/29/machinelearning_roc_pr/roc.png" class="" title="图2 RoC曲线">
 <h1 id="pr曲线">4、PR曲线</h1>
 <p>　　以精确率为<span
 class="math inline">\(y\)</span>轴，以召回率为<span
 class="math inline">\(x\)</span>轴，我们就得到了PR曲线。精确率越高，召回率越高，PR曲线越靠近右上角，模型和算法就越高效。和ROC一样，先看PR曲线的平滑度，再看谁上谁下（同一测试集上）。一般来说，上面的比下面的好。当P和R接近F1值就也越大，一般会画出连接(0,0)和(1,1)的线，线和PR曲线重合处的F1是这条线最大的F1（光滑的情况下），此时的F1对于PR曲线就好象AUC对于ROC曲线一样。数字比一条线更方便调模型。</p>
-
+<img src="/2017/08/29/machinelearning_roc_pr/pr.png" class="" title="图3 PR曲线">
 <h1 id="roc和pr曲线之间的关系和不同">5、ROC和PR曲线之间的关系和不同</h1>
 <p>　　RoC曲线和PR曲线是非常常用的衡量模型分类能力两个指标，在模型评估中具有重要的作用。当正负样本的分布较为平衡时，ROC和PR的趋势差不多。但当样本分布不均时，两者就截然不同了，ROC效果依然看似很好，但是PR上反映效果一般。因此，对非平衡（倾斜）数据集，PR曲线或F1值将是更好的选择。</p>
 <blockquote>

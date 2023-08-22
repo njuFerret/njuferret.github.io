@@ -27,12 +27,14 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="第12章 pandas高级应用 前面的章节关注于不同类型的数据规整流程和NumPy、pandas与其它库的特点。随着时间的发展，pandas发展出了更多适合高级用户的功能。本章就要深入学习pandas的高级功能。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap12/7178691-6c602152c2bba658.png">
 <meta property="article:published_time" content="2018-08-02T02:57:28.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:07.865Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="book">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap12/7178691-6c602152c2bba658.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap12/">
@@ -333,7 +335,7 @@ baz]指明‘foo’位于‘bar’的前面，以此类推。无序的分类实�
 <p>在大数据集中，分类经常作为节省内存和高性能的便捷工具。过滤完大DataFrame或Series之后，许多分类可能不会出现在数据中。我们可以使用remove_unused_categories方法删除没看到的分类：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">70</span>]: cat_s3 = cat_s[cat_s.isin([<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>])]</span><br><span class="line"></span><br><span class="line">In [<span class="number">71</span>]: cat_s3</span><br><span class="line">Out[<span class="number">71</span>]: </span><br><span class="line"><span class="number">0</span>    a</span><br><span class="line"><span class="number">1</span>    b</span><br><span class="line"><span class="number">4</span>    a</span><br><span class="line"><span class="number">5</span>    b</span><br><span class="line">dtype: category</span><br><span class="line">Categories (<span class="number">4</span>, <span class="built_in">object</span>): [a, b, c, d]</span><br><span class="line"></span><br><span class="line">In [<span class="number">72</span>]: cat_s3.cat.remove_unused_categories()</span><br><span class="line">Out[<span class="number">72</span>]: </span><br><span class="line"><span class="number">0</span>    a</span><br><span class="line"><span class="number">1</span>    b</span><br><span class="line"><span class="number">4</span>    a</span><br><span class="line"><span class="number">5</span>    b</span><br><span class="line">dtype: category</span><br><span class="line">Categories (<span class="number">2</span>, <span class="built_in">object</span>): [a, b]</span><br></pre></td></tr></table></figure>
 <p>表12-1列出了可用的分类方法。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap12/7178691-6c602152c2bba658.png" class="" title="表12-1 pandas的Series的分类方法">
 <h3 id="为建模创建虚拟变量">12.1.6 为建模创建虚拟变量</h3>
 <p>当你使用统计或机器学习工具时，通常会将分类数据转换为虚拟变量，也称为one-hot编码。这包括创建一个不同类别的列的DataFrame；这些列包含给定分类的1s，其它为0。</p>
 <p>看前面的例子：</p>

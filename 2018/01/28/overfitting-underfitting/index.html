@@ -27,6 +27,9 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="在机器学习算法中，经常会遇到两个问题：欠拟合（underfitting）和过拟合（overfitting）。所谓欠拟合就是算法没有学习到足够的特征，预测结果较差，即拟合程度不够；过拟合则刚好相反，算法除了学习到一般特征外，也学习到了样本个体的局部特征，即拟合过度。 造成这两种结果的原因主要有两个： 　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2018/01/28/overfitting-underfitting/l1l2regulation.jpg">
+<meta property="og:image" content="https://njuferret.github.io/2018/01/28/overfitting-underfitting/nn_without_dropout.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/01/28/overfitting-underfitting/nn_with_dropout.png">
 <meta property="article:published_time" content="2018-01-28T03:21:02.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.754Z">
 <meta property="article:author" content="Ferret@NJTech">
@@ -35,6 +38,7 @@
 <meta property="article:tag" content="正则化">
 <meta property="article:tag" content="Dropout">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/01/28/overfitting-underfitting/l1l2regulation.jpg">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2018/01/28/overfitting-underfitting/">
@@ -457,16 +461,16 @@ class="math inline">\(\lambda =
 参数<span
 class="math inline">\(w\)</span>可以变得任意大从而使得模型不稳定，即方差大而偏差小。<span
 class="math inline">\(\lambda\)</span>越大，表明先验分布的协方差越小、偏差越大，模型越稳定。也就是说，正则化项是在偏差bias与方差variance之间做平衡的tradeoff。图1为L1与L2正则化的区别：</p>
-
+<img src="/2018/01/28/overfitting-underfitting/l1l2regulation.jpg" class="" title="图1. L1与L2正则化的区别">
 <p>　　图1中的模型是线性回归，有两个特征，要优化的参数分别是<span
 class="math inline">\(w_1\)</span>和<span
 class="math inline">\(w_2\)</span>，左图是L2正则化，右图是L1正则化。蓝色线是优化过程中遇到的等高线，一圈代表一个目标函数值，圆心是某一个样本观测值，半径为误差值。正则化相当于增加了受限条件（红色边界），二者相交处是最优参数。可见L1正则化的最优参数只可能在坐标轴上，从而出现0权重参数，使得模型稀疏。
  </p>
 <h2 id="dropout">3.4 Dropout</h2>
 <p>  正则化是通过在代价函数后面加上正则化项来防止模型过拟合，Dropout方法是通过修改人工神经网络（ANN）中隐藏层的神经元个数来防止过拟合。该方法是在对网络进行训练时用一种技巧（trick），对于如下所示的三层人工神经网络：</p>
-
+<img src="/2018/01/28/overfitting-underfitting/nn_without_dropout.png" class="" title="图2. 经典三层人工神经网络">
 <p>　　对于图2的神经网络，在训练开始时，随机删除一些（可以设定为一半，也可以为1/3，1/4等）隐藏层神经元，即认为这些神经元不存在，同时保持输入层与输出层神经元的个数不变，这样便得到如下的ANN：</p>
-
+<img src="/2018/01/28/overfitting-underfitting/nn_with_dropout.png" class="" title="图3. dropout之后的人工神经网络">
 <p>　　然后按照BP学习算法对ANN中的参数进行学习更新（虚线连接的单元不更新，因为认为这些神经元被临时删除了）。这样一次迭代更新便完成了。下一次迭代中，同样随机删除一些神经元。后续训练过程循环进行这一操作，直至训练结束。</p>
 <p>　　Dropout能够有助于防止过拟合的简单解释，运用了dropout的训练过程，相当于训练了很多个只有部分隐层单元的神经网络（简称“部分网络”）。每一个这样的部分网络，都可以给出一个分类结果，这些结果有的是正确的，有的是错误的。随着训练的进行，大部分半数网络都可以给出正确的分类结果，那么少数的错误分类结果就不会对最终结果造成大的影响。</p>
 <hr />

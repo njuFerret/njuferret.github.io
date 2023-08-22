@@ -27,12 +27,25 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="第2章 Python语法基础，IPython和Jupyter Notebooks 当我在2011年和2012年写作本书的第一版时，可用的学习Python数据分析的资源很少。这部分上是一个鸡和蛋的问题：我们现在使用的库，比如pandas、scikit-learn和statsmodels，那时相对来说并不成熟。2017年，数据科学、数据分析和机器学习的资源已经很多，原来通用的科学计算拓展到了计算机">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-c76c4f40777d3ef1.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-86a6813291ead445.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-bc9a0b4c30363747.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-8188b0386238c16a.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-9ed3866ea25c11f8.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-e179f5ea00e50691.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-c72b11add9b8ccf8.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-3ab3738a92a15486.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-3e3a8c6b9c5040fc.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-9fb5f25b33166acf.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-27a30ac3e7d262a1.png">
+<meta property="og:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-100f9a20c1536553.png">
 <meta property="article:published_time" content="2018-08-02T02:57:38.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.766Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="book">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-c76c4f40777d3ef1.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2018/08/02/python_for_data_analysis/pfda_chap02/">
@@ -315,14 +328,14 @@ Chrome中的notebook。</p>
 <blockquote>
 <p>笔记：许多人使用Jupyter作为本地的计算环境，但它也可以部署到服务器上远程访问。这里不做介绍，如果需要的话，鼓励读者自行到网上学习。</p>
 </blockquote>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-c76c4f40777d3ef1.png" class="" title="&amp;#x56FE;2-1 Jupyter notebook&amp;#x542F;&amp;#x52A8;&amp;#x9875;&amp;#x9762;">
 <p>要新建一个notebook，点击按钮New，选择“Python3”或“conda[默认项]”。如果是第一次，点击空格，输入一行Python代码。然后按Shift-Enter执行。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-86a6813291ead445.png" class="" title="&amp;#x56FE;2-2 Jupyter&amp;#x65B0;notebook&amp;#x9875;&amp;#x9762;">
 <p>当保存notebook时（File目录下的Save and
 Checkpoint），会创建一个后缀名为<code>.ipynb</code>的文件。这是一个自包含文件格式，包含当前笔记本中的所有内容（包括所有已评估的代码输出）。可以被其它Jupyter用户加载和编辑。要加载存在的notebook，把它放到启动notebook进程的相同目录内。你可以用本书的示例代码练习，见图2-3。</p>
 <p>虽然Jupyter notebook和IPython
 shell使用起来不同，本章中几乎所有的命令和工具都可以通用。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-bc9a0b4c30363747.png" class="" title="&amp;#x56FE;2-3 Jupyter&amp;#x67E5;&amp;#x770B;&amp;#x4E00;&amp;#x4E2A;&amp;#x5B58;&amp;#x5728;&amp;#x7684;notebook&amp;#x7684;&amp;#x9875;&amp;#x9762;">
 <h3 id="tab补全">2.2.3 Tab补全</h3>
 <p>从外观上，IPython shell和标准的Python解释器只是看起来不同。IPython
 shell的进步之一是具备其它IDE和交互计算分析环境都有的tab补全功能。在shell中输入表达式，按下Tab，会搜索已输入变量（对象、函数等等）的命名空间：</p>
@@ -340,7 +353,7 @@ notebook和新版的IPython（5.0及以上），自动补全功能是下拉框�
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [7]: datasets/movielens/&lt;Tab&gt;</span><br><span class="line">datasets/movielens/movies.dat    datasets/movielens/README</span><br><span class="line">datasets/movielens/ratings.dat   datasets/movielens/users.dat</span><br><span class="line"></span><br><span class="line">In [7]: path = &#x27;datasets/movielens/&lt;Tab&gt;</span><br><span class="line">datasets/movielens/movies.dat    datasets/movielens/README</span><br><span class="line">datasets/movielens/ratings.dat   datasets/movielens/users.dat</span><br></pre></td></tr></table></figure>
 <p>结合<code>%run</code>，tab补全可以节省许多键盘操作。</p>
 <p>另外，tab补全可以补全函数的关键词参数（包括等于号=）。见图2-4。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-8188b0386238c16a.png" class="" title="&amp;#x56FE;2-4 Jupyter notebook&amp;#x4E2D;&amp;#x81EA;&amp;#x52A8;&amp;#x8865;&amp;#x5168;&amp;#x51FD;&amp;#x6570;&amp;#x5173;&amp;#x952E;&amp;#x8BCD;">
 <p>后面会仔细地学习函数。</p>
 <h3 id="自省">2.2.4 自省</h3>
 <p>在变量前后使用问号？，可以显示对象的信息：</p>
@@ -386,8 +399,8 @@ shell中也可以从剪贴板执行。假设在其它应用中复制了如下代
 <h3 id="键盘快捷键">2.2.8 键盘快捷键</h3>
 <p>IPython有许多键盘快捷键进行导航提示（类似Emacs文本编辑器或UNIX bash
 Shell）和交互shell的历史命令。表2-1总结了常见的快捷键。图2-5展示了一部分，如移动光标。</p>
-
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-9ed3866ea25c11f8.png" class="" title="&amp;#x56FE;2-5 IPython shell&amp;#x4E2D;&amp;#x4E00;&amp;#x4E9B;&amp;#x5FEB;&amp;#x6377;&amp;#x952E;&amp;#x7684;&amp;#x8BF4;&amp;#x660E;">
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-e179f5ea00e50691.png" class="" title="&amp;#x8868;2-1 IPython&amp;#x7684;&amp;#x6807;&amp;#x51C6;&amp;#x5FEB;&amp;#x6377;&amp;#x952E;">
 <p>Jupyter
 notebooks有另外一套庞大的快捷键。因为它的快捷键比IPython的变化快，建议你参阅Jupyter
 notebook的帮助文档。</p>
@@ -400,7 +413,7 @@ notebook的帮助文档。</p>
 <p>一些魔术函数与Python函数很像，它的结果可以赋值给一个变量：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [22]: %pwd</span><br><span class="line">Out[22]: &#x27;/home/wesm/code/pydata-book</span><br><span class="line"></span><br><span class="line">In [23]: foo = %pwd</span><br><span class="line"></span><br><span class="line">In [24]: foo</span><br><span class="line">Out[24]: &#x27;/home/wesm/code/pydata-book&#x27;</span><br></pre></td></tr></table></figure>
 <p>IPython的文档可以在shell中打开，我建议你用<code>%quickref</code>或<code>%magic</code>学习下所有特殊命令。表2-2列出了一些可以提高生产率的交互计算和Python开发的IPython指令。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-c72b11add9b8ccf8.png" class="" title="&amp;#x8868;2-2 &amp;#x4E00;&amp;#x4E9B;&amp;#x5E38;&amp;#x7528;&amp;#x7684;IPython&amp;#x9B54;&amp;#x672F;&amp;#x547D;&amp;#x4EE4;">
 <h3 id="集成matplotlib">2.2.10 集成Matplotlib</h3>
 <p>IPython在分析计算领域能够流行的原因之一是它非常好的集成了数据可视化和其它用户界面库，比如matplotlib。不用担心以前没用过matplotlib，本书后面会详细介绍。<code>%matplotlib</code>魔术函数配置了IPython
 shell和Jupyter
@@ -410,7 +423,7 @@ shell中，运行<code>%matplotlib</code>可以进行设置，可以创建多个
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [26]: %matplotlib</span><br><span class="line">Using matplotlib backend: Qt4Agg</span><br></pre></td></tr></table></figure>
 <p>在JUpyter中，命令有所不同（图2-6）：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">In [26]: %matplotlib inline</span><br></pre></td></tr></table></figure>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-3ab3738a92a15486.png" class="" title="&amp;#x56FE;2-6 Jupyter&amp;#x884C;&amp;#x5185;matplotlib&amp;#x4F5C;&amp;#x56FE;">
 <h2 id="python语法基础">2.3 Python语法基础</h2>
 <p>在本节中，我将概述基本的Python概念和语言机制。在下一章，我将详细介绍Python的数据结构、函数和其它内建工具。</p>
 <h3 id="语言的语义">2.3.1 语言的语义</h3>
@@ -449,7 +462,7 @@ shell中，运行<code>%matplotlib</code>可以进行设置，可以创建多个
 3]也复制。在Python中，a和b实际上是同一个对象，即原有列表[1, 2,
 3]（见图2-7）。你可以在a中添加一个元素，然后检查b：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">10</span>]: a.append(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">11</span>]: b</span><br><span class="line">Out[<span class="number">11</span>]: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-3e3a8c6b9c5040fc.png" class="" title="&amp;#x56FE;2-7 &amp;#x5BF9;&amp;#x540C;&amp;#x4E00;&amp;#x5BF9;&amp;#x8C61;&amp;#x7684;&amp;#x53CC;&amp;#x91CD;&amp;#x5F15;&amp;#x7528;">
 <p>理解Python的引用的含义，数据是何时、如何、为何复制的，是非常重要的。尤其是当你用Python处理大的数据集时。</p>
 <blockquote>
 <p>笔记：赋值也被称作绑定，我们是把一个名字绑定给一个对象。变量名有时可能被称为绑定变量。</p>
@@ -502,7 +515,7 @@ Basic，字符串‘5’可能被默许转换（或投射）为整数，因此�
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">40</span>]: a == c</span><br><span class="line">Out[<span class="number">40</span>]: <span class="literal">True</span></span><br></pre></td></tr></table></figure>
 <p><code>is</code>和<code>is not</code>常用来判断一个变量是否为<code>None</code>，因为只有一个<code>None</code>的实例：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">41</span>]: a = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">42</span>]: a <span class="keyword">is</span> <span class="literal">None</span></span><br><span class="line">Out[<span class="number">42</span>]: <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-9fb5f25b33166acf.png" class="" title="&amp;#x8868;2-3 &amp;#x4E8C;&amp;#x5143;&amp;#x8FD0;&amp;#x7B97;&amp;#x7B26;">
 <h3 id="可变与不可变对象">2.3.12 可变与不可变对象</h3>
 <p>Python中的大多数对象，比如列表、字典、NumPy数组，和用户定义的类型（类），都是可变的。意味着这些对象或包含的值可以被修改：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">43</span>]: a_list = [<span class="string">&#x27;foo&#x27;</span>, <span class="number">2</span>, [<span class="number">4</span>, <span class="number">5</span>]]</span><br><span class="line"></span><br><span class="line">In [<span class="number">44</span>]: a_list[<span class="number">2</span>] = (<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">45</span>]: a_list</span><br><span class="line">Out[<span class="number">45</span>]: [<span class="string">&#x27;foo&#x27;</span>, <span class="number">2</span>, (<span class="number">3</span>, <span class="number">4</span>)]</span><br></pre></td></tr></table></figure>
@@ -511,7 +524,7 @@ Basic，字符串‘5’可能被默许转换（或投射）为整数，因此�
 <p>记住，可以修改一个对象并不意味就要修改它。这被称为副作用。例如，当写一个函数，任何副作用都要在文档或注释中写明。如果可能的话，我推荐避免副作用，采用不可变的方式，即使要用到可变对象。</p>
 <h3 id="标量类型">2.3.13 标量类型</h3>
 <p>Python的标准库中有一些内建的类型，用于处理数值数据、字符串、布尔值，和日期时间。这些单值类型被称为标量类型，本书中称其为标量。表2-4列出了主要的标量。日期和时间处理会另外讨论，因为它们是标准库的<code>datetime</code>模块提供的。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-27a30ac3e7d262a1.png" class="" title="&amp;#x8868;2-4 Python&amp;#x7684;&amp;#x6807;&amp;#x91CF;">
 <h3 id="数值类型">2.3.14 数值类型</h3>
 <p>Python的主要数值类型是<code>int</code>和<code>float</code>。<code>int</code>可以存储任意大的数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">48</span>]: ival = <span class="number">17239871</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">49</span>]: ival ** <span class="number">6</span></span><br><span class="line">Out[<span class="number">49</span>]: <span class="number">26254519291092456596965462913230729701102721</span></span><br></pre></td></tr></table></figure>
@@ -593,7 +606,7 @@ Basic，字符串‘5’可能被默许转换（或投射）为整数，因此�
 <p><code>strptime</code>可以将字符串转换成<code>datetime</code>对象：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">109</span>]: datetime.strptime(<span class="string">&#x27;20091031&#x27;</span>, <span class="string">&#x27;%Y%m%d&#x27;</span>)</span><br><span class="line">Out[<span class="number">109</span>]: datetime.datetime(<span class="number">2009</span>, <span class="number">10</span>, <span class="number">31</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <p>表2-5列出了所有的格式化命令。</p>
-
+<img src="/2018/08/02/python_for_data_analysis/pfda_chap02/7178691-100f9a20c1536553.png" class="" title="&amp;#x8868;2-5 Datetime&amp;#x683C;&amp;#x5F0F;&amp;#x5316;&amp;#x6307;&amp;#x4EE4;&amp;#xFF08;&amp;#x4E0E;ISO C89&amp;#x517C;&amp;#x5BB9;&amp;#xFF09;">
 <p>当你聚类或对时间序列进行分组，替换datetimes的time字段有时会很有用。例如，用0替换分和秒：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">110</span>]: dt.replace(minute=<span class="number">0</span>, second=<span class="number">0</span>)</span><br><span class="line">Out[<span class="number">110</span>]: datetime.datetime(<span class="number">2011</span>, <span class="number">10</span>, <span class="number">29</span>, <span class="number">20</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 <p>因为<code>datetime.datetime</code>是不可变类型，上面的方法会产生新的对象。</p>

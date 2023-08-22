@@ -27,6 +27,9 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig01.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig02.gif">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig03_svd.png">
 <meta property="article:published_time" content="2019-07-31T01:21:02.000Z">
 <meta property="article:modified_time" content="2023-08-22T07:00:36.688Z">
 <meta property="article:author" content="Ferret@NJTech">
@@ -36,6 +39,7 @@
 <meta property="article:tag" content="numpy">
 <meta property="article:tag" content="ICA">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig01.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/">
@@ -274,7 +278,7 @@ BSS)</a>的一个特例，来源于“鸡尾酒会问题”，如果被观测信
 <h2 id="pca">1、PCA</h2>
 <h3 id="一个简单的例子">1.1 一个简单的例子</h3>
 <p>　　二维平面上有若干个样本点，现在希望使用1维坐标对其进行降维处理，同时又希望尽量保留原始的信息，如何实现？
-</p>
+<img src="/2019/07/31/2019-07-31_pca-ica/fig01.png" class="" title="图1.二维样本的降维处理"></p>
 <h3 id="最大方差理论">1.2 最大方差理论</h3>
 <p>　　最懒的一种降维方法，直接将数据点投影至<span
 class="math inline">\(x\)</span>/<span
@@ -282,7 +286,7 @@ class="math inline">\(y\)</span>坐标轴。这样处理的结果会使得样本
 class="math inline">\(x\)</span>上，此时横坐标上只有3个点，这就造成了原始样本丢失的情况。更为极端的一个例子，如果5个点的横坐标均相同，则投影后只剩下1个点（此时各点在<span
 class="math inline">\(x\)</span>轴的方差为0）。如果选择<span
 class="math inline">\(y=x\)</span>作为基准坐标轴，可以发现，5个点的信息都会被保留下来。可以看出，方差是衡量样本信息量的关键指标。
-
+<img src="/2019/07/31/2019-07-31_pca-ica/fig02.gif" class="" title="图2.基向量与方差的关系">
 　　从信号处理的角度来说，一个随机信号最有用的信息体包含在方差里，<strong>方差越大，信号所包含的信息量越多</strong>。另一方面，样本的多样性，是保证机器学习算法能够有效学习到特征的前提条件，而方差即为反应样本多样性的关键指标。如图2所示，基向量不同，样本在基向量上的投影长度（方差）不同。设想一组由10个方差为0的数据构成的样本，方差为0说明这10个数据完全相等，故实际有效的样本仅为1个。因此<strong>最大化方差，即意味着最大化样本的多样性</strong>。图1中，样本在<span
 class="math inline">\(x&#39;\)</span>轴上的投影方差较大，在<span
 class="math inline">\(y&#39;\)</span>轴上的投影方差较小。当希望将样本数据从二维降至一维时，可以认为选择<span
@@ -456,7 +460,7 @@ class="math inline">\(）。这样的分解就称作\)</span>M<span
 class="math inline">\(的奇异值分解。\)</span><span
 class="math inline">\(对角线上的元素\)</span>_{i,i}<span
 class="math inline">\(即为\)</span>M$的奇异值。如图3所示：</p>
-
+<img src="/2019/07/31/2019-07-31_pca-ica/fig03_svd.png" class="" title="图3.SVD分解可视化">
 <p>　　设<span
 class="math inline">\(Cov(X)=WLW^{T}\)</span>，考虑矩阵<span
 class="math inline">\(X\)</span>的奇异值分解：<span

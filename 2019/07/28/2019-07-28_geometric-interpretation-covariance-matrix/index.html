@@ -27,12 +27,22 @@
 <meta property="og:site_name" content="有点博客">
 <meta property="og:description" content="0、译序 　　Google时，发现了这一篇文章的译文，然而完全看不懂译文的意思，遂找到原文对照阅读，最后有了重新翻译一遍的想法。 　　本文结合直观的图形解释，说明了协方差矩阵实质上是一个线性变换，主要思想有如下几点：  协方差矩阵是怎么来的：方差表征了沿特征轴方向的离散度，但无法表征特征间的相关性，因此引入协方差来进行描述这种相关性； 线性变换由旋转和缩放组成，通过特征值分解的方法可以导">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig02.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig03.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png">
+<meta property="og:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png">
 <meta property="article:published_time" content="2019-07-28T14:58:02.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.614Z">
 <meta property="article:author" content="Ferret@NJTech">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="协方差矩阵">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png">
 
 
 <link rel="canonical" href="https://njuferret.github.io/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/">
@@ -268,7 +278,7 @@
 <p>　　本文通过研究线性变换，及变换后得到数据的协方差(Covariance)之间的关系，给出了协方差矩阵的一个直观图形解释。大部分教材是根据协方差矩阵的概念解释数据的形状。我们反其道而行之，通过数据的形状来阐述协方差矩阵的概念。</p>
 <p>　　在<a
 target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/divide-variance-n-1/">《为什么样本方差除以N-1？》</a>文章中，我们讨论了方差(Variance)的概念，给出了著名的样本方差估算公式的推导和证明。如图1所示，标准差（方差的平方根）表明了数据在特征空间中的离散度。
- 　　式 <span
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png" class=""> 　　式 <span
 class="math inline">\((\ref{Unbiased})\)</span>
 给出了样本方差的无偏估计： <span class="math display">\[
 \begin{equation}
@@ -280,7 +290,7 @@ class="math inline">\((\ref{Unbiased})\)</span>
 \label{Unbiased} \end{equation}
 \]</span>
 　　不过，方差只能说明数据在平行于特征空间坐标轴方向上的离散度。考虑如图2所示的二维特征空间：</p>
-
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig02.png" class="">
 <p>　　对图2中的数据，我们可以计算 <span
 class="math inline">\(x\)</span> 轴方向上的方差 <span
 class="math inline">\(\sigma(x,x)\)</span>，和 <span
@@ -314,7 +324,7 @@ class="math inline">\(\sigma(x,y) =
 3\)</span> 协方差矩阵，可用于描述三维数据， <span
 class="math inline">\(N \times N\)</span> 协方差矩阵可以描述 <span
 class="math inline">\(N\)</span> 维数据。</p>
-<p>　　图3展示了数据的整体形状和协方差矩阵的关系： </p>
+<p>　　图3展示了数据的整体形状和协方差矩阵的关系： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig03.png" class=""></p>
 <h2 id="协方差矩阵的特征值分解">2、协方差矩阵的特征值分解</h2>
 <p>　　下一节，讨论协方差矩阵是如何作为一个线性算子，将白数据(white
 data)转换为观测数据。不过，在进入技术细节前，直观理解特征向量和特征值如何唯一地定义协方差矩阵和数据形状，非常重要。</p>
@@ -386,18 +396,18 @@ target="_blank" rel="noopener" href="http://blog.csdn.net/u010182633/article/det
 <p>　　如果协方差矩阵是对角矩阵，即协方差部分为零，则方差必然等于特征值
 <span
 class="math inline">\(\lambda\)</span>。如图4所示，特征向量用绿色和红色表示，特征值明显等于协方差矩阵的方差分量。
-</p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png" class=""></p>
 <p>　　如果协方差矩阵是非对角矩阵，即协方差部分不为零，则情况稍微复杂一些。特征值仍是最大离散方向的方差，协方差矩阵的对角线（方差）分量，仍然是
 <span class="math inline">\(x\)</span> 轴和 <span
 class="math inline">\(y\)</span>
 轴方向的方差大小。但因为数据是非轴对齐（最大方差对应的向量与x/ <span
 class="math inline">\(y\)</span>
 轴有一个夹角），所以协方差矩阵对角线上的值不再与图5所示的相同。
-</p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png" class=""></p>
 <p>　　比较图5与图4，可以清楚地看到，特征值表示沿特征向量方向的方差，而协方差矩阵的方差分量表示沿轴的方差。如果协方差为0，则两个值相等。</p>
 <h2 id="使用协方差矩阵作线性变换">3、使用协方差矩阵作线性变换</h2>
 <p>　　现在，暂时放一放协方差矩阵。图3中的例子，可以简单地认为是图6的一个线性变换：
-</p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png" class=""></p>
 <p>　　令图6中数据为 <span class="math inline">\(D\)</span>
 ，则图3中的各示例可以通过对 <span class="math inline">\(D\)</span>
 做线性变换得到： <span class="math display">\[
@@ -439,7 +449,7 @@ class="math inline">\(y\)</span> 方向的缩放比例因子。</p>
 class="math inline">\(\Sigma\)</span> 和线性变换矩阵 <span
 class="math inline">\(T\)</span> 之间的关系。</p>
 <p>　　先从无缩放（缩放比例为1）、无旋转数据开始。此类样本服从标准正态分布，对应于白（非相关）噪声，统计学习惯称之为“白数据”：
-</p>
+<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png" class=""></p>
 <p>　　“白”数据的协方差矩阵，等于单位矩阵，因此方差和标准差为1，协方差等于0：
 <span class="math display">\[
 \Sigma=
@@ -462,7 +472,7 @@ D^{&#39;}=
 D
 \]</span></p>
 <p>　　则变换后的数据 <span class="math inline">\(D^{&#39;}\)</span>
-如图8所示： </p>
+如图8所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png" class=""></p>
 <p>　　 <span class="math inline">\(D^{&#39;}\)</span> 的协方差矩阵
 <span class="math inline">\(\Sigma^{&#39;}\)</span> 为： <span
 class="math display">\[
@@ -550,7 +560,7 @@ class="math inline">\(T=RS\)</span> )，即可得到旋转和缩放后的数据 
 class="math inline">\(D^{&#39;}\)</span>及其协方差矩阵 <span
 class="math inline">\(\Sigma^{&#39;}\)</span> （ <span
 class="math inline">\(\Sigma^{&#39;}=TT^{T}=RSSR^{-1}\)</span>
-），如图10所示： </p>
+），如图10所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png" class=""></p>
 <p>　　图10中彩色箭头表示特征向量。与最大特征值对应的特征向量，总是指向数据最大方差的方向，并规定了其走向（orientation）。由旋转矩阵的正交性，次最大特征值对应的特征向量，总是与最大特征值对应的特征向量正交。</p>
 <h2 id="总结">4、总结</h2>
 <p>　　本文说明了，被观测数据的协方差矩阵，直接与针对白（非相关）数据的线性变换有关。该线性变换完全由特征向量和特征值定义。特征向量表示了矩阵的旋转，特征值对应于每个维度上缩放因子的平方。</p>
