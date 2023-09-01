@@ -264,10 +264,7 @@
     <div class="post-body" itemprop="articleBody"><p>　　为了衡量机器学习算法特别是分类算法的优劣，常用精确率(Precision)与召回率(Recall)，RoC曲线与PR曲线等指标，本文具体说明上述各项指标的基本含义。</p>
 <span id="more"></span>
 <h1 id="混淆矩阵">1、混淆矩阵</h1>
-<p>　　考虑一个二分类问题，即将实例分成正类（positive）或负类（negative）。对一个二分类问题来说，会出现四种情况。如果一个实例是正类并且也被预测成正类，即为真正类（True
-positive）,如果实例是负类被预测成正类，称之为假正类（False
-positive）。相应地，如果实例是负类被预测成负类，称之为真负类（True
-negative）,正类被预测成负类则为假负类（false negative）。</p>
+<p>　　考虑一个二分类问题，即将实例分成正类（positive）或负类（negative）。对一个二分类问题来说，会出现四种情况。如果一个实例是正类并且也被预测成正类，即为真正类（True positive）,如果实例是负类被预测成正类，称之为假正类（False positive）。相应地，如果实例是负类被预测成负类，称之为真负类（True negative）,正类被预测成负类则为假负类（false negative）。</p>
 <h2 id="tp-fp-tn-fn">TP, FP, TN, FN</h2>
 <ol type="1">
 <li>True Positives,TP：预测为正样本，实际也为正样本的特征数</li>
@@ -297,11 +294,8 @@ negative）,正类被预测成负类则为假负类（false negative）。</p>
 </tbody>
 </table>
 
-<h1
-id="精确率precision与召回率recall">2、精确率(precision)与召回率(Recall)</h1>
-<p>　　<strong><font color="#FF0000">精确率(Precision)</font></strong>的定义在上图可以看出，是绿色半圆除以红色绿色组成的圆。<strong><font color="#FF0000">召回率(Recall)</font></strong>的定义也在图上能看出，是绿色半圆除以左边的长方形。<strong><font color="#FF0000">特异性(specificity，或<span
-class="math inline">\(FP_{rate}\)</span>)</font></strong>的定义图上没有直接写明，这里给出，是红色半圆除以右边的长方形。<strong><font color="#FF0000">F1值</font></strong>来综合评估精确率和召回率，它是精确率和召回率的调和均值。当精确率和召回率都高时,<span
-class="math inline">\(F_1\)</span>值也会高。严格的数学定义如下：</p>
+<h1 id="精确率precision与召回率recall">2、精确率(precision)与召回率(Recall)</h1>
+<p>　　<strong><font color="#FF0000">精确率(Precision)</font></strong>的定义在上图可以看出，是绿色半圆除以红色绿色组成的圆。<strong><font color="#FF0000">召回率(Recall)</font></strong>的定义也在图上能看出，是绿色半圆除以左边的长方形。<strong><font color="#FF0000">特异性(specificity，或<span class="math inline">\(FP_{rate}\)</span>)</font></strong>的定义图上没有直接写明，这里给出，是红色半圆除以右边的长方形。<strong><font color="#FF0000">F1值</font></strong>来综合评估精确率和召回率，它是精确率和召回率的调和均值。当精确率和召回率都高时,<span class="math inline">\(F_1\)</span>值也会高。严格的数学定义如下：</p>
 <table>
 <colgroup>
 <col style="width: 50%" />
@@ -315,8 +309,7 @@ class="math inline">\(F_1\)</span>值也会高。严格的数学定义如下：<
 </thead>
 <tbody>
 <tr class="odd">
-<td
-style="text-align: center;"><strong>精确率（Precision）</strong></td>
+<td style="text-align: center;"><strong>精确率（Precision）</strong></td>
 <td>$ \displaystyle P = \frac {TP}{TP+FP} $</td>
 </tr>
 <tr class="even">
@@ -324,62 +317,36 @@ style="text-align: center;"><strong>精确率（Precision）</strong></td>
 <td>$ \displaystyle R=\frac{TP}{TP+FN} $</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><strong>特异性(Specificity, <span
-class="math inline">\(FP_{rate}\)</span>)</strong></td>
+<td style="text-align: center;"><strong>特异性(Specificity, <span class="math inline">\(FP_{rate}\)</span>)</strong></td>
 <td>$ \displaystyle S=\frac{FP}{FP+TN} $</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong><span
-class="math inline">\(F_1\)</span>值</strong></td>
-<td>$\displaystyle \frac {2} {F_{1}} = \frac {1}{P}+\frac {1}{R} \quad
-\Leftrightarrow \quad F_{1} = 2 \times \left ( \frac{P\cdot R}{P+R}
-\right ) $</td>
+<td style="text-align: center;"><strong><span class="math inline">\(F_1\)</span>值</strong></td>
+<td>$\displaystyle \frac {2} {F_{1}} = \frac {1}{P}+\frac {1}{R} \quad \Leftrightarrow \quad F_{1} = 2 \times \left ( \frac{P\cdot R}{P+R} \right ) $</td>
 </tr>
 </tbody>
 </table>
-<p>　　有时候我们对精确率和召回率并不是一视同仁，比如有时候我们更加重视精确率。我们用一个参数<span
-class="math inline">\(\beta\)</span>来度量两者之间的关系，含有参数<span
-class="math inline">\(\beta\)</span>的<span
-class="math inline">\(F_1\)</span>我们记为<span
-class="math inline">\(F_{\beta}\)</span>。如果<span
-class="math inline">\(\beta&gt;1\)</span>，召回率有更大影响，如果<span
-class="math inline">\(\beta&lt;1\)</span>，精确率有更大影响。当<span
-class="math inline">\(\beta=1\)</span>时，精确率和召回率影响力相同，<span
-class="math inline">\(F_{\beta}\)</span>退化为<span
-class="math inline">\(F_1\)</span>的形式。严格的数学定义如下：</p>
-<p><span class="math display">\[ F_{\beta} = \frac{(1+\beta_{2})\cdot P
-\cdot R} {\beta_{2}\cdot P+R}  \]</span></p>
+<p>　　有时候我们对精确率和召回率并不是一视同仁，比如有时候我们更加重视精确率。我们用一个参数<span class="math inline">\(\beta\)</span>来度量两者之间的关系，含有参数<span class="math inline">\(\beta\)</span>的<span class="math inline">\(F_1\)</span>我们记为<span class="math inline">\(F_{\beta}\)</span>。如果<span class="math inline">\(\beta&gt;1\)</span>，召回率有更大影响，如果<span class="math inline">\(\beta&lt;1\)</span>，精确率有更大影响。当<span class="math inline">\(\beta=1\)</span>时，精确率和召回率影响力相同，<span class="math inline">\(F_{\beta}\)</span>退化为<span class="math inline">\(F_1\)</span>的形式。严格的数学定义如下：</p>
+<p><span class="math display">\[ F_{\beta} = \frac{(1+\beta_{2})\cdot P \cdot R} {\beta_{2}\cdot P+R}  \]</span></p>
 <h1 id="roc曲线">3、RoC曲线</h1>
-<p>　　以召回率为<span
-class="math inline">\(y\)</span>轴，以特异性为<span
-class="math inline">\(x\)</span>轴，我们就直接得到了RoC曲线。召回率越高，特异性越小，RoC曲线越靠近左上角，模型和算法就越高效，如图2。另一方面，如果ROC是光滑的，那么基本可以判断没有太大的过拟合（overfitting）。从几何的角度讲，RoC曲线下方的面积越大越大，则模型越优。所以有时候我们用RoC曲线下的面积，即AUC（Area
-Under Curve）值来作为算法和模型好坏的标准。</p>
+<p>　　以召回率为<span class="math inline">\(y\)</span>轴，以特异性为<span class="math inline">\(x\)</span>轴，我们就直接得到了RoC曲线。召回率越高，特异性越小，RoC曲线越靠近左上角，模型和算法就越高效，如图2。另一方面，如果ROC是光滑的，那么基本可以判断没有太大的过拟合（overfitting）。从几何的角度讲，RoC曲线下方的面积越大越大，则模型越优。所以有时候我们用RoC曲线下的面积，即AUC（Area Under Curve）值来作为算法和模型好坏的标准。</p>
 <img src="/2017/08/29/machinelearning_roc_pr/roc.png" class="" title="图2 RoC曲线">
 <h1 id="pr曲线">4、PR曲线</h1>
-<p>　　以精确率为<span
-class="math inline">\(y\)</span>轴，以召回率为<span
-class="math inline">\(x\)</span>轴，我们就得到了PR曲线。精确率越高，召回率越高，PR曲线越靠近右上角，模型和算法就越高效。和ROC一样，先看PR曲线的平滑度，再看谁上谁下（同一测试集上）。一般来说，上面的比下面的好。当P和R接近F1值就也越大，一般会画出连接(0,0)和(1,1)的线，线和PR曲线重合处的F1是这条线最大的F1（光滑的情况下），此时的F1对于PR曲线就好象AUC对于ROC曲线一样。数字比一条线更方便调模型。</p>
+<p>　　以精确率为<span class="math inline">\(y\)</span>轴，以召回率为<span class="math inline">\(x\)</span>轴，我们就得到了PR曲线。精确率越高，召回率越高，PR曲线越靠近右上角，模型和算法就越高效。和ROC一样，先看PR曲线的平滑度，再看谁上谁下（同一测试集上）。一般来说，上面的比下面的好。当P和R接近F1值就也越大，一般会画出连接(0,0)和(1,1)的线，线和PR曲线重合处的F1是这条线最大的F1（光滑的情况下），此时的F1对于PR曲线就好象AUC对于ROC曲线一样。数字比一条线更方便调模型。</p>
 <img src="/2017/08/29/machinelearning_roc_pr/pr.png" class="" title="图3 PR曲线">
 <h1 id="roc和pr曲线之间的关系和不同">5、ROC和PR曲线之间的关系和不同</h1>
 <p>　　RoC曲线和PR曲线是非常常用的衡量模型分类能力两个指标，在模型评估中具有重要的作用。当正负样本的分布较为平衡时，ROC和PR的趋势差不多。但当样本分布不均时，两者就截然不同了，ROC效果依然看似很好，但是PR上反映效果一般。因此，对非平衡（倾斜）数据集，PR曲线或F1值将是更好的选择。</p>
 <blockquote>
 <p>解释：</p>
-<p>　　设数据集负类占大多数（例如占99%），正类为极少数（例如占1%）。此时负类样本预测为负类的数值TN较大，负类样本预测为正类的数值FP较少。此时当FP的数量变化时，由于<span
-class="math inline">\(\displaystyle
-FP_{rate}=\frac{FP}{FP+TN}\)</span>，所以<span
-class="math inline">\(FP_{rate}\)</span>不会有很大变化。</p>
-<p>　　但是<span class="math inline">\(\displaystyle PR=\frac{TP}{TP
-+FP}\)</span>，正类样本预测为正类的数值TP以及负类样本预测正类的数值FP均较小，因此，当FP稍有变化，PR曲线即可以捕获到这个差异，所以效果会更好。</p>
+<p>　　设数据集负类占大多数（例如占99%），正类为极少数（例如占1%）。此时负类样本预测为负类的数值TN较大，负类样本预测为正类的数值FP较少。此时当FP的数量变化时，由于<span class="math inline">\(\displaystyle FP_{rate}=\frac{FP}{FP+TN}\)</span>，所以<span class="math inline">\(FP_{rate}\)</span>不会有很大变化。</p>
+<p>　　但是<span class="math inline">\(\displaystyle PR=\frac{TP}{TP +FP}\)</span>，正类样本预测为正类的数值TP以及负类样本预测正类的数值FP均较小，因此，当FP稍有变化，PR曲线即可以捕获到这个差异，所以效果会更好。</p>
 </blockquote>
 <hr />
 <p>参考文档：</p>
 <ol type="1">
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/30643044">精确率、召回率、F1
-值、ROC、AUC 各自的优缺点是什么？</a></li>
-<li><a
-target="_blank" rel="noopener" href="https://www.cnblogs.com/pinard/p/5993450.html">精确率与召回率，RoC曲线与PR曲线</a></li>
-<li><a
-target="_blank" rel="noopener" href="https://www.bbsmax.com/A/D854V4Z3zE/">ROC曲线和PR曲线</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/30643044">精确率、召回率、F1 值、ROC、AUC 各自的优缺点是什么？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pinard/p/5993450.html">精确率与召回率，RoC曲线与PR曲线</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bbsmax.com/A/D854V4Z3zE/">ROC曲线和PR曲线</a></li>
 </ol>
 
     </div>

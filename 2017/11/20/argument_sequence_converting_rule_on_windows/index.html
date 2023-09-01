@@ -141,8 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8windows%E4%B8%8B%E5%B0%86%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E5%BA%8F%E5%88%97%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9B%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90%E6%97%B6%E9%9C%80%E9%81%B5%E5%BE%AA%E4%BB%A5%E4%B8%8B%E8%A7%84%E5%88%99%E5%AF%B9%E5%BA%94-ms-c-runtime-%E8%A7%84%E5%88%99"><span class="nav-text">在Windows下，将一个参数序列转换为一个字符串进行命令解析时，需遵循以下规则（对应
-MS C runtime 规则）：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E6%96%87"><span class="nav-text">原文：</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8windows%E4%B8%8B%E5%B0%86%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E5%BA%8F%E5%88%97%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%9B%E8%A1%8C%E5%91%BD%E4%BB%A4%E8%A7%A3%E6%9E%90%E6%97%B6%E9%9C%80%E9%81%B5%E5%BE%AA%E4%BB%A5%E4%B8%8B%E8%A7%84%E5%88%99%E5%AF%B9%E5%BA%94-ms-c-runtime-%E8%A7%84%E5%88%99"><span class="nav-text">在Windows下，将一个参数序列转换为一个字符串进行命令解析时，需遵循以下规则（对应 MS C runtime 规则）：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E6%96%87"><span class="nav-text">原文：</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -260,38 +259,24 @@ MS C runtime 规则）：</span></a></li><li class="nav-item nav-level-1"><a cla
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>使用subprocess时，对参数转换的一些规则，原文来自<a
-target="_blank" rel="noopener" href="https://docs.python.org/3/library/subprocess.html#converting-argument-sequence"
-title="Python文档">converting-argument-sequence</a></p>
+    <div class="post-body" itemprop="articleBody"><p>使用subprocess时，对参数转换的一些规则，原文来自<a target="_blank" rel="noopener" href="https://docs.python.org/3/library/subprocess.html#converting-argument-sequence" title="Python文档">converting-argument-sequence</a></p>
 <span id="more"></span>
-<h1
-id="在windows下将一个参数序列转换为一个字符串进行命令解析时需遵循以下规则对应-ms-c-runtime-规则">在Windows下，将一个参数序列转换为一个字符串进行命令解析时，需遵循以下规则（对应
-MS C runtime 规则）：</h1>
+<h1 id="在windows下将一个参数序列转换为一个字符串进行命令解析时需遵循以下规则对应-ms-c-runtime-规则">在Windows下，将一个参数序列转换为一个字符串进行命令解析时，需遵循以下规则（对应 MS C runtime 规则）：</h1>
 <ol type="1">
 <li>参数由白字符分隔，白字符可以是空格(Space)或制表符(Tab)。</li>
-<li>由双引号包围的字符串被解释为单个参数，无论其中是否包含白字符。
-带引号的字符串可以嵌入到参数中。</li>
+<li>由双引号包围的字符串被解释为单个参数，无论其中是否包含白字符。 带引号的字符串可以嵌入到参数中。</li>
 <li>双引号前加上反斜杠被解释为一个双引号文本（反斜杠“\”视为转义字符，同C语言）。</li>
 <li>反斜杠仅视为文本，除反斜杠之后紧跟一个双引号。</li>
-<li>如果反斜杠后紧跟一个双引号，则每对反斜杠都解释为反斜杠文本。
-如果反斜杠的数量是奇数，则最后一个反斜杠将转义下一个双引号，如规则3所述。</li>
+<li>如果反斜杠后紧跟一个双引号，则每对反斜杠都解释为反斜杠文本。 如果反斜杠的数量是奇数，则最后一个反斜杠将转义下一个双引号，如规则3所述。</li>
 </ol>
 <h1 id="原文">原文：</h1>
 <blockquote>
 <ol type="1">
-<li>Arguments are delimited by white space, which is either a space or a
-tab.</li>
-<li>A string surrounded by double quotation marks is interpreted as a
-single argument, regardless of white space contained within. A quoted
-string can be embedded in an argument.</li>
-<li>A double quotation mark preceded by a backslash is interpreted as a
-literal double quotation mark.</li>
-<li>Backslashes are interpreted literally, unless they immediately
-precede a double quotation mark.</li>
-<li>If backslashes immediately precede a double quotation mark, every
-pair of backslashes is interpreted as a literal backslash. If the number
-of backslashes is odd, the last backslash escapes the next double
-quotation mark as described in rule 3.</li>
+<li>Arguments are delimited by white space, which is either a space or a tab.</li>
+<li>A string surrounded by double quotation marks is interpreted as a single argument, regardless of white space contained within. A quoted string can be embedded in an argument.</li>
+<li>A double quotation mark preceded by a backslash is interpreted as a literal double quotation mark.</li>
+<li>Backslashes are interpreted literally, unless they immediately precede a double quotation mark.</li>
+<li>If backslashes immediately precede a double quotation mark, every pair of backslashes is interpreted as a literal backslash. If the number of backslashes is odd, the last backslash escapes the next double quotation mark as described in rule 3.</li>
 </ol>
 </blockquote>
 

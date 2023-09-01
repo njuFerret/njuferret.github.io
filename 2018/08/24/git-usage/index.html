@@ -292,17 +292,12 @@
 <li><code>git stash pop</code> 恢复工作区修改并删除stash内容</li>
 <li><code>git stash appy</code> 恢复工作区修改但不删除stash内容</li>
 <li><code>git stash drop</code> 删除<code>stash</code> 内容</li>
-<li><code>git merge --no-ff -m "comment" branchname</code>
-合并当前及branchname分支（推荐的merge方法，--no-ff提交模式可以在Git
-log后看到merge的节点，否则看不到）</li>
-<li><code>git log --graph --pretty=oneline --abbrev-commit</code>
-查看简化的提交日志</li>
+<li><code>git merge --no-ff -m "comment" branchname</code> 合并当前及branchname分支（推荐的merge方法，--no-ff提交模式可以在Git log后看到merge的节点，否则看不到）</li>
+<li><code>git log --graph --pretty=oneline --abbrev-commit</code> 查看简化的提交日志</li>
 <li><code>git remote</code> 查看远程库信息</li>
 <li><code>git remote -v</code> 显示更详细的远程库信息</li>
-<li><code>git push origin master</code>
-推送本地master分支到远程仓库origin的master分支</li>
-<li><code>git push origin dev</code>
-推送本地dev分支到远程仓库origin的dev分支</li>
+<li><code>git push origin master</code> 推送本地master分支到远程仓库origin的master分支</li>
+<li><code>git push origin dev</code> 推送本地dev分支到远程仓库origin的dev分支</li>
 <li><code>git tag v1.0</code> 给发布版本创建标签</li>
 <li><code>git tag</code> 查看所有标签</li>
 <li><code>git tag commitId</code> 给谋而历史提交id打上标签</li>
@@ -313,8 +308,7 @@ log后看到merge的节点，否则看不到）</li>
 <li><code>git push origin :refs/tags/tagname</code> 删除远程标签</li>
 </ol>
 <h3 id="创建与合并分支">1) 创建与合并分支</h3>
-<p><code>git merge</code>如果有冲突，打开冲突的文件，手动改动冲突部分，
-再重新<code>git add</code>, <code>git commit</code></p>
+<p><code>git merge</code>如果有冲突，打开冲突的文件，手动改动冲突部分， 再重新<code>git add</code>, <code>git commit</code></p>
 <p>在实际开发中，我们应该按照几个基本原则进行分支管理。</p>
 <ul>
 <li><code>master</code>分支应该是非常稳定的，也就是仅用来发布新版本，平时不能再上面干活。</li>
@@ -322,8 +316,7 @@ log后看到merge的节点，否则看不到）</li>
 <li>每个人都有自己的分支，时不时地往分支<code>dev</code>上合并就可以了。</li>
 </ul>
 <h3 id="bug分支">2) bug分支</h3>
-<p>修复bug时，通过创建新的Bug分支进行修复，然后合并，最后删除；当手头工作没有完成时，先把工作现场<code>git stash</code>一下，然后去修复<code>bug</code>,
-修复后，再<code>git stash pop</code> 回到工作现场</p>
+<p>修复bug时，通过创建新的Bug分支进行修复，然后合并，最后删除；当手头工作没有完成时，先把工作现场<code>git stash</code>一下，然后去修复<code>bug</code>, 修复后，再<code>git stash pop</code> 回到工作现场</p>
 <h3 id="feature分支">3) feature分支</h3>
 <p>开发一个新feature，最好新建一个分支；</p>
 <p>如果要丢弃一个没有被合并过的分支，可以通过<code>git branch -D</code>强行删除。</p>
@@ -339,8 +332,7 @@ log后看到merge的节点，否则看不到）</li>
 <p>在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！</p>
 <h2 id="标签">4、标签</h2>
 <p>发布一个版本时，我们通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。</p>
-<p>本文转载了<a
-target="_blank" rel="noopener" href="https://blog.csdn.net/chenxiaodan_danny/article/details/51426204">这篇文档</a>，向作者表示感谢。</p>
+<p>本文转载了<a target="_blank" rel="noopener" href="https://blog.csdn.net/chenxiaodan_danny/article/details/51426204">这篇文档</a>，向作者表示感谢。</p>
 
     </div>
 

@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是">
+    <meta name="description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是盲源分">
 <meta property="og:type" content="article">
 <meta property="og:title" content="主成分分析与独立成分分析">
 <meta property="og:url" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/index.html">
 <meta property="og:site_name" content="有点博客">
-<meta property="og:description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是">
+<meta property="og:description" content="主成分分析(Principle Component Analysis, PCA)和独立成分分析(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。 　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免维度灾难。PCA只对符合高斯分布的样本较为有效。 　　ICA，是盲源分">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig01.png">
 <meta property="og:image" content="https://njuferret.github.io/2019/07/31/2019-07-31_pca-ica/fig02.gif">
@@ -262,41 +262,16 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>　　<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Principal_component_analysis">主成分分析</a>(Principle
-Component Analysis, PCA)和<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Independent_component_analysis">独立成分分析</a>(Independent
-Components Analysis,
-ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。</p>
-<p>　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">维度灾难</a>。PCA只对符合高斯分布的样本较为有效。</p>
-<p>　　ICA，是<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Signal_separation">盲源分离(Blind
-source separation,
-BSS)</a>的一个特例，来源于“鸡尾酒会问题”，如果被观测信号由若干个统计独立的分量的线性组合（混合信号），ICA的目的是将被观测信号解混为若干独立信号源，从而对感兴趣的信号进行处理。</p>
+    <div class="post-body" itemprop="articleBody"><p>　　<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Principal_component_analysis">主成分分析</a>(Principle Component Analysis, PCA)和<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Independent_component_analysis">独立成分分析</a>(Independent Components Analysis, ICA)，是目前应用最为广泛的机器学习数据预处理的手段之一。</p>
+<p>　　PCA，顾名思义，取信号中的最为主要的成分，对非重要部分进行去除，从而达到数据降维的目的，避免<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curse_of_dimensionality">维度灾难</a>。PCA只对符合高斯分布的样本较为有效。</p>
+<p>　　ICA，是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Signal_separation">盲源分离(Blind source separation, BSS)</a>的一个特例，来源于“鸡尾酒会问题”，如果被观测信号由若干个统计独立的分量的线性组合（混合信号），ICA的目的是将被观测信号解混为若干独立信号源，从而对感兴趣的信号进行处理。</p>
 <span id="more"></span>
 <h2 id="pca">1、PCA</h2>
 <h3 id="一个简单的例子">1.1 一个简单的例子</h3>
-<p>　　二维平面上有若干个样本点，现在希望使用1维坐标对其进行降维处理，同时又希望尽量保留原始的信息，如何实现？
-<img src="/2019/07/31/2019-07-31_pca-ica/fig01.png" class="" title="图1.二维样本的降维处理"></p>
+<p>　　二维平面上有若干个样本点，现在希望使用1维坐标对其进行降维处理，同时又希望尽量保留原始的信息，如何实现？ <img src="/2019/07/31/2019-07-31_pca-ica/fig01.png" class="" title="图1.二维样本的降维处理"></p>
 <h3 id="最大方差理论">1.2 最大方差理论</h3>
-<p>　　最懒的一种降维方法，直接将数据点投影至<span
-class="math inline">\(x\)</span>/<span
-class="math inline">\(y\)</span>坐标轴。这样处理的结果会使得样本叠加，导致有效样本减少，从而丢失信息。例如，所有的样本投影至<span
-class="math inline">\(x\)</span>上，此时横坐标上只有3个点，这就造成了原始样本丢失的情况。更为极端的一个例子，如果5个点的横坐标均相同，则投影后只剩下1个点（此时各点在<span
-class="math inline">\(x\)</span>轴的方差为0）。如果选择<span
-class="math inline">\(y=x\)</span>作为基准坐标轴，可以发现，5个点的信息都会被保留下来。可以看出，方差是衡量样本信息量的关键指标。
-<img src="/2019/07/31/2019-07-31_pca-ica/fig02.gif" class="" title="图2.基向量与方差的关系">
-　　从信号处理的角度来说，一个随机信号最有用的信息体包含在方差里，<strong>方差越大，信号所包含的信息量越多</strong>。另一方面，样本的多样性，是保证机器学习算法能够有效学习到特征的前提条件，而方差即为反应样本多样性的关键指标。如图2所示，基向量不同，样本在基向量上的投影长度（方差）不同。设想一组由10个方差为0的数据构成的样本，方差为0说明这10个数据完全相等，故实际有效的样本仅为1个。因此<strong>最大化方差，即意味着最大化样本的多样性</strong>。图1中，样本在<span
-class="math inline">\(x&#39;\)</span>轴上的投影方差较大，在<span
-class="math inline">\(y&#39;\)</span>轴上的投影方差较小。当希望将样本数据从二维降至一维时，可以认为选择<span
-class="math inline">\(x&#39;\)</span>轴丢失的信息量较少，是较为合理的选择。</p>
-<p>　　因此，如果需要对<span
-class="math inline">\(n\)</span>维特征数据进行降维处理，如果能够找到<span
-class="math inline">\(k (k&lt;n)\)</span>维特征，使得<span
-class="math inline">\(\sum_{i=1}^{k} \sigma_{i}^{(k)} \approx
-\sum_{i=1}^{n} \sigma_{i}^{(n)}\)</span>，那么<span
-class="math inline">\((n-k)\)</span>维数据都属于冗余数据，可以丢弃，从而使计算量大大下降。</p>
+<p>　　最懒的一种降维方法，直接将数据点投影至<span class="math inline">\(x\)</span>/<span class="math inline">\(y\)</span>坐标轴。这样处理的结果会使得样本叠加，导致有效样本减少，从而丢失信息。例如，所有的样本投影至<span class="math inline">\(x\)</span>上，此时横坐标上只有3个点，这就造成了原始样本丢失的情况。更为极端的一个例子，如果5个点的横坐标均相同，则投影后只剩下1个点（此时各点在<span class="math inline">\(x\)</span>轴的方差为0）。如果选择<span class="math inline">\(y=x\)</span>作为基准坐标轴，可以发现，5个点的信息都会被保留下来。可以看出，方差是衡量样本信息量的关键指标。 <img src="/2019/07/31/2019-07-31_pca-ica/fig02.gif" class="" title="图2.基向量与方差的关系"> 　　从信号处理的角度来说，一个随机信号最有用的信息体包含在方差里，<strong>方差越大，信号所包含的信息量越多</strong>。另一方面，样本的多样性，是保证机器学习算法能够有效学习到特征的前提条件，而方差即为反应样本多样性的关键指标。如图2所示，基向量不同，样本在基向量上的投影长度（方差）不同。设想一组由10个方差为0的数据构成的样本，方差为0说明这10个数据完全相等，故实际有效的样本仅为1个。因此<strong>最大化方差，即意味着最大化样本的多样性</strong>。图1中，样本在<span class="math inline">\(x&#39;\)</span>轴上的投影方差较大，在<span class="math inline">\(y&#39;\)</span>轴上的投影方差较小。当希望将样本数据从二维降至一维时，可以认为选择<span class="math inline">\(x&#39;\)</span>轴丢失的信息量较少，是较为合理的选择。</p>
+<p>　　因此，如果需要对<span class="math inline">\(n\)</span>维特征数据进行降维处理，如果能够找到<span class="math inline">\(k (k&lt;n)\)</span>维特征，使得<span class="math inline">\(\sum_{i=1}^{k} \sigma_{i}^{(k)} \approx \sum_{i=1}^{n} \sigma_{i}^{(n)}\)</span>，那么<span class="math inline">\((n-k)\)</span>维数据都属于冗余数据，可以丢弃，从而使计算量大大下降。</p>
 <p>　　这里有2个问题：</p>
 <ol type="1">
 <li>如何使得所选维度上方差最大？</li>
@@ -304,61 +279,29 @@ class="math inline">\((n-k)\)</span>维数据都属于冗余数据，可以丢�
 </ol>
 <h3 id="pca方法">1.3 PCA方法</h3>
 <p>　　PCA在数学上定义为，一个将原数据变换到新坐标系统下的线性变换，要求原数据投影后，最大方差位于第一坐标轴上（称为第一主成分），第二大方差位于第二坐标轴上（第二主成分），以此类推。</p>
-<p>　　以一个随机信号<span class="math inline">\(\vec{x}=\left [
-x_1,\cdots,x_p \right ]\)</span>为例，PCA的基本思想是找到一个向量<span
-class="math inline">\(\vec{w}_1\)</span>，使得随机信号在该方向上的投影的方差<span
-class="math inline">\(\left (\vec{w}^T_1 \vec{x} \right
-)\)</span>最大。然后，在与<span
-class="math inline">\(\vec{w}_1\)</span>向量正交的空间里到向量<span
-class="math inline">\(\vec{w}_2\)</span>，使得信号在<span
-class="math inline">\(\vec{w}_2\)</span>投影的方差<span
-class="math inline">\(\left (\vec{w}^T_2 \vec{x} \right
-)\)</span>最大，以此类推直到找到所有向量，用这种方法我们最终可以得到一列非相关的随机变量<span
-class="math inline">\(\left [\vec{w}^T_1 \vec{x}, \cdots, \vec{w}^T_n
-\vec{x} \right]\)</span>。</p>
-<p>　　设各特征列均值为<span
-class="math inline">\(0\)</span>的样本集<span
-class="math inline">\(X\)</span>，由<span
-class="math inline">\(n\)</span>个包含<span
-class="math inline">\(p\)</span>个特征的样本构成(注意：每行一个样本，每列一个特征)，即：</p>
+<p>　　以一个随机信号<span class="math inline">\(\vec{x}=\left [ x_1,\cdots,x_p \right ]\)</span>为例，PCA的基本思想是找到一个向量<span class="math inline">\(\vec{w}_1\)</span>，使得随机信号在该方向上的投影的方差<span class="math inline">\(\left (\vec{w}^T_1 \vec{x} \right )\)</span>最大。然后，在与<span class="math inline">\(\vec{w}_1\)</span>向量正交的空间里到向量<span class="math inline">\(\vec{w}_2\)</span>，使得信号在<span class="math inline">\(\vec{w}_2\)</span>投影的方差<span class="math inline">\(\left (\vec{w}^T_2 \vec{x} \right )\)</span>最大，以此类推直到找到所有向量，用这种方法我们最终可以得到一列非相关的随机变量<span class="math inline">\(\left [\vec{w}^T_1 \vec{x}, \cdots, \vec{w}^T_n \vec{x} \right]\)</span>。</p>
+<p>　　设各特征列均值为<span class="math inline">\(0\)</span>的样本集<span class="math inline">\(X\)</span>，由<span class="math inline">\(n\)</span>个包含<span class="math inline">\(p\)</span>个特征的样本构成(注意：每行一个样本，每列一个特征)，即：</p>
 <p><span class="math display">\[
 X=X_{np}=       \label{eq1}
 \begin{bmatrix}
 x_{11}  &amp; x_{12} &amp; \cdots &amp; x_{1p} \\
 x_{21}  &amp; x_{22} &amp; \cdots &amp; x_{2p} \\
 \vdots  &amp; \vdots &amp; \ddots &amp; \vdots \\
-x_{n1}  &amp; x_{n2} &amp; \cdots &amp; x_{np}
+x_{n1}  &amp; x_{n2} &amp; \cdots &amp; x_{np} 
 \end{bmatrix}
 \]</span></p>
 <blockquote>
-<p>　　<strong>注1</strong>：对一般样本集<span
-class="math inline">\(X&#39;\)</span>，可以简单的将各元素减去所在特征列的均值，即可得到特征列均值为0的样本集<span
-class="math inline">\(X\)</span>。记<span
-class="math inline">\(X&#39;\)</span>各特征列的均值为 <span
-class="math inline">\(\bar{X_{p}&#39;} \equiv \left [ \bar {X_{1}&#39;},
-\bar {X_{2}&#39;}, \cdots, \bar {X_{p}&#39;} \right ]\)</span>
-，则：</p>
+<p>　　<strong>注1</strong>：对一般样本集<span class="math inline">\(X&#39;\)</span>，可以简单的将各元素减去所在特征列的均值，即可得到特征列均值为0的样本集<span class="math inline">\(X\)</span>。记<span class="math inline">\(X&#39;\)</span>各特征列的均值为 <span class="math inline">\(\bar{X_{p}&#39;} \equiv \left [ \bar {X_{1}&#39;}, \bar {X_{2}&#39;}, \cdots, \bar {X_{p}&#39;} \right ]\)</span> ，则：</p>
 </blockquote>
 <p><span class="math display">\[
-X \equiv X&#39; -  {\begin{bmatrix} 1&amp; \cdots &amp; 1 \\
-\end{bmatrix}}^T_{n} \cdot \bar{X_{p}&#39;} \label{eq2}
+X \equiv X&#39; -  {\begin{bmatrix} 1&amp; \cdots &amp; 1 \\ \end{bmatrix}}^T_{n} \cdot \bar{X_{p}&#39;} \label{eq2}
 \]</span></p>
-<p>　　下文讨论均对去均值后的样本集<span
-class="math inline">\(X\)</span>展开。</p>
-<p>　　对样本矩阵<span class="math inline">\(X_{n \times
-p}\)</span>，找到一组由基向量<span
-class="math inline">\(\vec{w_i}=[w_1,\cdots,w_p]^T\)</span>构成的矩阵<span
-class="math inline">\(W_{p \times p}\)</span>，使得<span
-class="math inline">\(Y=X W\)</span>，其中：</p>
+<p>　　下文讨论均对去均值后的样本集<span class="math inline">\(X\)</span>展开。</p>
+<p>　　对样本矩阵<span class="math inline">\(X_{n \times p}\)</span>，找到一组由基向量<span class="math inline">\(\vec{w_i}=[w_1,\cdots,w_p]^T\)</span>构成的矩阵<span class="math inline">\(W_{p \times p}\)</span>，使得<span class="math inline">\(Y=X W\)</span>，其中：</p>
 <ul>
 <li><span class="math inline">\(Y\)</span>各分量线性无关；</li>
-<li><span class="math inline">\(Y_1,
-\cdots,Y_p\)</span>的方差递减；</li>
-<li>构成矩阵<span class="math inline">\(W\)</span>的各基向量<span
-class="math inline">\(w_i\)</span>模值为<span
-class="math inline">\(1\)</span>，即<span class="math inline">\(\lVert
-w_i \rVert=1\)</span>（<span
-class="math inline">\(L1\)</span>范数）；</li>
+<li><span class="math inline">\(Y_1, \cdots,Y_p\)</span>的方差递减；</li>
+<li>构成矩阵<span class="math inline">\(W\)</span>的各基向量<span class="math inline">\(w_i\)</span>模值为<span class="math inline">\(1\)</span>，即<span class="math inline">\(\lVert w_i \rVert=1\)</span>（<span class="math inline">\(L1\)</span>范数）；</li>
 </ul>
 <p>　　考虑方差为协方差矩阵的对角线元素，且当各分量线性无关时，协方差为0，即满足上述条件：</p>
 <p><span class="math display">\[
@@ -370,10 +313,7 @@ Var(Y) &amp;= Cov(Y) = \frac{1}{n-1}Y^T Y       \\
 &amp;=  W^T Cov(X) W                \\
 \end{align*}
 \]</span></p>
-<p>　　<span class="math inline">\(Cov(Y)\)</span>和<span
-class="math inline">\(Cov(X)\)</span>以及<span
-class="math inline">\(W\)</span>均为对称方阵(<span
-class="math inline">\(W^T=W^{-1}\)</span>)，从而：</p>
+<p>　　<span class="math inline">\(Cov(Y)\)</span>和<span class="math inline">\(Cov(X)\)</span>以及<span class="math inline">\(W\)</span>均为对称方阵(<span class="math inline">\(W^T=W^{-1}\)</span>)，从而：</p>
 <p><span class="math display">\[
 \begin{align*}                  \label{eq4}
 Cov(Y) &amp;= W^T Cov(X) W = W^{-1} Cov(X) W \\
@@ -381,94 +321,35 @@ Cov(Y) &amp;= W^T Cov(X) W = W^{-1} Cov(X) W \\
 &amp;\Rightarrow W Cov(Y) W^T = Cov(X)
 \end{align*}
 \]</span></p>
-<p>　　因此上述问题等价于：求矩阵<span
-class="math inline">\(W\)</span>(每列为一个基向量)，使随机信号<span
-class="math inline">\(X\)</span>的协方差矩阵的对角化（对称矩阵变为对角矩阵）：</p>
+<p>　　因此上述问题等价于：求矩阵<span class="math inline">\(W\)</span>(每列为一个基向量)，使随机信号<span class="math inline">\(X\)</span>的协方差矩阵的对角化（对称矩阵变为对角矩阵）：</p>
 <p><span class="math display">\[
-\text{求}w\text{使}：\; \max \limits_{\lVert w \rVert=1} \{Var(W^T X) \}
-\;  \Leftrightarrow \; \text{求} w \text{使}：\{W^T Cov(X) W \}
-\text{为对角矩阵}
+\text{求}w\text{使}：\; \max \limits_{\lVert w \rVert=1} \{Var(W^T X) \} \;  \Leftrightarrow \; \text{求} w \text{使}：\{W^T Cov(X) W \} \text{为对角矩阵}
 \]</span></p>
-<p>　　常规的矩阵对角化方法，有<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix">特征值分解</a>(Eigenvalue
-Decomposition, EVD)，<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition">奇异值分解</a>(Singular
-Value Decomposition, SVD)等。其中EVD针对<span class="math inline">\(N
-\times N\)</span>方阵，SVD是EVD的一个推广，可以针对任意形状矩阵。</p>
+<p>　　常规的矩阵对角化方法，有<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix">特征值分解</a>(Eigenvalue Decomposition, EVD)，<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition">奇异值分解</a>(Singular Value Decomposition, SVD)等。其中EVD针对<span class="math inline">\(N \times N\)</span>方阵，SVD是EVD的一个推广，可以针对任意形状矩阵。</p>
 <h3 id="矩阵的对角化">1.4 矩阵的对角化</h3>
 <p>　　利用EVD或SVD方法，我们可以将协方差矩阵对角化，并求出相应的变化基向量矩阵。</p>
-<p>　　矩阵对角化定理(Matrix diagonalization theorem)：对于<span
-class="math inline">\(m\)</span>维方阵<span
-class="math inline">\(C\)</span>，如果它有<span
-class="math inline">\(m\)</span>个线性无关的特征向量，那么存在一个特征分解：</p>
+<p>　　矩阵对角化定理(Matrix diagonalization theorem)：对于<span class="math inline">\(m\)</span>维方阵<span class="math inline">\(C\)</span>，如果它有<span class="math inline">\(m\)</span>个线性无关的特征向量，那么存在一个特征分解：</p>
 <p><span class="math display">\[
 C = W \Lambda W^{−1}
 \]</span></p>
-<p>　　其中， <span class="math inline">\(W\)</span>为<span
-class="math inline">\(m \times m\)</span>方阵，且<span
-class="math inline">\(W\)</span>的第 <span
-class="math inline">\(i\)</span> 列为 <span
-class="math inline">\(C\)</span> 的特征向量<span
-class="math inline">\(\vec{q_i}\)</span>。<span
-class="math inline">\(\Lambda\)</span>是对角矩阵，其对角线上的元素为对应的特征值，即
-<span class="math inline">\(\Lambda_{ii}=\lambda_i\)</span> 。</p>
-<p>　　对称对角化定理(Symmetric diagonalization
-theorem)：更进一步，如果方阵<span
-class="math inline">\(C\)</span>是对称方阵，可得<span
-class="math inline">\(W\)</span>的每一列都是<span
-class="math inline">\(C\)</span>的互相正交且归一化（单位长度）的特征向量，即<span
-class="math inline">\(W^{−1}=W^{T}\)</span> 。</p>
-<p>　　求出基向量矩阵<span
-class="math inline">\(W\)</span>后，特征值矩阵 $ $
-已经按照各特征值(方差)大小排列，故可以根据重要性，简单的选取前<span
-class="math inline">\(k\)</span>个向量即可。设需要取 <span
-class="math inline">\(k (1 &lt; k &lt; m)\)</span> 个基向量（例如前<span
-class="math inline">\(k\)</span>个特征值占全部<span
-class="math inline">\(p\)</span>个特征值的<span
-class="math inline">\(90\%\)</span>，即<span
-class="math inline">\(\sum^k_{i=1} \lambda_i / \sum^p_{i=1} \lambda_i
-&gt; 0.9\)</span>），令<span class="math inline">\(W_{p \times
-k}\)</span>为<span class="math inline">\(W\)</span>的前<span
-class="math inline">\(k\)</span>维基向量子矩阵，则变换后的数据<span
-class="math inline">\(Y\)</span>为：</p>
-<p><span class="math display">\[
+<p>　　其中， <span class="math inline">\(W\)</span>为<span class="math inline">\(m \times m\)</span>方阵，且<span class="math inline">\(W\)</span>的第 <span class="math inline">\(i\)</span> 列为 <span class="math inline">\(C\)</span> 的特征向量<span class="math inline">\(\vec{q_i}\)</span>。<span class="math inline">\(\Lambda\)</span>是对角矩阵，其对角线上的元素为对应的特征值，即 <span class="math inline">\(\Lambda_{ii}=\lambda_i\)</span> 。</p>
+<p>　　对称对角化定理(Symmetric diagonalization theorem)：更进一步，如果方阵<span class="math inline">\(C\)</span>是对称方阵，可得<span class="math inline">\(W\)</span>的每一列都是<span class="math inline">\(C\)</span>的互相正交且归一化（单位长度）的特征向量，即<span class="math inline">\(W^{−1}=W^{T}\)</span> 。</p>
+<p>　　求出基向量矩阵<span class="math inline">\(W\)</span>后，特征值矩阵 $ $ 已经按照各特征值(方差)大小排列，故可以根据重要性，简单的选取前<span class="math inline">\(k\)</span>个向量即可。设需要取 <span class="math inline">\(k (1 &lt; k &lt; m)\)</span> 个基向量（例如前<span class="math inline">\(k\)</span>个特征值占全部<span class="math inline">\(p\)</span>个特征值的<span class="math inline">\(90\%\)</span>，即<span class="math inline">\(\sum^k_{i=1} \lambda_i / \sum^p_{i=1} \lambda_i &gt; 0.9\)</span>），令<span class="math inline">\(W_{p \times k}\)</span>为<span class="math inline">\(W\)</span>的前<span class="math inline">\(k\)</span>维基向量子矩阵，则变换后的数据<span class="math inline">\(Y\)</span>为：</p>
+<p><span class="math display">\[ 
 Y =  X W_{p \times k}
 \]</span></p>
-<p>　　其中，新的数据矩阵<span class="math inline">\(Y\)</span>为<span
-class="math inline">\(n \times k\)</span>矩阵，较原<span
-class="math inline">\((n \times p)\)</span>维数据矩阵<span
-class="math inline">\(X\)</span>，减少了<span
-class="math inline">\((p-k)\)</span>维，从而达到了降维的目的。</p>
+<p>　　其中，新的数据矩阵<span class="math inline">\(Y\)</span>为<span class="math inline">\(n \times k\)</span>矩阵，较原<span class="math inline">\((n \times p)\)</span>维数据矩阵<span class="math inline">\(X\)</span>，减少了<span class="math inline">\((p-k)\)</span>维，从而达到了降维的目的。</p>
 <h3 id="奇异值分解">1.5 奇异值分解</h3>
-<p>　　<strong>奇异值分解</strong>定义：假设<span
-class="math inline">\(X\)</span>是一个<span
-class="math inline">\(n×p\)</span>阶矩阵，其中的元素全部属于域<span
-class="math inline">\(K\)</span>(实数域或复数域)。如此则存在一个分解使得</p>
+<p>　　<strong>奇异值分解</strong>定义：假设<span class="math inline">\(X\)</span>是一个<span class="math inline">\(n×p\)</span>阶矩阵，其中的元素全部属于域<span class="math inline">\(K\)</span>(实数域或复数域)。如此则存在一个分解使得</p>
 <p><span class="math display">\[
 M=U \Sigma V^* = U \Sigma V^{T} \quad (V\text{为实矩阵})
 \]</span></p>
-<p>　　其中<span class="math inline">\(U\)</span>是<span
-class="math inline">\(n×n\)</span>阶<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unitary_matrix">酉矩阵(也叫幺正矩阵)</a>；$
-<span class="math inline">\(是\)</span> m n <span
-class="math inline">\(阶非负实数对角矩阵；\)</span>V$的<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Conjugate_transpose">共轭转置</a> $
-V^{*} <span class="math inline">\(，是\)</span>p p<span
-class="math inline">\(阶酉矩阵（当\)</span>V<span
-class="math inline">\(为实矩阵时，\)</span>V^*=V^T<span
-class="math inline">\(）。这样的分解就称作\)</span>M<span
-class="math inline">\(的奇异值分解。\)</span><span
-class="math inline">\(对角线上的元素\)</span>_{i,i}<span
-class="math inline">\(即为\)</span>M$的奇异值。如图3所示：</p>
+<p>　　其中<span class="math inline">\(U\)</span>是<span class="math inline">\(n×n\)</span>阶<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Unitary_matrix">酉矩阵(也叫幺正矩阵)</a>；$ <span class="math inline">\(是\)</span> m n <span class="math inline">\(阶非负实数对角矩阵；\)</span>V$的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Conjugate_transpose">共轭转置</a> $ V^{*} <span class="math inline">\(，是\)</span>p p<span class="math inline">\(阶酉矩阵（当\)</span>V<span class="math inline">\(为实矩阵时，\)</span>V^*=V^T<span class="math inline">\(）。这样的分解就称作\)</span>M<span class="math inline">\(的奇异值分解。\)</span><span class="math inline">\(对角线上的元素\)</span>_{i,i}<span class="math inline">\(即为\)</span>M$的奇异值。如图3所示：</p>
 <img src="/2019/07/31/2019-07-31_pca-ica/fig03_svd.png" class="" title="图3.SVD分解可视化">
-<p>　　设<span
-class="math inline">\(Cov(X)=WLW^{T}\)</span>，考虑矩阵<span
-class="math inline">\(X\)</span>的奇异值分解：<span
-class="math inline">\(X=U\Sigma V^T\)</span>，且<span
-class="math inline">\(\Sigma 为实对角矩阵\)</span>，则：</p>
+<p>　　设<span class="math inline">\(Cov(X)=WLW^{T}\)</span>，考虑矩阵<span class="math inline">\(X\)</span>的奇异值分解：<span class="math inline">\(X=U\Sigma V^T\)</span>，且<span class="math inline">\(\Sigma 为实对角矩阵\)</span>，则：</p>
 <p><span class="math display">\[
 \begin{align*}
-  \left \{
+  \left \{ 
   \begin{array}{r@{\mskip\thickmuskip}l}
     Cov(X) &amp;=&amp;  \underline{WLW^{T} }              \\
     Cov(X) &amp;=&amp; \displaystyle \frac{1}{n-1} X^{T} X    \\
@@ -476,38 +357,27 @@ class="math inline">\(\Sigma 为实对角矩阵\)</span>，则：</p>
   \end{array} \right .
   \, \implies \,  
   \begin{array}{r@{\mskip\thickmuskip}l}\\
-  Cov(x) &amp;=&amp; \displaystyle \frac{1}{n-1} \left ( U\Sigma V^{T}
-\right )^T U\Sigma V^{T} \\
-&amp;=&amp; \displaystyle V \frac{\Sigma^T \Sigma}{n-1} V^T =
-\underline{\displaystyle V \frac{\Sigma^2}{n-1} V^T}
+  Cov(x) &amp;=&amp; \displaystyle \frac{1}{n-1} \left ( U\Sigma V^{T} \right )^T U\Sigma V^{T} \\
+&amp;=&amp; \displaystyle V \frac{\Sigma^T \Sigma}{n-1} V^T = \underline{\displaystyle V \frac{\Sigma^2}{n-1} V^T}
 \end{array}
 \end{align*}
 \]</span></p>
-<p>　　比较式中划线部分的协方差<span
-class="math inline">\(Cov(X)\)</span>的表达式，可以发现：</p>
+<p>　　比较式中划线部分的协方差<span class="math inline">\(Cov(X)\)</span>的表达式，可以发现：</p>
 <p><span class="math display">\[
 \begin{array}{r@{\mskip\thickmuskip}l}
     WLW^{T} =\displaystyle V \frac{\Sigma^2}{n-1} V^T \\
 \end{array}
 \; \implies \;
-\left \{
+\left \{ 
 \begin{array}{r@{\mskip\thickmuskip}l}
-    W &amp;=&amp; V              &amp;\, &amp; \text{(基向量 vs
-右奇异矢量)}                     \\
-    L &amp;=&amp; \displaystyle \frac{1}{n-1}\Sigma^2 &amp;\, &amp;
-\text{(特征值 vs 奇异值)}  \\
+    W &amp;=&amp; V              &amp;\, &amp; \text{(基向量 vs 右奇异矢量)}                     \\
+    L &amp;=&amp; \displaystyle \frac{1}{n-1}\Sigma^2 &amp;\, &amp; \text{(特征值 vs 奇异值)}  \\
 \end{array}
 \right.
 \]</span></p>
-<p>　　上式说明，奇异值分解后的右奇异矢量与特征向量是一样的，即主成分方向向量；特征值矩阵<span
-class="math inline">\(L\)</span>和奇异值矩阵<span
-class="math inline">\(\Sigma\)</span>之间的关系为<span
-class="math inline">\(\lambda_{i} =
-\Sigma^2_{ii}/(n-1)\)</span>。主成分由<span class="math inline">\(XV =
-USV^T V= US\)</span>给出。</p>
+<p>　　上式说明，奇异值分解后的右奇异矢量与特征向量是一样的，即主成分方向向量；特征值矩阵<span class="math inline">\(L\)</span>和奇异值矩阵<span class="math inline">\(\Sigma\)</span>之间的关系为<span class="math inline">\(\lambda_{i} = \Sigma^2_{ii}/(n-1)\)</span>。主成分由<span class="math inline">\(XV = USV^T V= US\)</span>给出。</p>
 <h3 id="pca的计算">1.6 PCA的计算</h3>
-<p>　　特征值分解和奇异值分解均能实现PCA功能，以下代码使用SVD方法进行：
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> decomposition</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pca</span>(<span class="params">data,threshs=<span class="number">0.9</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        实现pca降维，行向量为样本数，列向量为特征数</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 去均值</span></span><br><span class="line">    data = data - data.mean(axis=<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># SVD分解</span></span><br><span class="line">    _,s,vh = np.linalg.svd(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 由奇异值求特征值</span></span><br><span class="line">    s = s*s/(data.shape[<span class="number">0</span>]-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算特征值累积占比</span></span><br><span class="line">    <span class="comment"># print(&#x27;特征值累积占比:&#x27;)</span></span><br><span class="line">    cum =np.cumsum(s)/s.<span class="built_in">sum</span>()</span><br><span class="line">    <span class="comment">#print(cum)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 寻找距离阈值最小的索引</span></span><br><span class="line">    k = np.argmin(np.<span class="built_in">abs</span>(cum-threshs))</span><br><span class="line"></span><br><span class="line">    k = k + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data.dot(vh.T[:,:k])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sk_pca</span>(<span class="params">data,ncoms=<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    使用sklearn函数求解pca</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    data = data-data.mean(axis=<span class="number">0</span>)</span><br><span class="line">    dec = decomposition.PCA(n_components=ncoms)</span><br><span class="line">    dec.fit(data)</span><br><span class="line">    <span class="comment"># print(dec.singular_values_)</span></span><br><span class="line">    <span class="keyword">return</span> dec.fit_transform(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n=<span class="number">10</span></span><br><span class="line">p=<span class="number">5</span></span><br><span class="line"></span><br><span class="line">d = np.random.randn(n,p)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>,p):</span><br><span class="line">    d[:,i] = d[:,i-<span class="number">2</span>]*<span class="number">0.2</span> + d[:,i-<span class="number">1</span>]*<span class="number">0.1</span> + d[:,i]*<span class="number">3</span></span><br><span class="line">d</span><br><span class="line"><span class="comment"># Out[38]: </span></span><br><span class="line"><span class="comment"># array([[ 0.3339,  0.289 , -0.1083,  0.8498, -6.5554],</span></span><br><span class="line"><span class="comment">#        [-0.1016, -0.7047,  0.4679,  4.3804,  1.1741],</span></span><br><span class="line"><span class="comment">#        [ 0.3309, -0.1823, -3.3715,  2.7843,  2.1753],</span></span><br><span class="line"><span class="comment">#        [-0.5411,  0.3759, -1.3554,  3.3289, -4.585 ],</span></span><br><span class="line"><span class="comment">#        [-1.8377, -1.2617,  7.2369,  4.0068, -0.5727],</span></span><br><span class="line"><span class="comment">#        [ 0.1038, -0.958 , -3.85  , -3.3861, -0.3578],</span></span><br><span class="line"><span class="comment">#        [ 2.4289, -0.6595, -0.8572, -4.1682, -1.2252],</span></span><br><span class="line"><span class="comment">#        [ 0.228 ,  0.6531,  3.0009,  4.116 ,  0.2939],</span></span><br><span class="line"><span class="comment">#        [ 1.7679, -1.2958,  2.9587,  1.7904, -0.1354],</span></span><br><span class="line"><span class="comment">#        [-0.9489, -0.2181, -1.1429, -0.4187, -1.6981]])</span></span><br><span class="line"></span><br><span class="line">p1 = pca(d)</span><br><span class="line">p1</span><br><span class="line"><span class="comment"># Out[39]: </span></span><br><span class="line"><span class="comment"># array([[-1.3118, -5.1628, -1.2068],</span></span><br><span class="line"><span class="comment">#        [ 2.4578,  2.5278, -1.5113],</span></span><br><span class="line"><span class="comment">#        [-1.3398,  4.2623, -2.5864],</span></span><br><span class="line"><span class="comment">#        [-0.2347, -2.7441, -3.4702],</span></span><br><span class="line"><span class="comment">#        [ 7.1897, -0.958 ,  2.3557],</span></span><br><span class="line"><span class="comment">#        [-6.0142,  1.3158,  0.9834],</span></span><br><span class="line"><span class="comment">#        [-4.7649, -0.2436,  3.5921],</span></span><br><span class="line"><span class="comment">#        [ 3.9656,  0.9283, -0.1481],</span></span><br><span class="line"><span class="comment">#        [ 2.1713,  0.5124,  2.04  ],</span></span><br><span class="line"><span class="comment">#        [-2.1189, -0.4381, -0.0484]])</span></span><br><span class="line"></span><br><span class="line">sk_pca(d,p1.shape[-<span class="number">1</span>])</span><br><span class="line">Out[<span class="number">40</span>]: </span><br><span class="line"><span class="comment"># array([[-1.3118,  5.1628, -1.2068],</span></span><br><span class="line"><span class="comment">#        [ 2.4578, -2.5278, -1.5113],</span></span><br><span class="line"><span class="comment">#        [-1.3398, -4.2623, -2.5864],</span></span><br><span class="line"><span class="comment">#        [-0.2347,  2.7441, -3.4702],</span></span><br><span class="line"><span class="comment">#        [ 7.1897,  0.958 ,  2.3557],</span></span><br><span class="line"><span class="comment">#        [-6.0142, -1.3158,  0.9834],</span></span><br><span class="line"><span class="comment">#        [-4.7649,  0.2436,  3.5921],</span></span><br><span class="line"><span class="comment">#        [ 3.9656, -0.9283, -0.1481],</span></span><br><span class="line"><span class="comment">#        [ 2.1713, -0.5124,  2.04  ],</span></span><br><span class="line"><span class="comment">#        [-2.1189,  0.4381, -0.0484]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 两者比较，中间维度数值正确，符号相反，</span></span><br><span class="line"><span class="comment"># 这是np.linalg.svd计算和np.linalg.eig计算结果差异造成的</span></span><br><span class="line"></span><br><span class="line">np.allclose(np.<span class="built_in">abs</span>(p1), np.<span class="built_in">abs</span>(p2) )</span><br><span class="line"><span class="comment"># Out[41]: True</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>　　特征值分解和奇异值分解均能实现PCA功能，以下代码使用SVD方法进行： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> decomposition</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pca</span>(<span class="params">data,threshs=<span class="number">0.9</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        实现pca降维，行向量为样本数，列向量为特征数</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="comment"># 去均值</span></span><br><span class="line">    data = data - data.mean(axis=<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># SVD分解</span></span><br><span class="line">    _,s,vh = np.linalg.svd(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 由奇异值求特征值</span></span><br><span class="line">    s = s*s/(data.shape[<span class="number">0</span>]-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算特征值累积占比</span></span><br><span class="line">    <span class="comment"># print(&#x27;特征值累积占比:&#x27;)</span></span><br><span class="line">    cum =np.cumsum(s)/s.<span class="built_in">sum</span>()</span><br><span class="line">    <span class="comment">#print(cum)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 寻找距离阈值最小的索引</span></span><br><span class="line">    k = np.argmin(np.<span class="built_in">abs</span>(cum-threshs))</span><br><span class="line"></span><br><span class="line">    k = k + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data.dot(vh.T[:,:k])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sk_pca</span>(<span class="params">data,ncoms=<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    使用sklearn函数求解pca</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    data = data-data.mean(axis=<span class="number">0</span>)</span><br><span class="line">    dec = decomposition.PCA(n_components=ncoms)</span><br><span class="line">    dec.fit(data)</span><br><span class="line">    <span class="comment"># print(dec.singular_values_)</span></span><br><span class="line">    <span class="keyword">return</span> dec.fit_transform(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">n=<span class="number">10</span></span><br><span class="line">p=<span class="number">5</span></span><br><span class="line"></span><br><span class="line">d = np.random.randn(n,p)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>,p):</span><br><span class="line">    d[:,i] = d[:,i-<span class="number">2</span>]*<span class="number">0.2</span> + d[:,i-<span class="number">1</span>]*<span class="number">0.1</span> + d[:,i]*<span class="number">3</span></span><br><span class="line">d</span><br><span class="line"><span class="comment"># Out[38]: </span></span><br><span class="line"><span class="comment"># array([[ 0.3339,  0.289 , -0.1083,  0.8498, -6.5554],</span></span><br><span class="line"><span class="comment">#        [-0.1016, -0.7047,  0.4679,  4.3804,  1.1741],</span></span><br><span class="line"><span class="comment">#        [ 0.3309, -0.1823, -3.3715,  2.7843,  2.1753],</span></span><br><span class="line"><span class="comment">#        [-0.5411,  0.3759, -1.3554,  3.3289, -4.585 ],</span></span><br><span class="line"><span class="comment">#        [-1.8377, -1.2617,  7.2369,  4.0068, -0.5727],</span></span><br><span class="line"><span class="comment">#        [ 0.1038, -0.958 , -3.85  , -3.3861, -0.3578],</span></span><br><span class="line"><span class="comment">#        [ 2.4289, -0.6595, -0.8572, -4.1682, -1.2252],</span></span><br><span class="line"><span class="comment">#        [ 0.228 ,  0.6531,  3.0009,  4.116 ,  0.2939],</span></span><br><span class="line"><span class="comment">#        [ 1.7679, -1.2958,  2.9587,  1.7904, -0.1354],</span></span><br><span class="line"><span class="comment">#        [-0.9489, -0.2181, -1.1429, -0.4187, -1.6981]])</span></span><br><span class="line"></span><br><span class="line">p1 = pca(d)</span><br><span class="line">p1</span><br><span class="line"><span class="comment"># Out[39]: </span></span><br><span class="line"><span class="comment"># array([[-1.3118, -5.1628, -1.2068],</span></span><br><span class="line"><span class="comment">#        [ 2.4578,  2.5278, -1.5113],</span></span><br><span class="line"><span class="comment">#        [-1.3398,  4.2623, -2.5864],</span></span><br><span class="line"><span class="comment">#        [-0.2347, -2.7441, -3.4702],</span></span><br><span class="line"><span class="comment">#        [ 7.1897, -0.958 ,  2.3557],</span></span><br><span class="line"><span class="comment">#        [-6.0142,  1.3158,  0.9834],</span></span><br><span class="line"><span class="comment">#        [-4.7649, -0.2436,  3.5921],</span></span><br><span class="line"><span class="comment">#        [ 3.9656,  0.9283, -0.1481],</span></span><br><span class="line"><span class="comment">#        [ 2.1713,  0.5124,  2.04  ],</span></span><br><span class="line"><span class="comment">#        [-2.1189, -0.4381, -0.0484]])</span></span><br><span class="line"></span><br><span class="line">sk_pca(d,p1.shape[-<span class="number">1</span>])</span><br><span class="line">Out[<span class="number">40</span>]: </span><br><span class="line"><span class="comment"># array([[-1.3118,  5.1628, -1.2068],</span></span><br><span class="line"><span class="comment">#        [ 2.4578, -2.5278, -1.5113],</span></span><br><span class="line"><span class="comment">#        [-1.3398, -4.2623, -2.5864],</span></span><br><span class="line"><span class="comment">#        [-0.2347,  2.7441, -3.4702],</span></span><br><span class="line"><span class="comment">#        [ 7.1897,  0.958 ,  2.3557],</span></span><br><span class="line"><span class="comment">#        [-6.0142, -1.3158,  0.9834],</span></span><br><span class="line"><span class="comment">#        [-4.7649,  0.2436,  3.5921],</span></span><br><span class="line"><span class="comment">#        [ 3.9656, -0.9283, -0.1481],</span></span><br><span class="line"><span class="comment">#        [ 2.1713, -0.5124,  2.04  ],</span></span><br><span class="line"><span class="comment">#        [-2.1189,  0.4381, -0.0484]])</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 两者比较，中间维度数值正确，符号相反，</span></span><br><span class="line"><span class="comment"># 这是np.linalg.svd计算和np.linalg.eig计算结果差异造成的</span></span><br><span class="line"></span><br><span class="line">np.allclose(np.<span class="built_in">abs</span>(p1), np.<span class="built_in">abs</span>(p2) )</span><br><span class="line"><span class="comment"># Out[41]: True</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
 <p>　　上述代码使用了SVD计算特征向量和特征值，<code>numpy</code>中的<code>svd</code>函数计算结果中，特征向量已经按照特征值的降序排序。<code>numpy</code>文档中有如下说明：</p>
 <blockquote>
 <pre><code>numpy.linalg.svd(a, full_matrices=True, compute_uv=True, hermitian=False)
@@ -525,11 +395,8 @@ numpy.linalg.eig(a)
 <p>　　待续</p>
 <h2 id="参考">参考</h2>
 <ul>
-<li><a
-target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca">Relationship
-between SVD and PCA. How to use SVD to perform PCA?</a></li>
-<li><a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition#/media/File:Singular_value_decomposition_visualisation.svg">SVD分解可视化</a></li>
+<li><a target="_blank" rel="noopener" href="https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca">Relationship between SVD and PCA. How to use SVD to perform PCA?</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition#/media/File:Singular_value_decomposition_visualisation.svg">SVD分解可视化</a></li>
 </ul>
 
     </div>

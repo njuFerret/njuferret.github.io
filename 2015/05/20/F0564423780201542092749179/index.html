@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="From: Qt 线程基础 注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 - 本文不是严格的翻译 dbzhang800，2011.06.18">
+    <meta name="description" content="From: Qt 线程基础 注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 - 本文不是严格的翻译 dbzhang800，2011.06.18">
 <meta property="og:type" content="article">
 <meta property="og:title" content="转：Qt 线程基础(QThread、QtConcurrent等)">
 <meta property="og:url" content="https://njuferret.github.io/2015/05/20/F0564423780201542092749179/index.html">
 <meta property="og:site_name" content="有点博客">
-<meta property="og:description" content="From: Qt 线程基础 注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 - 本文不是严格的翻译 dbzhang800，2011.06.18">
+<meta property="og:description" content="From: Qt 线程基础 注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 - 本文不是严格的翻译 dbzhang800，2011.06.18">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-05-20T13:27:49.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.704Z">
@@ -146,8 +146,7 @@
 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A.2BT1Vl9k9.2FdShRdk7WYoBnL2b.2FTuN.2Bv3oL-"><span class="nav-text">
 何时使用其他技术替代线程
 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A.2BXpSL5U9.2FdShU6nnN_Qt_.2Bfr96C3aEVOp5zWKAZy.2F.2FHw-"><span class="nav-text">
-应该使用
-Qt 线程的哪种技术？
+应该使用 Qt 线程的哪种技术？
 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Qt.2Bfr96C1f6eEA-"><span class="nav-text">
 Qt线程基础
 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#QObject.2BTg5.2Bv3oL-"><span class="nav-text">
@@ -272,11 +271,8 @@ QObject与线程
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>From: <a
-target="_blank" rel="noopener" href="http://blog.csdn.net/dbzhang800/article/details/6554104">Qt
-线程基础</a></p>
-<p>注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 -
-本文不是严格的翻译 dbzhang800，2011.06.18</p>
+    <div class="post-body" itemprop="articleBody"><p>From: <a target="_blank" rel="noopener" href="http://blog.csdn.net/dbzhang800/article/details/6554104">Qt 线程基础</a></p>
+<p>注意： - 该链接以后会失效，但是到时候你直接看Qt自带Manual就行了 - 本文不是严格的翻译 dbzhang800，2011.06.18</p>
 <span id="more"></span>
 <div class="bct fc05 fc11 nbw-blog ztag">
 <h2 id="A.2BT391KH6.2Fegs-" style="margin: 0px; padding: 0px 0px 0.3em; color: rgb(51, 51, 51); font-family: Arial; line-height: 26px; border-bottom-width: 3px; border-bottom-style: solid; border-bottom-color: rgb(4, 115, 7);">
@@ -297,11 +293,9 @@ target="_blank" rel="noopener" href="http://blog.csdn.net/dbzhang800/article/det
 <a style="color: rgb(51, 102, 153);" name="t1" rel="nofollow"></a>何时使用其他技术替代线程
 </h3>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-开发人员使用线程时需要非常小心。启动线程是很容易的，但确保所有共享数据保持一致很难。遇到问题往往很难解决，这是由于在一段时间内它可能只出现一次或只在特定的硬件配置下出现。<span
-style="color: rgb(0, 0, 255);"><strong>在创建线程来解决某些问题之前，应该考虑一些替代的技术</strong> </span>：
+开发人员使用线程时需要非常小心。启动线程是很容易的，但确保所有共享数据保持一致很难。遇到问题往往很难解决，这是由于在一段时间内它可能只出现一次或只在特定的硬件配置下出现。<span style="color: rgb(0, 0, 255);"><strong>在创建线程来解决某些问题之前，应该考虑一些替代的技术</strong> </span>：
 </p>
-<div
-style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
+<div style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
 <table border="0" style="margin: 0.5em 0px 0px 0.5em; border-collapse: collapse;">
 <tbody>
 <tr>
@@ -348,8 +342,7 @@ style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height:
 </td>
 <td style="padding: 0.25em 0.5em; border: 1px solid rgb(4, 115, 7);">
 <p style="margin-top: 0px; margin-bottom: 0px;">
-这是一个替代技术，替代有一个或多个线程在慢速网络执行阻塞读的情况。只要响应部分的计算可以快速执行，这种设计比在线程中实现的同步等待更好。与线程相比这种设计更不容易出错且更节能(energy
-efficient)。在许多情况下也有性能优势。
+这是一个替代技术，替代有一个或多个线程在慢速网络执行阻塞读的情况。只要响应部分的计算可以快速执行，这种设计比在线程中实现的同步等待更好。与线程相比这种设计更不容易出错且更节能(energy efficient)。在许多情况下也有性能优势。
 </p>
 </td>
 </tr>
@@ -357,21 +350,15 @@ efficient)。在许多情况下也有性能优势。
 </table>
 </div>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-一般情况下，建议只使用安全和经过测试的方案而避免引入特设线程的概念。QtConcurrent
-提供了一个将任务分发到处理器所有的核的易用接口。线程代码完全被隐藏在
-QtConcurrent 框架下，所以你不必考虑细节。尽管如此，QtConcurrent
-不能用于线程运行时需要通信的情况，而且它也不应该被用来处理阻塞操作。
+一般情况下，建议只使用安全和经过测试的方案而避免引入特设线程的概念。QtConcurrent 提供了一个将任务分发到处理器所有的核的易用接口。线程代码完全被隐藏在 QtConcurrent 框架下，所以你不必考虑细节。尽管如此，QtConcurrent 不能用于线程运行时需要通信的情况，而且它也不应该被用来处理阻塞操作。
 </p>
 <h3 id="A.2BXpSL5U9.2FdShU6nnN_Qt_.2Bfr96C3aEVOp5zWKAZy.2F.2FHw-" style="margin: 0px; padding: 0px 0px 0.3em; color: rgb(51, 51, 51); font-family: Arial; line-height: 26px; border-bottom-width: 3px; border-bottom-style: solid; border-bottom-color: rgb(4, 115, 7);">
-<a style="color: rgb(51, 102, 153);" name="t2" rel="nofollow"></a>应该使用
-Qt 线程的哪种技术？
+<a style="color: rgb(51, 102, 153);" name="t2" rel="nofollow"></a>应该使用 Qt 线程的哪种技术？
 </h3>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-有时候，你需要的不仅仅是在另一线程的上下文中运行一个函数。您可能需要有一个生存在另一个线程中的对象来为GUI线程提供服务。也许你想在另一个始终运行的线程中来轮询硬件端口并在有关注的事情发生时发送信号到GUI线程。Qt为开发多线程应用程序提供了多种不同的解决方案。<strong><span
-style="color: rgb(0, 0, 255);">解决方案的选择依赖于新线程的目的以及线程的生命周期。</span></strong>
+有时候，你需要的不仅仅是在另一线程的上下文中运行一个函数。您可能需要有一个生存在另一个线程中的对象来为GUI线程提供服务。也许你想在另一个始终运行的线程中来轮询硬件端口并在有关注的事情发生时发送信号到GUI线程。Qt为开发多线程应用程序提供了多种不同的解决方案。<strong><span style="color: rgb(0, 0, 255);">解决方案的选择依赖于新线程的目的以及线程的生命周期。</span></strong>
 </p>
-<div
-style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
+<div style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
 <table border="0" style="margin: 0.5em 0px 0px 0.5em; border-collapse: collapse;">
 <tbody>
 <tr>
@@ -530,15 +517,13 @@ run方法中包含将在另一个线程中运行的代码。在本例中，一�
 <a style="color: rgb(51, 102, 153);" name="t4" rel="nofollow"></a>QObject与线程
 </h3>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-QObject有线程关联(thread affinity)[如何翻译？关联？依附性？dbzhang800
-20110618]，换句话说，它生存于一个特定的线程。这意味着，在创建时QObject保存了到当前线程的指针。当事件使用postEvent()被派发时，这个信息变得很有用。事件被放置到相应线程的事件循环中。如果QObject所依附的线程没有事件循环，该事件将永远不会被传递。
+QObject有线程关联(thread affinity)[如何翻译？关联？依附性？dbzhang800 20110618]，换句话说，它生存于一个特定的线程。这意味着，在创建时QObject保存了到当前线程的指针。当事件使用postEvent()被派发时，这个信息变得很有用。事件被放置到相应线程的事件循环中。如果QObject所依附的线程没有事件循环，该事件将永远不会被传递。
 </p>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
 要启动事件循环，必须在run()内调用exec()。线程关联可以通过moveToThread()来更改。
 </p>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-如上所述，当从其他线程调用对象的方法时开发人员必须始终保持谨慎。线程关联不会改变这种状况。
-Qt文档中将一些方法标记为线程安全。postEvent()就是一个值得注意的例子。一个线程安全的方法可以同时在不同的线程被调用。
+如上所述，当从其他线程调用对象的方法时开发人员必须始终保持谨慎。线程关联不会改变这种状况。 Qt文档中将一些方法标记为线程安全。postEvent()就是一个值得注意的例子。一个线程安全的方法可以同时在不同的线程被调用。
 </p>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
 通常情况下并不会并发访问的一些方法，在其他线程调用对象的非线程安全的方法在出现造成意想不到行为的并发访问前数千次的访问可能都是工作正常的。编写测试代码不能完全确保线程的正确性，但它仍然是重要的。在Linux上，Valgrind和Helgrind有助于检测线程错误。
@@ -582,8 +567,7 @@ QObject必须始终和parent在同一个线程。对于在run()中生成的对�
 Qt的事件循环对线程间的通信是一个非常有价值的工具。每个线程都可以有它自己的事件循环。在另一个线程中调用一个槽的一个安全的方法是将调用放置到另一个线程的事件循环中。这可以确保目标对象调用另一个的成员函数之前可以完成当前正在运行的成员函数。
 </p>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-那么，如何才能把一个成员调用放于一个事件循环中？
-Qt的有两种方法来做这个。一种方法是通过queued信号槽连接；另一种是使用QCoreApplication::postEvent()派发一个事件。queued的信号槽连接是异步执行的信号槽连接。内部实现是基于posted的事件。信号的参数放入事件循环后信号函数的调用将立即返回。
+那么，如何才能把一个成员调用放于一个事件循环中？ Qt的有两种方法来做这个。一种方法是通过queued信号槽连接；另一种是使用QCoreApplication::postEvent()派发一个事件。queued的信号槽连接是异步执行的信号槽连接。内部实现是基于posted的事件。信号的参数放入事件循环后信号函数的调用将立即返回。
 </p>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
 连接的槽函数何时被执行依赖于事件循环其他的其他操作。
@@ -595,15 +579,11 @@ Qt的有两种方法来做这个。一种方法是通过queued信号槽连接；
 <a style="color: rgb(51, 102, 153);" name="t7" rel="nofollow"></a>处理异步执行
 </h3>
 <p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px;">
-一种获得一个工作线程的结果的方法是等待线程终止。在许多情况下，一个阻塞等待是不可接受的。阻塞等待的替代方法是异步的结果通过posted事件或者queued信号槽进行传递。由于操作的结果不会出现在源代码的下一行而是在位于源文件其他部分的一个槽中，这会产生一定的开销，因为，但在位于源文件中其他地方的槽。
-Qt开发人员习惯于使用这种异步行为工作，因为它非常相似于GUI程序中使用的的事件驱动编程。
+一种获得一个工作线程的结果的方法是等待线程终止。在许多情况下，一个阻塞等待是不可接受的。阻塞等待的替代方法是异步的结果通过posted事件或者queued信号槽进行传递。由于操作的结果不会出现在源代码的下一行而是在位于源文件其他部分的一个槽中，这会产生一定的开销，因为，但在位于源文件中其他地方的槽。 Qt开发人员习惯于使用这种异步行为工作，因为它非常相似于GUI程序中使用的的事件驱动编程。
 </p>
 <wbr>
 </div>
-<p>本文来自：<a
-target="_blank" rel="noopener" href="http://ferret.blog.163.com/blog/static/64423780201542092749179"
-title="转：Qt 线程基础(QThread、QtConcurrent等)">转：Qt
-线程基础(QThread、QtConcurrent等)</a></p>
+<p>本文来自：<a target="_blank" rel="noopener" href="http://ferret.blog.163.com/blog/static/64423780201542092749179" title="转：Qt 线程基础(QThread、QtConcurrent等)">转：Qt 线程基础(QThread、QtConcurrent等)</a></p>
 
     </div>
 

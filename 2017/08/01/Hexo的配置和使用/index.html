@@ -259,10 +259,7 @@
 <span id="more"></span>
 <h2 id="安装node.js">1、安装node.js</h2>
 <p>1） 下载与安装</p>
-<p>下载地址<a
-target="_blank" rel="noopener" href="https://nodejs.org/dist/v6.11.1/node-v6.11.1-win-x64.zip"
-title="Node.js下载">Node.js</a>,
-解压之后，在环境变量Path中添加上述node.js的路径(假设为<code>D:\Dev\Node</code>）。设置成功后，打开命令行，可以看看node.js的版本：</p>
+<p>下载地址<a target="_blank" rel="noopener" href="https://nodejs.org/dist/v6.11.1/node-v6.11.1-win-x64.zip" title="Node.js下载">Node.js</a>, 解压之后，在环境变量Path中添加上述node.js的路径(假设为<code>D:\Dev\Node</code>）。设置成功后，打开命令行，可以看看node.js的版本：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm --version</span><br><span class="line">3.10.10</span><br></pre></td></tr></table></figure>
 <p>2） npm的配置</p>
 <p>配置npm的代理，缓存地址等。（以下配置为全局配置（<code>--global</code>）便于copy到U盘携带。）</p>
@@ -273,17 +270,10 @@ title="Node.js下载">Node.js</a>,
 <h2 id="git的安装与配置">2、Git的安装与配置</h2>
 <p>Git的安装与配置，网上有很多教程，这里不再详细说明。无论是msi安装还是绿色解压安装，均需要在Path环境变量中设置路径。如果以下命令返回版本号，则git安装完成：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git --version</span><br><span class="line">git version 1.9.5.msysgit.1</span><br></pre></td></tr></table></figure>
-<p>说明： 1)使用 git
-的版本对发布有重要影响，版本2.13.3.windows.1/1.95.msysgit.1可以正常工作，版本
-2.7.2.windows.1无法正常工作。
-2)在使用代理服务器时，可能需要导入CA认证文件。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslCAInfo /ssl/certs/your.cert.CA.crt</span><br></pre></td></tr></table></figure></p>
+<p>说明： 1)使用 git 的版本对发布有重要影响，版本2.13.3.windows.1/1.95.msysgit.1可以正常工作，版本 2.7.2.windows.1无法正常工作。 2)在使用代理服务器时，可能需要导入CA认证文件。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslCAInfo /ssl/certs/your.cert.CA.crt</span><br></pre></td></tr></table></figure></p>
 <h2 id="hexo的安装和使用">3、Hexo的安装和使用</h2>
-<p>1）安装 Hexo的安装分为3个过程，首先安装<code>hexo-cli</code>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli </span><br></pre></td></tr></table></figure>
-等待进度条跑到头，出现一堆提示信息，<code>hexo-cli</code>安装完成。</p>
-<p>第二步，安装hexo <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo --save</span><br></pre></td></tr></table></figure> 第三步，初始化网站
-指定一个目录初始化网站 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init xxx</span><br></pre></td></tr></table></figure> 第四步，完成安装 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
-2）显示版本信息 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v  (或 hexo version)</span><br></pre></td></tr></table></figure> 输出： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">hexo-cli: 1.1.0</span><br><span class="line">os: Windows_NT 10.0.17134 win32 x64</span><br><span class="line">http_parser: 2.8.0</span><br><span class="line">node: 8.11.3</span><br><span class="line">v8: 6.2.414.54</span><br><span class="line">uv: 1.19.1</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">ares: 1.10.1-DEV</span><br><span class="line">modules: 57</span><br><span class="line">nghttp2: 1.32.0</span><br><span class="line">napi: 3</span><br><span class="line">openssl: 1.0.2o</span><br><span class="line">icu: 60.1</span><br><span class="line">unicode: 10.0</span><br><span class="line">cldr: 32.0</span><br><span class="line">tz: 2017c                      </span><br></pre></td></tr></table></figure></p>
+<p>1）安装 Hexo的安装分为3个过程，首先安装<code>hexo-cli</code> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli </span><br></pre></td></tr></table></figure> 等待进度条跑到头，出现一堆提示信息，<code>hexo-cli</code>安装完成。</p>
+<p>第二步，安装hexo <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo --save</span><br></pre></td></tr></table></figure> 第三步，初始化网站 指定一个目录初始化网站 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init xxx</span><br></pre></td></tr></table></figure> 第四步，完成安装 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure> 2）显示版本信息 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v  (或 hexo version)</span><br></pre></td></tr></table></figure> 输出： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">hexo-cli: 1.1.0</span><br><span class="line">os: Windows_NT 10.0.17134 win32 x64</span><br><span class="line">http_parser: 2.8.0</span><br><span class="line">node: 8.11.3</span><br><span class="line">v8: 6.2.414.54</span><br><span class="line">uv: 1.19.1</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">ares: 1.10.1-DEV</span><br><span class="line">modules: 57</span><br><span class="line">nghttp2: 1.32.0</span><br><span class="line">napi: 3</span><br><span class="line">openssl: 1.0.2o</span><br><span class="line">icu: 60.1</span><br><span class="line">unicode: 10.0</span><br><span class="line">cldr: 32.0</span><br><span class="line">tz: 2017c                      </span><br></pre></td></tr></table></figure></p>
 <p>3）Hexo的基本使用</p>
 <ol type="1">
 <li>创建一个网站：<code>hexo init blog</code>；注意：不能使用当前目录作为网站目录。如果使用<code>hexo init .</code>，会出现<code>ERROR Local hexo not found in D:\Dev\Project\blog</code>的错误。</li>
@@ -292,28 +282,14 @@ title="Node.js下载">Node.js</a>,
 <li>在blog目录内安装Hexo的git插件： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p>4）Hexo的配置</p>
-<p>Hexo的配置内容还是比较简单，核心是修改配置文件<code>_config.yml</code>，关于配置部分还是查阅相关的<a
-target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/"
-title="Helo Docs">文档</a>比较靠谱。</p>
+<p>Hexo的配置内容还是比较简单，核心是修改配置文件<code>_config.yml</code>，关于配置部分还是查阅相关的<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/" title="Helo Docs">文档</a>比较靠谱。</p>
 <ol start="5" type="1">
 <li>页面生成与发布</li>
 </ol>
-<p>Hexo支持同时向多个gits提交，以下以Github为例。 1.
-在Github上建一个新的库，例如：<code>yourname.github.io</code>，其URL地址为：<code>https://github.com/yourname/youname.github.io.git</code>
-2.
-修改<code>blog</code>中的<code>_config.yml</code>中的<code>deploy</code>字段：
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: </span><br><span class="line">    - https://xxxx@git.oschina.net/xxxx/xxxx.git</span><br><span class="line">    - https://github.com/yourname/youname.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure> 3.
-执行命令<code>hexo d -g</code>，接着在提示框中输入github的用户名和密码就ok了。
-4.
-访问<code>https://github.com/yourname/youname.github.io.git</code>试试。</p>
+<p>Hexo支持同时向多个gits提交，以下以Github为例。 1. 在Github上建一个新的库，例如：<code>yourname.github.io</code>，其URL地址为：<code>https://github.com/yourname/youname.github.io.git</code> 2. 修改<code>blog</code>中的<code>_config.yml</code>中的<code>deploy</code>字段： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repo: </span><br><span class="line">    - https://xxxx@git.oschina.net/xxxx/xxxx.git</span><br><span class="line">    - https://github.com/yourname/youname.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure> 3. 执行命令<code>hexo d -g</code>，接着在提示框中输入github的用户名和密码就ok了。 4. 访问<code>https://github.com/yourname/youname.github.io.git</code>试试。</p>
 <h2 id="hexonext使用latex">4、Hexo+Next使用Latex</h2>
-<p>1）基本配置
-打开配置文件<code>themes/next/_config.yml</code>，找到<code># MathJax Support</code>，将<code>enable</code>改为<code>true</code>即可
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mathjax:</span><br><span class="line">  enable: true</span><br><span class="line">  per_page: true</span><br><span class="line">  cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span><br><span class="line"></span><br></pre></td></tr></table></figure> 然后在需要使用<code>Latex</code>的页面头部添加：
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mathjax:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-<p>2）<code>mathjax</code>的CDN可以使用如下链接，不过cloudflare的访问速度...
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#cdn: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span><br></pre></td></tr></table></figure>
-3）在录入公式时，Latex的源文件并不能正常渲染，其原因在于next自己有很多转义字符，因此必须对某些字符做转义后使用。先将目前遇到的转义字符记录如下，以后再继续补齐。</p>
+<p>1）基本配置 打开配置文件<code>themes/next/_config.yml</code>，找到<code># MathJax Support</code>，将<code>enable</code>改为<code>true</code>即可 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mathjax:</span><br><span class="line">  enable: true</span><br><span class="line">  per_page: true</span><br><span class="line">  cdn: //cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML</span><br><span class="line"></span><br></pre></td></tr></table></figure> 然后在需要使用<code>Latex</code>的页面头部添加： <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mathjax:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<p>2）<code>mathjax</code>的CDN可以使用如下链接，不过cloudflare的访问速度... <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#cdn: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML</span><br></pre></td></tr></table></figure> 3）在录入公式时，Latex的源文件并不能正常渲染，其原因在于next自己有很多转义字符，因此必须对某些字符做转义后使用。先将目前遇到的转义字符记录如下，以后再继续补齐。</p>
 <table>
 <thead>
 <tr class="header">
@@ -333,18 +309,14 @@ title="Helo Docs">文档</a>比较靠谱。</p>
 </tbody>
 </table>
 <p>4）<del>添加公式自动编号支持</del>，<code>next 6.3.0</code>已经<font color=#FF0000>内置支持</font></p>
-<p>使用时，在需要添加公式编号的位置<code>\label&#123;公式名称&#125;</code>，引用时<code>$ref&#123;公式名称&#125;</code>。注意，自动编号的公式需要使用<code>equation</code>关键字。
-<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;equation&#125; <span class="keyword">\theta</span><span class="built_in">_</span>j := <span class="keyword">\theta</span><span class="built_in">_</span>j + </span><br><span class="line"><span class="keyword">\alpha</span> <span class="keyword">\sum</span> <span class="keyword">\limits</span><span class="built_in">_</span>&#123;i=1&#125;<span class="built_in">^</span>n(y<span class="built_in">^</span>&#123;(i)&#125;-h<span class="built_in">_</span>&#123;<span class="keyword">\theta</span>&#125;(x<span class="built_in">^</span>&#123;(i)&#125;))x<span class="built_in">_</span>j<span class="built_in">^</span>&#123;(i)&#125;</span><br><span class="line"><span class="keyword">\label</span>&#123;mini-BGD&#125; </span><br><span class="line"><span class="keyword">\end</span>&#123;equation&#125;</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"></span><br><span class="line">公式<span class="built_in">$</span>(<span class="keyword">\ref</span>&#123;mini-BGD&#125;)<span class="built_in">$</span></span><br></pre></td></tr></table></figure></p>
-<p>效果： <span class="math display">\[ \begin{equation} \theta_j :=
-\theta_j +
+<p>使用时，在需要添加公式编号的位置<code>\label&#123;公式名称&#125;</code>，引用时<code>$ref&#123;公式名称&#125;</code>。注意，自动编号的公式需要使用<code>equation</code>关键字。 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;equation&#125; <span class="keyword">\theta</span><span class="built_in">_</span>j := <span class="keyword">\theta</span><span class="built_in">_</span>j + </span><br><span class="line"><span class="keyword">\alpha</span> <span class="keyword">\sum</span> <span class="keyword">\limits</span><span class="built_in">_</span>&#123;i=1&#125;<span class="built_in">^</span>n(y<span class="built_in">^</span>&#123;(i)&#125;-h<span class="built_in">_</span>&#123;<span class="keyword">\theta</span>&#125;(x<span class="built_in">^</span>&#123;(i)&#125;))x<span class="built_in">_</span>j<span class="built_in">^</span>&#123;(i)&#125;</span><br><span class="line"><span class="keyword">\label</span>&#123;mini-BGD&#125; </span><br><span class="line"><span class="keyword">\end</span>&#123;equation&#125;</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"></span><br><span class="line">公式<span class="built_in">$</span>(<span class="keyword">\ref</span>&#123;mini-BGD&#125;)<span class="built_in">$</span></span><br></pre></td></tr></table></figure></p>
+<p>效果： <span class="math display">\[ \begin{equation} \theta_j := \theta_j + 
 \alpha \sum \limits_{i=1}^n(y^{(i)}-h_{\theta}(x^{(i)}))x_j^{(i)}
-\label{mini-BGD}
+\label{mini-BGD} 
 \end{equation}\]</span></p>
 <p>公式<span class="math inline">\((\ref{mini-BGD})\)</span></p>
 <p>以下内容，来自<code>next</code>官方文档：</p>
-<p>对于多行公式，在 <code>equation</code> 环境中，你可以使用
-<code>aligned</code>、<code>cases</code>、<code>array</code>
-环境把公式分成多行，</p>
+<p>对于多行公式，在 <code>equation</code> 环境中，你可以使用 <code>aligned</code>、<code>cases</code>、<code>array</code> 环境把公式分成多行，</p>
 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;equation&#125;</span><br><span class="line">f(x)=</span><br><span class="line">    <span class="keyword">\begin</span>&#123;cases&#125;</span><br><span class="line">        0<span class="built_in">&amp;</span> x=0<span class="keyword">\\</span></span><br><span class="line">        1<span class="built_in">&amp;</span> x <span class="keyword">\neq</span> 0</span><br><span class="line">    <span class="keyword">\end</span>&#123;cases&#125;</span><br><span class="line"><span class="keyword">\end</span>&#123;equation&#125;  <span class="keyword">\label</span>&#123;eq1&#125;</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
 <p><span class="math display">\[
 \begin{equation}
@@ -355,8 +327,7 @@ f(x)=
 \end{cases}
 \end{equation}\label{eq1}
 \]</span></p>
-<p>要对齐多个公式，我们需要使用 <code>align</code> 环境。align
-环境中的每个公式都有自己的编号：</p>
+<p>要对齐多个公式，我们需要使用 <code>align</code> 环境。align 环境中的每个公式都有自己的编号：</p>
 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;align&#125;</span><br><span class="line">a <span class="built_in">&amp;</span>= b + c <span class="keyword">\label</span>&#123;eq3&#125; <span class="keyword">\\</span></span><br><span class="line">x <span class="built_in">&amp;</span>= yz <span class="keyword">\label</span>&#123;eq4&#125;<span class="keyword">\\</span></span><br><span class="line">l <span class="built_in">&amp;</span>= m - n <span class="keyword">\label</span>&#123;eq5&#125;</span><br><span class="line"><span class="keyword">\end</span>&#123;align&#125;</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
 <p><span class="math display">\[
 \left\{
@@ -367,33 +338,19 @@ l &amp;= m - n \label{eq5}
 \end{align}
 \right.
 \]</span></p>
-<p>在 <code>align</code>
-环境中，如果你不想给某个或某几个公式编号，那么在这些公式后面使用 <a
-target="_blank" rel="noopener" href="https://tex.stackexchange.com/questions/17528/show-equation-number-only-once-in-align-environment"><code>\nonumber</code></a>
-命令即可。例如：</p>
+<p>在 <code>align</code> 环境中，如果你不想给某个或某几个公式编号，那么在这些公式后面使用 <a target="_blank" rel="noopener" href="https://tex.stackexchange.com/questions/17528/show-equation-number-only-once-in-align-environment"><code>\nonumber</code></a> 命令即可。例如：</p>
 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span><span class="keyword">\begin</span>&#123;align&#125;</span><br><span class="line">-4 + 5x <span class="built_in">&amp;</span>= 2+y <span class="keyword">\nonumber</span>  <span class="keyword">\\</span></span><br><span class="line"> w+2 <span class="built_in">&amp;</span>= -1+w <span class="keyword">\\</span></span><br><span class="line"> ab <span class="built_in">&amp;</span>= cb</span><br><span class="line"><span class="keyword">\end</span>&#123;align&#125;<span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
-<p>有时，你可能会希望采用更加奇特的方式来标记和引用你的公式，你可以通过使用
-<code>\tag&#123;&#125;</code> 命令来实现，例如：</p>
+<p>有时，你可能会希望采用更加奇特的方式来标记和引用你的公式，你可以通过使用 <code>\tag&#123;&#125;</code> 命令来实现，例如：</p>
 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span>  x+1 <span class="keyword">\over</span> <span class="keyword">\sqrt</span>&#123;1-x<span class="built_in">^</span>2&#125; <span class="keyword">\tag</span>&#123;i&#125;<span class="keyword">\label</span>&#123;eq<span class="built_in">_</span>tag&#125;<span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
-<p><span class="math display">\[  x+1 \over \sqrt{1-x^2}
-\tag{i}\label{eq_tag}\]</span> 公式<span
-class="math inline">\((\ref{eq_tag})\)</span></p>
-<h2
-id="修改next主题分类菜单下日期格式">5、修改Next主题“分类”菜单下日期格式</h2>
+<p><span class="math display">\[  x+1 \over \sqrt{1-x^2} \tag{i}\label{eq_tag}\]</span> 公式<span class="math inline">\((\ref{eq_tag})\)</span></p>
+<h2 id="修改next主题分类菜单下日期格式">5、修改Next主题“分类”菜单下日期格式</h2>
 <p>原时期格式为<code>MM-DD</code>格式，希望将年份一起显示成为<code>YYYY-MM-DD</code>。</p>
-<p>1）打开<code>themes/next/layout/_macro/post-collapse.swig</code>，将第27行日期格式由<code>MM-DD</code>改为<code>YYYY-MM-DD</code>:
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; date(post.date, &#x27;YYYY-MM-DD&#x27;) &#125;&#125;</span><br></pre></td></tr></table></figure>
-2）上述修改完成后，日期可以显示为完整的年-月-日格式，但与post名称重叠。打开<code>themes/next/source/css/_common/components/post/post-collapse.styl</code>，第96行：
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.post-title</span> &#123;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">110px</span>;  # 此处原来是<span class="number">60px</span>，修改为<span class="number">110px</span></span><br></pre></td></tr></table></figure>
-3）这种修改是一种全局修改，不仅在“分类”下，“存档”菜单下的日期格式也同样修改。</p>
+<p>1）打开<code>themes/next/layout/_macro/post-collapse.swig</code>，将第27行日期格式由<code>MM-DD</code>改为<code>YYYY-MM-DD</code>: <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; date(post.date, &#x27;YYYY-MM-DD&#x27;) &#125;&#125;</span><br></pre></td></tr></table></figure> 2）上述修改完成后，日期可以显示为完整的年-月-日格式，但与post名称重叠。打开<code>themes/next/source/css/_common/components/post/post-collapse.styl</code>，第96行： <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.post-title</span> &#123;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">110px</span>;  # 此处原来是<span class="number">60px</span>，修改为<span class="number">110px</span></span><br></pre></td></tr></table></figure> 3）这种修改是一种全局修改，不仅在“分类”下，“存档”菜单下的日期格式也同样修改。</p>
 <h2 id="插件">6、插件</h2>
-<p>可以在<code>package.json</code>中查看所有插件，除基本功能插件外，目前安装的插件如下：
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-search --save    # 站内搜索</span><br><span class="line"># npm install hexo-pdf --save                 # 支持显示pdf，未安装</span><br></pre></td></tr></table></figure> ## 7、添加版权
-打开<code>themes/next/_config.yml</code>，搜索<code>copyright</code>，将<code>post_copyright</code>的<code>enable</code>改为<code>true</code>。</p>
+<p>可以在<code>package.json</code>中查看所有插件，除基本功能插件外，目前安装的插件如下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-search --save    # 站内搜索</span><br><span class="line"># npm install hexo-pdf --save                 # 支持显示pdf，未安装</span><br></pre></td></tr></table></figure> ## 7、添加版权 打开<code>themes/next/_config.yml</code>，搜索<code>copyright</code>，将<code>post_copyright</code>的<code>enable</code>改为<code>true</code>。</p>
 <h2 id="修改标签显示图标">8、修改标签显示图标</h2>
 <p>打开<code>themes/next/layout/_macro/post.swig</code>，搜索<code>rel="tag"&gt;#</code>，将之改为<code>&lt;i class="fa fa-tag"&gt;&lt;/i&gt;</code>。</p>
-<p>本文参考<a
-target="_blank" rel="noopener" href="http://lier.space/2017/07/13/hexo-tutorial4/">这篇文档</a>，向作者表示感谢。</p>
+<p>本文参考<a target="_blank" rel="noopener" href="http://lier.space/2017/07/13/hexo-tutorial4/">这篇文档</a>，向作者表示感谢。</p>
 
     </div>
 

@@ -262,12 +262,7 @@
 <span id="more"></span>
 <h2 id="安装texlive">1、安装TexLive</h2>
 <h3 id="下载与安装">1） 下载与安装</h3>
-<p>网上很多都是直接下载安装包进行安装，一般要超过4G大小的一个镜像。个人对这种方法无爱，以下安装使用的是在线安装模式。
-首先下载<a
-target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet/install-tl.zip"
-title="TexLive 在线安装包">install-tl.zip</a>。
-解压之后，进入<code>install-tl-日期</code>目录，编辑<code>install-tl-advanced.bat</code>文件，添加清华的镜像源：
-<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet</span><br></pre></td></tr></table></figure> 完整的命令行如下： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">call</span> &quot;%~dp0install-tl-windows.bat&quot; -repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet -gui perltk %*</span><br></pre></td></tr></table></figure></p>
+<p>网上很多都是直接下载安装包进行安装，一般要超过4G大小的一个镜像。个人对这种方法无爱，以下安装使用的是在线安装模式。 首先下载<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet/install-tl.zip" title="TexLive 在线安装包">install-tl.zip</a>。 解压之后，进入<code>install-tl-日期</code>目录，编辑<code>install-tl-advanced.bat</code>文件，添加清华的镜像源： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet</span><br></pre></td></tr></table></figure> 完整的命令行如下： <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">call</span> &quot;%~dp0install-tl-windows.bat&quot; -repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet -gui perltk %*</span><br></pre></td></tr></table></figure></p>
 <p>双击修改后的<code>install-tl-advanced.bat</code>文件，进入<code>GUI</code>安装模式，根据自己的情况配置。这里安装路径设置为<code>D:\Dev\TexLive</code>，安装模式为<code>portable</code>。</p>
 <img src="/2018/07/08/texlive_config/img01.png" class="" title="图1.GUI安装界面">
 <p>为了省事，可以选择全部安装，也可以选择自定义安装包。下图给出自定义的安装包：</p>

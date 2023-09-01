@@ -263,8 +263,7 @@
     
     <div class="post-body" itemprop="articleBody"><p>　　在机器学习算法中，经常会遇到两个问题：<strong>欠拟合（underfitting）</strong>和<strong>过拟合（overfitting）</strong>。所谓欠拟合就是算法没有学习到足够的特征，预测结果较差，即拟合程度不够；过拟合则刚好相反，算法除了学习到一般特征外，也学习到了样本个体的局部特征，即拟合过度。</p>
 <p>造成这两种结果的原因主要有两个：</p>
-<p>　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易欠拟合。<br/>
-　　（2）参数设置和调整有问题。特别存在学习率的方法，学习率调整不当，容易引起这两种结果。</p>
+<p>　　（1）模型选择不好，简单问题选择了复杂的模型，容易过拟合；复杂的问题选择了简单的模型容易欠拟合。<br/> 　　（2）参数设置和调整有问题。特别存在学习率的方法，学习率调整不当，容易引起这两种结果。</p>
 <span id="more"></span>
 <h1 id="白天鹅与黑天鹅问题">1、白天鹅与黑天鹅问题</h1>
 <p>　　过拟合的一个形象的例子是白天鹅与黑天鹅例子。给一群天鹅让机器来学习天鹅的特征，经过训练后，算法学习到了以下特征：</p>
@@ -278,16 +277,10 @@
 <p>　　过拟合是算法学习的太彻底，把训练样本的所有特征几乎都学到了。过多的局部特征（由于噪声带来的假特征），造成模型的“泛化性”和识别正确率较低。</p>
 <p>　　一般，解决过拟合问题，从两方面入手：首先是训练样本，要具有代表性，局部特征尽量少。另一方面，算法在训练时，不能学习的太过彻底，降低学到局部特征和错误特征的几率，使得识别正确率得到优化。</p>
 <h1 id="解决过拟合的方法">3、解决过拟合的方法</h1>
-<p>　　解决过拟合的常见方法有：early stopping、数据集扩增（Data
-augmentation）、正则化（Regularization）、Dropout等。</p>
+<p>　　解决过拟合的常见方法有：early stopping、数据集扩增（Data augmentation）、正则化（Regularization）、Dropout等。</p>
 <h2 id="early-stopping">3.1 Early Stopping</h2>
-<p>　　算法训练的过程，本质上是对算法参数进行迭代更新的过程，如梯度下降（Gradient
-descent）算法。Early
-stopping通过在算法对数据集训练收敛前停止迭代，来防止过拟合。具体方法是，在每一个Epoch结束时（1个Epoch是对所有训练数据遍历一轮）计算validation
-data的accuracy，当accuracy不再提高时，就停止训练。</p>
-<p>　　Early
-Stopping方法很符合直观感受，因为accurary都不再提高了，继续训练也是无益的，只会拉长训练时间。该方法的一个重点是，怎样才认为accurary不再提高了呢？并不是说accuracy一降下来便认为不再提高了，因为可能经过这个Epoch后，accuracy降低了，但是随后的Epoch又让accuracy又上去了，所以不能根据一两次的连续降低就判断不再提高。一般的做法是，在训练的过程中，记录到目前为止最好的accuracy，当连续10次Epoch（或者更多次）没达到最佳accuracy时，则可以认为accuracy不再提高了。此时便可以停止迭代了（Early
-Stopping）。这种策略也称为“No-improvement-in-N”，N即Epoch的次数，可以根据实际情况取，如10、20、30……</p>
+<p>　　算法训练的过程，本质上是对算法参数进行迭代更新的过程，如梯度下降（Gradient descent）算法。Early stopping通过在算法对数据集训练收敛前停止迭代，来防止过拟合。具体方法是，在每一个Epoch结束时（1个Epoch是对所有训练数据遍历一轮）计算validation data的accuracy，当accuracy不再提高时，就停止训练。</p>
+<p>　　Early Stopping方法很符合直观感受，因为accurary都不再提高了，继续训练也是无益的，只会拉长训练时间。该方法的一个重点是，怎样才认为accurary不再提高了呢？并不是说accuracy一降下来便认为不再提高了，因为可能经过这个Epoch后，accuracy降低了，但是随后的Epoch又让accuracy又上去了，所以不能根据一两次的连续降低就判断不再提高。一般的做法是，在训练的过程中，记录到目前为止最好的accuracy，当连续10次Epoch（或者更多次）没达到最佳accuracy时，则可以认为accuracy不再提高了。此时便可以停止迭代了（Early Stopping）。这种策略也称为“No-improvement-in-N”，N即Epoch的次数，可以根据实际情况取，如10、20、30……</p>
 <h2 id="数据集扩增">3.2 数据集扩增</h2>
 <p>　　数据集扩增即需要得到更多的符合要求的数据，即和已有的数据是独立同分布的，或者近似独立同分布的。一般有以下方法：</p>
 <ol type="1">
@@ -313,159 +306,66 @@ Stopping）。这种策略也称为“No-improvement-in-N”，N即Epoch的次�
 <p>　　L1正则化在实际中往往替代L0正则化，来防止过拟合，也称为Lasso。</p>
 <p>　　L1正则化之所以可以防止过拟合，是因为L1范数就是各个参数的绝对值相加得到的，而参数值大小和模型复杂度是成正比的。因此复杂的模型，其L1范数就大，最终导致损失函数就大，说明这个模型就不够好。</p>
 <p>　　通常，L1正则化在目标函数后面加上参数的L1范数和项，即参数绝对值和与参数的积项，即：</p>
-<p><span class="math display">\[
+<p><span class="math display">\[ 
 \begin{equation}
 C=C_0+\frac{\lambda}{n} \sum_w |w|
 \end{equation}
-\]</span> 　　其中<span
-class="math inline">\(C_0\)</span>代表原始的代价函数，<span
-class="math inline">\(n\)</span>是样本数，<span
-class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span
-class="math inline">\(C_0\)</span>项的比重。最后一项即为L1正则项。使用L1正则化后，计算梯度时，<span
-class="math inline">\(w\)</span>和<span
-class="math inline">\(b\)</span>的梯度变为：</p>
+\]</span> 　　其中<span class="math inline">\(C_0\)</span>代表原始的代价函数，<span class="math inline">\(n\)</span>是样本数，<span class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span class="math inline">\(C_0\)</span>项的比重。最后一项即为L1正则项。使用L1正则化后，计算梯度时，<span class="math inline">\(w\)</span>和<span class="math inline">\(b\)</span>的梯度变为：</p>
 <p><span class="math display">\[
 \begin{equation}
-\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial
-w}+\frac{\lambda}{n} sgn(w) \label {weight-gradient}
+\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial w}+\frac{\lambda}{n} sgn(w) \label {weight-gradient} 
 \end{equation}
 \]</span></p>
-<p><span class="math display">\[\begin {equation} \frac{\partial
-C}{\partial b} = \frac{\partial C_0}{\partial b} \label {bias-gradient}
+<p><span class="math display">\[\begin {equation} \frac{\partial C}{\partial b} = \frac{\partial C_0}{\partial b} \label {bias-gradient} 
 \end {equation}
 \]</span></p>
-<p>　　其中，<span class="math inline">\(sgn\)</span>是符号函数，即<span
-class="math inline">\(w\)</span>是正数时<span
-class="math inline">\(sng(w)\)</span>为<span
-class="math inline">\(+1\)</span>，而<span
-class="math inline">\(w\)</span>为负数时<span
-class="math inline">\(sng(w)\)</span>为<span
-class="math inline">\(-1\)</span>。注意式(<span
-class="math inline">\(\ref
-{bias-gradient}\)</span>)中，正则化项对bias项无贡献。参数更新使用下式：</p>
+<p>　　其中，<span class="math inline">\(sgn\)</span>是符号函数，即<span class="math inline">\(w\)</span>是正数时<span class="math inline">\(sng(w)\)</span>为<span class="math inline">\(+1\)</span>，而<span class="math inline">\(w\)</span>为负数时<span class="math inline">\(sng(w)\)</span>为<span class="math inline">\(-1\)</span>。注意式(<span class="math inline">\(\ref {bias-gradient}\)</span>)中，正则化项对bias项无贡献。参数更新使用下式：</p>
 <p><span class="math display">\[\begin{equation}
-w := w + \alpha \frac{\partial C_0}{\partial w} + \beta
-\frac{\lambda}{n} sgn(w)
-\label{L1_weight_update}
-\end{equation}\]</span> <span class="math display">\[ \begin {equation}
-b: = b + \alpha \frac{\partial C_0}{\partial b} \label {L1-bias-update}
-\end {equation}\]</span></p>
-<p>　　其中，梯度下降算法中，<span class="math inline">\(\alpha &lt;
-0\)</span>，<span class="math inline">\(\beta &lt;
-0\)</span>，而在梯度上升算法中则相反。</p>
-<p>　　与式(<span class="math inline">\(\ref
-{L1_weight_update}\)</span>)做个比较，未经正则化的线性回归中，权值项<span
-class="math inline">\(w\)</span>的更新方程为：</p>
+w := w + \alpha \frac{\partial C_0}{\partial w} + \beta \frac{\lambda}{n} sgn(w)
+\label{L1_weight_update} 
+\end{equation}\]</span> <span class="math display">\[ \begin {equation} b: = b + \alpha \frac{\partial C_0}{\partial b} \label {L1-bias-update} \end {equation}\]</span></p>
+<p>　　其中，梯度下降算法中，<span class="math inline">\(\alpha &lt; 0\)</span>，<span class="math inline">\(\beta &lt; 0\)</span>，而在梯度上升算法中则相反。</p>
+<p>　　与式(<span class="math inline">\(\ref {L1_weight_update}\)</span>)做个比较，未经正则化的线性回归中，权值项<span class="math inline">\(w\)</span>的更新方程为：</p>
 <p><span class="math display">\[\begin{equation}
-w := w + \alpha \frac{\partial C_0}{\partial w}
-\label{normal_weight_update}
+w := w + \alpha \frac{\partial C_0}{\partial w} \label{normal_weight_update} 
 \end{equation}\]</span></p>
-<p>　　注意，未正则化的线性回归中，权值参数<span
-class="math inline">\(w\)</span>的更新(式(<span
-class="math inline">\(\ref
-{normal_weight_update}\)</span>))，没有式(<span
-class="math inline">\(\ref
-{L1_weight_update}\)</span>)等号右侧第二项（即正则化项）；包含了L1正则化项的线性回归称为<span
-class="math inline">\(Lasso\)</span>回归。常数项<span
-class="math inline">\(b\)</span>的更新方程同式<span
-class="math inline">\((\ref {L1-bias-update})\)</span>。</p>
-<p>　　可以看出，当<span
-class="math inline">\(w\)</span>为正时，更新后<span
-class="math inline">\(w\)</span>会变小；当<span
-class="math inline">\(w\)</span>为负时，更新后<span
-class="math inline">\(w\)</span>会变大；因此L1正则化项令那些原先处于<span
-class="math inline">\(0\)</span>（即<span
-class="math inline">\(|w|≈0\)</span>）附近的参数<span
-class="math inline">\(w\)</span>往<span
-class="math inline">\(0\)</span>移动，使得部分参数为<span
-class="math inline">\(0\)</span>，从而降低模型的复杂度（模型的复杂度由参数决定），从而防止过拟合，提高模型的泛化能力。</p>
-<p>　　L1正则化有个问题：L1范数在<span
-class="math inline">\(0\)</span>处不可导，即<span
-class="math inline">\(|w|\)</span>在<span
-class="math inline">\(0\)</span>处不可导，因此在<span
-class="math inline">\(w\)</span>为0时，使用原来的未经正则化的更新方程来对<span
-class="math inline">\(w\)</span>进行更新，即令<span
-class="math inline">\(sgn(0)=0\)</span>，即：</p>
+<p>　　注意，未正则化的线性回归中，权值参数<span class="math inline">\(w\)</span>的更新(式(<span class="math inline">\(\ref {normal_weight_update}\)</span>))，没有式(<span class="math inline">\(\ref {L1_weight_update}\)</span>)等号右侧第二项（即正则化项）；包含了L1正则化项的线性回归称为<span class="math inline">\(Lasso\)</span>回归。常数项<span class="math inline">\(b\)</span>的更新方程同式<span class="math inline">\((\ref {L1-bias-update})\)</span>。</p>
+<p>　　可以看出，当<span class="math inline">\(w\)</span>为正时，更新后<span class="math inline">\(w\)</span>会变小；当<span class="math inline">\(w\)</span>为负时，更新后<span class="math inline">\(w\)</span>会变大；因此L1正则化项令那些原先处于<span class="math inline">\(0\)</span>（即<span class="math inline">\(|w|≈0\)</span>）附近的参数<span class="math inline">\(w\)</span>往<span class="math inline">\(0\)</span>移动，使得部分参数为<span class="math inline">\(0\)</span>，从而降低模型的复杂度（模型的复杂度由参数决定），从而防止过拟合，提高模型的泛化能力。</p>
+<p>　　L1正则化有个问题：L1范数在<span class="math inline">\(0\)</span>处不可导，即<span class="math inline">\(|w|\)</span>在<span class="math inline">\(0\)</span>处不可导，因此在<span class="math inline">\(w\)</span>为0时，使用原来的未经正则化的更新方程来对<span class="math inline">\(w\)</span>进行更新，即令<span class="math inline">\(sgn(0)=0\)</span>，即：</p>
 <p><span class="math display">\[
 \begin{equation}
-sgn(w) =
-\left \{
+sgn(w) = 
+\left \{ 
     \begin{matrix}
-        1 &amp; (w&gt;0)\\
-        0 &amp; (w=0)\\
-        -1 &amp; (w&lt;0)
-    \end{matrix}
+        1 &amp; (w&gt;0)\\ 
+        0 &amp; (w=0)\\ 
+        -1 &amp; (w&lt;0) 
+    \end{matrix} 
 \right.
 \end{equation}
 \]</span></p>
 <h3 id="l2正则化">3.3.2 L2正则化</h3>
-<p>　　L2正则化就是在代价函数后面再加上一个基于L2范数的正则化项，即：
-<span
-class="math display">\[\begin{equation}C=C_0+\frac{\lambda}{2n}\sum_w
-w^2 \label{L2-regulation-1}\end{equation}\]</span> 　　式(<span
-class="math inline">\(\ref
-{L2-regulation-1}\)</span>)中，等号右侧第一项<span
-class="math inline">\(C_0\)</span>为原始的代价函数，第一项是L2正则化项，它是这样来的：所有参数<span
-class="math inline">\(w\)</span>的平方的和，除以训练集的样本大小<span
-class="math inline">\(n\)</span>。<span
-class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span
-class="math inline">\(C_0\)</span>项的比重。正则化项中的系数<span
-class="math inline">\(\frac
-{1}{2}\)</span>，主要是为了计算方便，正则化项求导时会产生一个<span
-class="math inline">\(2\)</span>，与<span class="math inline">\(\frac
-{1}{2}\)</span>相乘刚好凑整。</p>
-<p>　　使用L2正则化后，梯度的计算与L1正则化类似，<span
-class="math inline">\(w\)</span>的梯度变为：</p>
+<p>　　L2正则化就是在代价函数后面再加上一个基于L2范数的正则化项，即： <span class="math display">\[\begin{equation}C=C_0+\frac{\lambda}{2n}\sum_w w^2 \label{L2-regulation-1}\end{equation}\]</span> 　　式(<span class="math inline">\(\ref {L2-regulation-1}\)</span>)中，等号右侧第一项<span class="math inline">\(C_0\)</span>为原始的代价函数，第一项是L2正则化项，它是这样来的：所有参数<span class="math inline">\(w\)</span>的平方的和，除以训练集的样本大小<span class="math inline">\(n\)</span>。<span class="math inline">\(\lambda\)</span>是正则化项系数，衡量正则化项与<span class="math inline">\(C_0\)</span>项的比重。正则化项中的系数<span class="math inline">\(\frac {1}{2}\)</span>，主要是为了计算方便，正则化项求导时会产生一个<span class="math inline">\(2\)</span>，与<span class="math inline">\(\frac {1}{2}\)</span>相乘刚好凑整。</p>
+<p>　　使用L2正则化后，梯度的计算与L1正则化类似，<span class="math inline">\(w\)</span>的梯度变为：</p>
 <p><span class="math display">\[
 \begin{equation}
-\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial
-w}+\frac{\lambda}{n} w \label {weight-gradient-2}
+\frac{\partial C}{\partial w}=\frac{\partial C_0}{\partial w}+\frac{\lambda}{n} w \label {weight-gradient-2} 
 \end{equation}
 \]</span></p>
-<p>　　参数<span class="math inline">\(b\)</span>的梯度表达式与式(<span
-class="math inline">\(\ref
-{bias-gradient}\)</span>)相同，且正则化项对bias项同样无贡献。</p>
-<p>　　L2正则化使用下式对权值参数<span
-class="math inline">\(w\)</span>进行更新： <span class="math display">\[
-\begin{equation}
-w := w + \alpha \frac {\partial \theta}{\partial w} + \beta
-\frac{\lambda}{n}w \label{L2-weight-update}
-\end{equation}\]</span> 　　其中，梯度下降算法中，<span
-class="math inline">\(\alpha &lt; 0\)</span>，<span
-class="math inline">\(\beta &lt;
-0\)</span>，而在梯度上升算法中则相反。</p>
-<p>　　仍然以线性回归为例，将式(<span class="math inline">\(\ref
-{L2-weight-update}\)</span>)与式(<span class="math inline">\(\ref
-{normal_weight_update}\)</span>)做个比较，类似L1正则化，未正则化的线性回归不包含式(<span
-class="math inline">\(\ref
-{L2-weight-update}\)</span>)等号右侧第二项(L2正则化项)。包含L2正则化项的线性回归称为岭回归(<span
-class="math inline">\(Ridge \ Regression\)</span>)或权值衰减(<span
-class="math inline">\(weight \ decay\)</span>)。</p>
-<p>　　与L1正则化类似，L2正则化项倾向于减小权值参数<span
-class="math inline">\(w\)</span>（但不为0）。</p>
-<p>　　顺便提一下参数的更新，在对模型参数进行学习更新时，常用mini-batch（小批量更新）和
-full-batch（全批量更新）两种方式。mini-batch在每轮学习（称为1个epoch或1次迭代，即把训练样本全部轮一遍）过程中，分批处理，使用部分样本进行参数更新，直到全部样本训练完成。这种方法的好处是数据量少，资源消耗少，速度快。每轮次的损失函数为所有mini
-batch的平均损失值。如果每次mini
-batch中样本个数为m，那么参数的更新方程中的正则化项需修正为：</p>
-<p>　　L1正则化项：<span class="math inline">\(\displaystyle
-\frac{\lambda}{m}\sum_w |w|\)</span>， L2正则化项：<span
-class="math inline">\(\displaystyle \frac{\lambda}{2m}\sum_w
-w^2\)</span>。full-batch不用修正。</p>
+<p>　　参数<span class="math inline">\(b\)</span>的梯度表达式与式(<span class="math inline">\(\ref {bias-gradient}\)</span>)相同，且正则化项对bias项同样无贡献。</p>
+<p>　　L2正则化使用下式对权值参数<span class="math inline">\(w\)</span>进行更新： <span class="math display">\[
+\begin{equation} 
+w := w + \alpha \frac {\partial \theta}{\partial w} + \beta \frac{\lambda}{n}w \label{L2-weight-update} 
+\end{equation}\]</span> 　　其中，梯度下降算法中，<span class="math inline">\(\alpha &lt; 0\)</span>，<span class="math inline">\(\beta &lt; 0\)</span>，而在梯度上升算法中则相反。</p>
+<p>　　仍然以线性回归为例，将式(<span class="math inline">\(\ref {L2-weight-update}\)</span>)与式(<span class="math inline">\(\ref {normal_weight_update}\)</span>)做个比较，类似L1正则化，未正则化的线性回归不包含式(<span class="math inline">\(\ref {L2-weight-update}\)</span>)等号右侧第二项(L2正则化项)。包含L2正则化项的线性回归称为岭回归(<span class="math inline">\(Ridge \ Regression\)</span>)或权值衰减(<span class="math inline">\(weight \ decay\)</span>)。</p>
+<p>　　与L1正则化类似，L2正则化项倾向于减小权值参数<span class="math inline">\(w\)</span>（但不为0）。</p>
+<p>　　顺便提一下参数的更新，在对模型参数进行学习更新时，常用mini-batch（小批量更新）和 full-batch（全批量更新）两种方式。mini-batch在每轮学习（称为1个epoch或1次迭代，即把训练样本全部轮一遍）过程中，分批处理，使用部分样本进行参数更新，直到全部样本训练完成。这种方法的好处是数据量少，资源消耗少，速度快。每轮次的损失函数为所有mini batch的平均损失值。如果每次mini batch中样本个数为m，那么参数的更新方程中的正则化项需修正为：</p>
+<p>　　L1正则化项：<span class="math inline">\(\displaystyle \frac{\lambda}{m}\sum_w |w|\)</span>， L2正则化项：<span class="math inline">\(\displaystyle \frac{\lambda}{2m}\sum_w w^2\)</span>。full-batch不用修正。</p>
 <h3 id="正则化小结">3.3.4 正则化小结</h3>
 <p>　　正则化可以降低模型的复杂度，避免模型过分拟合训练数据，包括噪声与异常点（outliers）。另一方面，正则化即是假设模型参数服从一定的先验概率，即为模型参数添加先验（不同的正则化方式为不同的先验分布）。这就规定了参数的分布，使得模型的复杂度降低（简言之，限定条件越多，模型的复杂度越低），这样模型对于噪声与异常点的抗干扰性的能力增强，从而提高模型的泛化能力。　</p>
-<p>　
-　　L1正则化与L2正则化的区别在于：L1正则化是拉普拉斯先验，而L2正则化是高斯先验。它们都是服从均值为0，协方差为<span
-class="math inline">\(\frac{1}{\lambda}\)</span>。当<span
-class="math inline">\(\lambda =
-0\)</span>时（即没有先验，没有正则化项），相当于先验分布具有无穷大的协方差，则先验约束非常弱，模型为了拟合所有的训练集数据，
-参数<span
-class="math inline">\(w\)</span>可以变得任意大从而使得模型不稳定，即方差大而偏差小。<span
-class="math inline">\(\lambda\)</span>越大，表明先验分布的协方差越小、偏差越大，模型越稳定。也就是说，正则化项是在偏差bias与方差variance之间做平衡的tradeoff。图1为L1与L2正则化的区别：</p>
+<p>　 　　L1正则化与L2正则化的区别在于：L1正则化是拉普拉斯先验，而L2正则化是高斯先验。它们都是服从均值为0，协方差为<span class="math inline">\(\frac{1}{\lambda}\)</span>。当<span class="math inline">\(\lambda = 0\)</span>时（即没有先验，没有正则化项），相当于先验分布具有无穷大的协方差，则先验约束非常弱，模型为了拟合所有的训练集数据， 参数<span class="math inline">\(w\)</span>可以变得任意大从而使得模型不稳定，即方差大而偏差小。<span class="math inline">\(\lambda\)</span>越大，表明先验分布的协方差越小、偏差越大，模型越稳定。也就是说，正则化项是在偏差bias与方差variance之间做平衡的tradeoff。图1为L1与L2正则化的区别：</p>
 <img src="/2018/01/28/overfitting-underfitting/l1l2regulation.jpg" class="" title="图1. L1与L2正则化的区别">
-<p>　　图1中的模型是线性回归，有两个特征，要优化的参数分别是<span
-class="math inline">\(w_1\)</span>和<span
-class="math inline">\(w_2\)</span>，左图是L2正则化，右图是L1正则化。蓝色线是优化过程中遇到的等高线，一圈代表一个目标函数值，圆心是某一个样本观测值，半径为误差值。正则化相当于增加了受限条件（红色边界），二者相交处是最优参数。可见L1正则化的最优参数只可能在坐标轴上，从而出现0权重参数，使得模型稀疏。
- </p>
+<p>　　图1中的模型是线性回归，有两个特征，要优化的参数分别是<span class="math inline">\(w_1\)</span>和<span class="math inline">\(w_2\)</span>，左图是L2正则化，右图是L1正则化。蓝色线是优化过程中遇到的等高线，一圈代表一个目标函数值，圆心是某一个样本观测值，半径为误差值。正则化相当于增加了受限条件（红色边界），二者相交处是最优参数。可见L1正则化的最优参数只可能在坐标轴上，从而出现0权重参数，使得模型稀疏。  </p>
 <h2 id="dropout">3.4 Dropout</h2>
 <p>  正则化是通过在代价函数后面加上正则化项来防止模型过拟合，Dropout方法是通过修改人工神经网络（ANN）中隐藏层的神经元个数来防止过拟合。该方法是在对网络进行训练时用一种技巧（trick），对于如下所示的三层人工神经网络：</p>
 <img src="/2018/01/28/overfitting-underfitting/nn_without_dropout.png" class="" title="图2. 经典三层人工神经网络">
@@ -476,11 +376,8 @@ class="math inline">\(w_2\)</span>，左图是L2正则化，右图是L1正则化
 <hr />
 <h1 id="参考文档">4、参考文档</h1>
 <ol type="1">
-<li><a
-target="_blank" rel="noopener" href="http://blog.csdn.net/btbujhj/article/details/73468993">机器学习中防止过拟合的处理方法</a></li>
-<li><a
-target="_blank" rel="noopener" href="http://blog.csdn.net/u012162613/article/details/44261657">正则化方法：L1和L2
-regularization、数据集扩增、dropout</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/btbujhj/article/details/73468993">机器学习中防止过拟合的处理方法</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/u012162613/article/details/44261657">正则化方法：L1和L2 regularization、数据集扩增、dropout</a></li>
 </ol>
 
     </div>

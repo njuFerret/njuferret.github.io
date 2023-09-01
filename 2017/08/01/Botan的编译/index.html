@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"njuferret.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
+    <meta name="description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Botan的编译">
 <meta property="og:url" content="https://njuferret.github.io/2017/08/01/Botan%E7%9A%84%E7%BC%96%E8%AF%91/index.html">
 <meta property="og:site_name" content="有点博客">
-<meta property="og:description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
+<meta property="og:description" content="今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程： 编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-08-01T10:24:02.000Z">
 <meta property="article:modified_time" content="2023-08-22T04:01:06.700Z">
@@ -255,16 +255,11 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan
-2.x版本编译很轻松。以下记录编译过程：</p>
+    <div class="post-body" itemprop="articleBody"><p>今天心血来潮想编译一个Qt版本的SS，首先需要编译Botan，翻出以前的老帖子，重新编译了一下，没想到Botan 2.x版本编译很轻松。以下记录编译过程：</p>
 <p>编译环境：Win10x64，MinGW 5.3.0(32bit), Botan 2.1.0</p>
 <span id="more"></span>
 <h2 id="botan下载">1.Botan下载</h2>
-<p>Botan的地址有两个，一个是<a
-target="_blank" rel="noopener" href="https://github.com/randombit/botan">Github主页</a>，一个是<a
-target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>。打开<a
-target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>地址，找到<code>Current Stable Release</code>，点击版本号(<a
-target="_blank" rel="noopener" href="https://botan.randombit.net/releases/Botan-2.1.0.tgz">2.1.0</a>)下载。</p>
+<p>Botan的地址有两个，一个是<a target="_blank" rel="noopener" href="https://github.com/randombit/botan">Github主页</a>，一个是<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>。打开<a target="_blank" rel="noopener" href="https://botan.randombit.net/">文档</a>地址，找到<code>Current Stable Release</code>，点击版本号(<a target="_blank" rel="noopener" href="https://botan.randombit.net/releases/Botan-2.1.0.tgz">2.1.0</a>)下载。</p>
 <h2 id="编译命令">2.编译命令</h2>
 <p>Botan的编译需要使用msys2和Python，将源码放在msys2的用户目录（假设为yourname）下，进入源码目录。使用以下命令配置：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure.py --prefix=/home/yourname/build/botan-<span class="number">2.1</span><span class="number">.0</span> --os=mingw --cc=gcc --cpu=i686 --link-method=copy --disable-shared --amalgamation</span><br></pre></td></tr></table></figure>

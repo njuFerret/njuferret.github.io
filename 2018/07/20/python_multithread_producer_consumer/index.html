@@ -262,16 +262,12 @@
     
     
     <div class="post-body" itemprop="articleBody"><h1 id="写在前面">1、写在前面</h1>
-<p>经典的生产者和消费者模型中，<span
-class="math inline">\(N\)</span>个线程根据要求生产出第一步处理结果，<span
-class="math inline">\(M\)</span>个消费者线程对上述结果进行第二步处理。生产者与消费者之间有明确的前后顺序关系。</p>
+<p>经典的生产者和消费者模型中，<span class="math inline">\(N\)</span>个线程根据要求生产出第一步处理结果，<span class="math inline">\(M\)</span>个消费者线程对上述结果进行第二步处理。生产者与消费者之间有明确的前后顺序关系。</p>
 <img src="/2018/07/20/python_multithread_producer_consumer/producer_consumer.png" class="" title="生产者消费者模型">
 <span id="more"></span>
 <p>关于生产者消费者问题，wikipedia是这么描述的：</p>
 <blockquote>
-<p>生产者消费者问题（英语：Producer-consumer
-problem），也称有限缓冲问题（英语：Bounded-buffer
-problem），是一个多线程同步问题的经典案例。该问题描述了共享固定大小缓冲区的两个线程——即所谓的“生产者”和“消费者”——在实际运行时会发生的问题。生产者的主要作用是生成一定量的数据放到缓冲区中，然后重复此过程。与此同时，消费者也在缓冲区消耗这些数据。该问题的关键就是要保证生产者不会在缓冲区满时加入数据，消费者也不会在缓冲区中空时消耗数据。</p>
+<p>生产者消费者问题（英语：Producer-consumer problem），也称有限缓冲问题（英语：Bounded-buffer problem），是一个多线程同步问题的经典案例。该问题描述了共享固定大小缓冲区的两个线程——即所谓的“生产者”和“消费者”——在实际运行时会发生的问题。生产者的主要作用是生成一定量的数据放到缓冲区中，然后重复此过程。与此同时，消费者也在缓冲区消耗这些数据。该问题的关键就是要保证生产者不会在缓冲区满时加入数据，消费者也不会在缓冲区中空时消耗数据。</p>
 </blockquote>
 <p>解决方案，wikipedia也给出了一个解释:</p>
 <blockquote>
@@ -281,21 +277,14 @@ problem），是一个多线程同步问题的经典案例。该问题描述了�
 <p>利用Python中<code>Queue</code>对象，可以很方便的解决生产者消费者问题。例如在程序中，创建两个<code>Queue</code>对象，前者是输入任务存放对象(<code>task_queue</code>)，后者是该任务完成后的结果存放对象(<code>out_queue</code>)。生产者首先从<code>task_queue</code>中取出任务（<code>Queue.get()</code>）,进行处理后，将处理结果存入<code>out_queue</code>，然后调用<code>Queue.task_done()</code>函数，表明处理完成。关于<code>Queue.task_done()</code>函数。官方文档给出说明如下：</p>
 <blockquote>
 <p>Queue.task_done()</p>
-<p>Indicate that a formerly enqueued task is complete. Used by queue
-consumer threads. For each get() used to fetch a task, a subsequent call
-to task_done() tells the queue that the processing on the task is
-complete.</p>
-<p>If a join() is currently blocking, it will resume when all items have
-been processed (meaning that a task_done() call was received for every
-item that had been put() into the queue).</p>
-<p>Raises a ValueError if called more times than there were items placed
-in the queue.</p>
+<p>Indicate that a formerly enqueued task is complete. Used by queue consumer threads. For each get() used to fetch a task, a subsequent call to task_done() tells the queue that the processing on the task is complete.</p>
+<p>If a join() is currently blocking, it will resume when all items have been processed (meaning that a task_done() call was received for every item that had been put() into the queue).</p>
+<p>Raises a ValueError if called more times than there were items placed in the queue.</p>
 </blockquote>
 <p>翻译如下：</p>
 <blockquote>
 <p>Queue.task_done()</p>
-<p>表明之前队列中的任务已经完成。由Queue的消费线程使用。
-使用<code>get()</code>函数获取任务后，当调用<code>task_done()</code>函数时，表示当前所处理的任务已经完成。</p>
+<p>表明之前队列中的任务已经完成。由Queue的消费线程使用。 使用<code>get()</code>函数获取任务后，当调用<code>task_done()</code>函数时，表示当前所处理的任务已经完成。</p>
 <p>如果使用<code>join()</code>阻塞当前执行，那么当所有的任务处理完成后，阻塞会解除。（意味着对每个放进(<code>put()</code>)队列的项目处理后，会接收到1个<code>task_done()</code>通知).</p>
 <p>调用次数大于Queue中放入项目数量时，会发出<code>ValueError</code>异常</p>
 </blockquote>

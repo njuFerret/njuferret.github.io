@@ -276,160 +276,64 @@
 <span id="more"></span>
 <h2 id="引言">1、引言</h2>
 <p>　　本文通过研究线性变换，及变换后得到数据的协方差(Covariance)之间的关系，给出了协方差矩阵的一个直观图形解释。大部分教材是根据协方差矩阵的概念解释数据的形状。我们反其道而行之，通过数据的形状来阐述协方差矩阵的概念。</p>
-<p>　　在<a
-target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/divide-variance-n-1/">《为什么样本方差除以N-1？》</a>文章中，我们讨论了方差(Variance)的概念，给出了著名的样本方差估算公式的推导和证明。如图1所示，标准差（方差的平方根）表明了数据在特征空间中的离散度。
-<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png" class=""> 　　式 <span
-class="math inline">\((\ref{Unbiased})\)</span>
-给出了样本方差的无偏估计： <span class="math display">\[
-\begin{equation}
+<p>　　在<a target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/divide-variance-n-1/">《为什么样本方差除以N-1？》</a>文章中，我们讨论了方差(Variance)的概念，给出了著名的样本方差估算公式的推导和证明。如图1所示，标准差（方差的平方根）表明了数据在特征空间中的离散度。 <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig01.png" class=""> 　　式 <span class="math inline">\((\ref{Unbiased})\)</span> 给出了样本方差的无偏估计： <span class="math display">\[
+\begin{equation} 
 \begin{split}   
 \sigma^2_x &amp;= \frac{1}{N-1}\sum^N_{i=1}(x_i-\mu)^2  \\
 &amp;=E[(x-E(x))(x-E(x))]   \\
 &amp;=\sigma(x,x)   \\
 \end{split}
-\label{Unbiased} \end{equation}
-\]</span>
-　　不过，方差只能说明数据在平行于特征空间坐标轴方向上的离散度。考虑如图2所示的二维特征空间：</p>
+\label{Unbiased} \end{equation} 
+\]</span> 　　不过，方差只能说明数据在平行于特征空间坐标轴方向上的离散度。考虑如图2所示的二维特征空间：</p>
 <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig02.png" class="">
-<p>　　对图2中的数据，我们可以计算 <span
-class="math inline">\(x\)</span> 轴方向上的方差 <span
-class="math inline">\(\sigma(x,x)\)</span>，和 <span
-class="math inline">\(y\)</span> 轴方向上的方差<span
-class="math inline">\(\sigma(y,y)\)</span>。但是，数据在水平和垂直方向上的离散度，无法解释数据呈对角线分布的特点。图2中可以很清楚地看到，总体来说，数据点
-<span class="math inline">\(x\)</span> 值增加，其 <span
-class="math inline">\(y\)</span>
-值也增加，即正相关性。这种相关性，可通过推广方差的概念，得到所谓的“协方差”：
-<span class="math display">\[
-\sigma(x,y)=E[(x-E(x))(y-E(y))]
-\]</span> 　　对二维数据，可以得到 <span
-class="math inline">\(\sigma(x,x)\)</span> 、 <span
-class="math inline">\(\sigma(y,y)\)</span> 、 <span
-class="math inline">\(\sigma(x,y)\)</span> 和 <span
-class="math inline">\(\sigma(y,x)\)</span>
-。这四个值构成的矩阵，称为协方差矩阵： <span class="math display">\[
-\Sigma =
+<p>　　对图2中的数据，我们可以计算 <span class="math inline">\(x\)</span> 轴方向上的方差 <span class="math inline">\(\sigma(x,x)\)</span>，和 <span class="math inline">\(y\)</span> 轴方向上的方差<span class="math inline">\(\sigma(y,y)\)</span>。但是，数据在水平和垂直方向上的离散度，无法解释数据呈对角线分布的特点。图2中可以很清楚地看到，总体来说，数据点 <span class="math inline">\(x\)</span> 值增加，其 <span class="math inline">\(y\)</span> 值也增加，即正相关性。这种相关性，可通过推广方差的概念，得到所谓的“协方差”： <span class="math display">\[
+\sigma(x,y)=E[(x-E(x))(y-E(y))] 
+\]</span> 　　对二维数据，可以得到 <span class="math inline">\(\sigma(x,x)\)</span> 、 <span class="math inline">\(\sigma(y,y)\)</span> 、 <span class="math inline">\(\sigma(x,y)\)</span> 和 <span class="math inline">\(\sigma(y,x)\)</span> 。这四个值构成的矩阵，称为协方差矩阵： <span class="math display">\[
+\Sigma = 
 \begin{bmatrix}
 \sigma(x,x)&amp;  \sigma(x,y) \\
 \sigma(y,x)&amp;  \sigma(y,y) \\
 \end{bmatrix}
 \]</span></p>
-<p>　　由于 <span class="math inline">\(x\)</span> 与 <span
-class="math inline">\(y\)</span> 的相关性，等价于 <span
-class="math inline">\(y\)</span> 与 <span
-class="math inline">\(x\)</span> 的相关性。也就是说，<span
-class="math inline">\(\sigma(x,y) =
-\sigma(y,x)\)</span>。因此，协方差矩阵，始终是一个由位于对角线上的方差和非对角线上的协方差构成的对称矩阵。二维的正态分布特性，可以用均值及
-<span class="math inline">\(2 \times 2\)</span>
-协方差矩阵完整描述。同样， <span class="math inline">\(3 \times
-3\)</span> 协方差矩阵，可用于描述三维数据， <span
-class="math inline">\(N \times N\)</span> 协方差矩阵可以描述 <span
-class="math inline">\(N\)</span> 维数据。</p>
+<p>　　由于 <span class="math inline">\(x\)</span> 与 <span class="math inline">\(y\)</span> 的相关性，等价于 <span class="math inline">\(y\)</span> 与 <span class="math inline">\(x\)</span> 的相关性。也就是说，<span class="math inline">\(\sigma(x,y) = \sigma(y,x)\)</span>。因此，协方差矩阵，始终是一个由位于对角线上的方差和非对角线上的协方差构成的对称矩阵。二维的正态分布特性，可以用均值及 <span class="math inline">\(2 \times 2\)</span> 协方差矩阵完整描述。同样， <span class="math inline">\(3 \times 3\)</span> 协方差矩阵，可用于描述三维数据， <span class="math inline">\(N \times N\)</span> 协方差矩阵可以描述 <span class="math inline">\(N\)</span> 维数据。</p>
 <p>　　图3展示了数据的整体形状和协方差矩阵的关系： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig03.png" class=""></p>
 <h2 id="协方差矩阵的特征值分解">2、协方差矩阵的特征值分解</h2>
-<p>　　下一节，讨论协方差矩阵是如何作为一个线性算子，将白数据(white
-data)转换为观测数据。不过，在进入技术细节前，直观理解特征向量和特征值如何唯一地定义协方差矩阵和数据形状，非常重要。</p>
+<p>　　下一节，讨论协方差矩阵是如何作为一个线性算子，将白数据(white data)转换为观测数据。不过，在进入技术细节前，直观理解特征向量和特征值如何唯一地定义协方差矩阵和数据形状，非常重要。</p>
 <p>　　如图3所示，协方差矩阵定义了数据的离散程度（方差）和走向（orientation）（协方差）。因此，可以简单的使用指向最大离散度方向的向量和其值（该值等于这个方向上的方差），表示协方差矩阵。</p>
-<p>　　定义向量 <span class="math inline">\(\vec{v}\)</span>
-，将数据<span class="math inline">\(D\)</span>投影到该向量后得到 <span
-class="math inline">\(\vec{v}^T D\)</span> ，投影后数据的方差为 <span
-class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span>
-。为了获得指向最大方差方向的向量 <span
-class="math inline">\(\vec{v}\)</span>，需要找到使投影后数据的协方差矩阵
-<span class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span>
-最大的成分。当 <span class="math inline">\(\vec{v}\)</span>
-为归一化单位向量时，求解关于向量 <span
-class="math inline">\(\vec{v}\)</span> 的函数 <span
-class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span>
-的最大值，可以用使用最大化<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rayleigh_quotient">瑞利熵</a>方法。当<span
-class="math inline">\(\vec{v}\)</span>等于协方差矩阵<span
-class="math inline">\(\Sigma\)</span>的最大特征向量时，瑞利熵最大。</p>
+<p>　　定义向量 <span class="math inline">\(\vec{v}\)</span> ，将数据<span class="math inline">\(D\)</span>投影到该向量后得到 <span class="math inline">\(\vec{v}^T D\)</span> ，投影后数据的方差为 <span class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span> 。为了获得指向最大方差方向的向量 <span class="math inline">\(\vec{v}\)</span>，需要找到使投影后数据的协方差矩阵 <span class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span> 最大的成分。当 <span class="math inline">\(\vec{v}\)</span> 为归一化单位向量时，求解关于向量 <span class="math inline">\(\vec{v}\)</span> 的函数 <span class="math inline">\(\vec{v}^T \Sigma \vec{v}\)</span> 的最大值，可以用使用最大化<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Rayleigh_quotient">瑞利熵</a>方法。当<span class="math inline">\(\vec{v}\)</span>等于协方差矩阵<span class="math inline">\(\Sigma\)</span>的最大特征向量时，瑞利熵最大。</p>
 <blockquote>
-<p>　　<strong>说明1</strong>，数学习惯上使用列向量表示一个基向量，例如平面坐标系的两个基向量<span
-class="math inline">\(\vec{x}\)</span>和<span
-class="math inline">\(\vec{y}\)</span>分别表示为<span
-class="math inline">\([1,0]^T\)</span>和<span
-class="math inline">\([0,1]^T\)</span>。机器学习中则习惯使用行向量表示一个样本（行数即为样本数），即基向量是一个行向量，如：<span
-class="math inline">\([1,0]\)</span>。</p>
+<p>　　<strong>说明1</strong>，数学习惯上使用列向量表示一个基向量，例如平面坐标系的两个基向量<span class="math inline">\(\vec{x}\)</span>和<span class="math inline">\(\vec{y}\)</span>分别表示为<span class="math inline">\([1,0]^T\)</span>和<span class="math inline">\([0,1]^T\)</span>。机器学习中则习惯使用行向量表示一个样本（行数即为样本数），即基向量是一个行向量，如：<span class="math inline">\([1,0]\)</span>。</p>
 </blockquote>
 <blockquote>
-<p>　　<strong>说明2</strong>，向量<span
-class="math inline">\(\vec{d_1}\)</span>在向量<span
-class="math inline">\(\vec
-{v_1}\)</span>上的投影，就是两个向量的内积<span
-class="math inline">\(\vec{v_1}^T \cdot
-\vec{d_1}\)</span>，向量均使用列向量形式表示。如果是向量<span
-class="math inline">\(\vec{d_1}\)</span>分别在向量<span
-class="math inline">\(\vec {v_1}\)</span>和<span
-class="math inline">\(\vec
-{v_2}\)</span>上投影，那么只需要简单的将两个向量组成一个矩阵，<span
-class="math inline">\(V = [v_1, v_2]\)</span>，然后继续点乘： <span
-class="math inline">\(V^T d_1\)</span>。再推广下，如果是<span
-class="math inline">\(n\)</span>个向量构成的样本<span
-class="math inline">\(D\)</span>：<span class="math inline">\(D =
-[d_1,d_2,\cdots, d_n]\)</span>，则数据集<span
-class="math inline">\(D\)</span>在向量空间<span
-class="math inline">\(V\)</span>的投影可以表示为： <span
-class="math display">\[
+<p>　　<strong>说明2</strong>，向量<span class="math inline">\(\vec{d_1}\)</span>在向量<span class="math inline">\(\vec {v_1}\)</span>上的投影，就是两个向量的内积<span class="math inline">\(\vec{v_1}^T \cdot \vec{d_1}\)</span>，向量均使用列向量形式表示。如果是向量<span class="math inline">\(\vec{d_1}\)</span>分别在向量<span class="math inline">\(\vec {v_1}\)</span>和<span class="math inline">\(\vec {v_2}\)</span>上投影，那么只需要简单的将两个向量组成一个矩阵，<span class="math inline">\(V = [v_1, v_2]\)</span>，然后继续点乘： <span class="math inline">\(V^T d_1\)</span>。再推广下，如果是<span class="math inline">\(n\)</span>个向量构成的样本<span class="math inline">\(D\)</span>：<span class="math inline">\(D = [d_1,d_2,\cdots, d_n]\)</span>，则数据集<span class="math inline">\(D\)</span>在向量空间<span class="math inline">\(V\)</span>的投影可以表示为： <span class="math display">\[
 D^{&#39;} =  V^T D
-\]</span> 　　因此，协方差矩阵<span
-class="math inline">\(\Sigma\)</span>向量空间<span
-class="math inline">\(V\)</span>中的投影矩阵为<span
-class="math inline">\(\Sigma^{&#39;}=V^T
-\Sigma\)</span>，对角线元素为方差。则对应于<span
-class="math inline">\(\vec{v_1}\)</span>的方差为<span
-class="math inline">\(\Sigma^{&#39;} v_1=V^T \Sigma v_1\)</span></p>
+\]</span> 　　因此，协方差矩阵<span class="math inline">\(\Sigma\)</span>向量空间<span class="math inline">\(V\)</span>中的投影矩阵为<span class="math inline">\(\Sigma^{&#39;}=V^T \Sigma\)</span>，对角线元素为方差。则对应于<span class="math inline">\(\vec{v_1}\)</span>的方差为<span class="math inline">\(\Sigma^{&#39;} v_1=V^T \Sigma v_1\)</span></p>
 </blockquote>
 <p>　　换句话说，协方差矩阵的最大特征值对应的特征向量，总是指向方差最大的方向。第二大特征值对应的特征向量，正交于最大特征值对应的特征向量，并指向第二大方差指向的方向。</p>
-<p>　　现在，让我们来看一些例子。在《特征值和特征向量》(<a
-target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/eigenvalues-eigenvectors/">原文</a>，<a
-target="_blank" rel="noopener" href="http://blog.csdn.net/u010182633/article/details/45921929">译文</a>)中，线性变换矩阵
-<span class="math inline">\(T\)</span>
-仅由特征向量和特征值确定。将其应用于协方差矩阵（注：协方差矩阵相当于两个特征向量之间的线性变换，可以通过特征方程求出特征向量和特征值）：
-<span class="math display">\[
-\begin{equation}
-\Sigma \vec{v}=\lambda \vec{v}  \qquad \qquad （\vec{v} 为 \Sigma
-的属于特征值 \lambda 的特征向量）
+<p>　　现在，让我们来看一些例子。在《特征值和特征向量》(<a target="_blank" rel="noopener" href="https://www.visiondummy.com/2014/03/eigenvalues-eigenvectors/">原文</a>，<a target="_blank" rel="noopener" href="http://blog.csdn.net/u010182633/article/details/45921929">译文</a>)中，线性变换矩阵 <span class="math inline">\(T\)</span> 仅由特征向量和特征值确定。将其应用于协方差矩阵（注：协方差矩阵相当于两个特征向量之间的线性变换，可以通过特征方程求出特征向量和特征值）： <span class="math display">\[
+\begin{equation} 
+\Sigma \vec{v}=\lambda \vec{v}  \qquad \qquad （\vec{v} 为 \Sigma 的属于特征值 \lambda 的特征向量）
 \label {CovMatrix}
-\end{equation}
+\end{equation} 
 \]</span></p>
-<p>　　如果协方差矩阵是对角矩阵，即协方差部分为零，则方差必然等于特征值
-<span
-class="math inline">\(\lambda\)</span>。如图4所示，特征向量用绿色和红色表示，特征值明显等于协方差矩阵的方差分量。
-<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png" class=""></p>
-<p>　　如果协方差矩阵是非对角矩阵，即协方差部分不为零，则情况稍微复杂一些。特征值仍是最大离散方向的方差，协方差矩阵的对角线（方差）分量，仍然是
-<span class="math inline">\(x\)</span> 轴和 <span
-class="math inline">\(y\)</span>
-轴方向的方差大小。但因为数据是非轴对齐（最大方差对应的向量与x/ <span
-class="math inline">\(y\)</span>
-轴有一个夹角），所以协方差矩阵对角线上的值不再与图5所示的相同。
-<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png" class=""></p>
+<p>　　如果协方差矩阵是对角矩阵，即协方差部分为零，则方差必然等于特征值 <span class="math inline">\(\lambda\)</span>。如图4所示，特征向量用绿色和红色表示，特征值明显等于协方差矩阵的方差分量。 <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig04.png" class=""></p>
+<p>　　如果协方差矩阵是非对角矩阵，即协方差部分不为零，则情况稍微复杂一些。特征值仍是最大离散方向的方差，协方差矩阵的对角线（方差）分量，仍然是 <span class="math inline">\(x\)</span> 轴和 <span class="math inline">\(y\)</span> 轴方向的方差大小。但因为数据是非轴对齐（最大方差对应的向量与x/ <span class="math inline">\(y\)</span> 轴有一个夹角），所以协方差矩阵对角线上的值不再与图5所示的相同。 <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig05.png" class=""></p>
 <p>　　比较图5与图4，可以清楚地看到，特征值表示沿特征向量方向的方差，而协方差矩阵的方差分量表示沿轴的方差。如果协方差为0，则两个值相等。</p>
 <h2 id="使用协方差矩阵作线性变换">3、使用协方差矩阵作线性变换</h2>
-<p>　　现在，暂时放一放协方差矩阵。图3中的例子，可以简单地认为是图6的一个线性变换：
-<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png" class=""></p>
-<p>　　令图6中数据为 <span class="math inline">\(D\)</span>
-，则图3中的各示例可以通过对 <span class="math inline">\(D\)</span>
-做线性变换得到： <span class="math display">\[
+<p>　　现在，暂时放一放协方差矩阵。图3中的例子，可以简单地认为是图6的一个线性变换： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig06.png" class=""></p>
+<p>　　令图6中数据为 <span class="math inline">\(D\)</span> ，则图3中的各示例可以通过对 <span class="math inline">\(D\)</span> 做线性变换得到： <span class="math display">\[
 D^{&#39;}=TD
-\]</span> 　　其中，<span class="math inline">\(T\)</span>
-是含有旋转矩阵 <span class="math inline">\(R\)</span> 和缩放矩阵 <span
-class="math inline">\(S\)</span> 的变换矩阵： <span
-class="math display">\[
+\]</span> 　　其中，<span class="math inline">\(T\)</span> 是含有旋转矩阵 <span class="math inline">\(R\)</span> 和缩放矩阵 <span class="math inline">\(S\)</span> 的变换矩阵： <span class="math display">\[
 \begin{equation}
 T=RS
 \label {matrixT}
 \end {equation}
 \]</span></p>
-<p>　　矩阵 <span class="math inline">\(R\)</span> 和 <span
-class="math inline">\(S\)</span> 的定义如式 <span
-class="math inline">\((\ref{matrixR})\)</span> 和式 <span
-class="math inline">\((\ref{matrixS})\)</span>： <span
-class="math display">\[
+<p>　　矩阵 <span class="math inline">\(R\)</span> 和 <span class="math inline">\(S\)</span> 的定义如式 <span class="math inline">\((\ref{matrixR})\)</span> 和式 <span class="math inline">\((\ref{matrixS})\)</span>： <span class="math display">\[
 \begin{align}
 R &amp;= \begin{bmatrix}
 cos(\theta) &amp; -sin(\theta) \\
-sin(\theta) &amp; cos(\theta)
+sin(\theta) &amp; cos(\theta) 
 \end{bmatrix}
 \label {matrixR} \\
 S &amp;= \begin{bmatrix}
@@ -438,20 +342,10 @@ s_x &amp; 0 \\
 \end{bmatrix}
 \label {matrixS}
 \end{align}
-\]</span> 　　式 <span class="math inline">\((\ref{matrixR})\)</span>
-中， <span class="math inline">\(\theta\)</span> 为旋转角度。式 <span
-class="math inline">\((\ref{matrixS})\)</span> 中， <span
-class="math inline">\(s_x\)</span> 、 <span
-class="math inline">\(s_y\)</span> 分别是 <span
-class="math inline">\(x\)</span> 方向和 <span
-class="math inline">\(y\)</span> 方向的缩放比例因子。</p>
-<p>　　接下来讨论，协方差矩阵 <span
-class="math inline">\(\Sigma\)</span> 和线性变换矩阵 <span
-class="math inline">\(T\)</span> 之间的关系。</p>
-<p>　　先从无缩放（缩放比例为1）、无旋转数据开始。此类样本服从标准正态分布，对应于白（非相关）噪声，统计学习惯称之为“白数据”：
-<img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png" class=""></p>
-<p>　　“白”数据的协方差矩阵，等于单位矩阵，因此方差和标准差为1，协方差等于0：
-<span class="math display">\[
+\]</span> 　　式 <span class="math inline">\((\ref{matrixR})\)</span> 中， <span class="math inline">\(\theta\)</span> 为旋转角度。式 <span class="math inline">\((\ref{matrixS})\)</span> 中， <span class="math inline">\(s_x\)</span> 、 <span class="math inline">\(s_y\)</span> 分别是 <span class="math inline">\(x\)</span> 方向和 <span class="math inline">\(y\)</span> 方向的缩放比例因子。</p>
+<p>　　接下来讨论，协方差矩阵 <span class="math inline">\(\Sigma\)</span> 和线性变换矩阵 <span class="math inline">\(T\)</span> 之间的关系。</p>
+<p>　　先从无缩放（缩放比例为1）、无旋转数据开始。此类样本服从标准正态分布，对应于白（非相关）噪声，统计学习惯称之为“白数据”： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig07.png" class=""></p>
+<p>　　“白”数据的协方差矩阵，等于单位矩阵，因此方差和标准差为1，协方差等于0： <span class="math display">\[
 \Sigma=
 \begin{bmatrix}
 \sigma^2_x &amp; 0      \\
@@ -462,8 +356,7 @@ class="math inline">\(T\)</span> 之间的关系。</p>
 0 &amp; 1 \\
 \end{bmatrix}
 \]</span></p>
-<p>　　现在，对 <span class="math inline">\(x\)</span> 方向乘4： <span
-class="math display">\[
+<p>　　现在，对 <span class="math inline">\(x\)</span> 方向乘4： <span class="math display">\[
 D^{&#39;}=
 \begin{bmatrix}
 4 &amp; 0 \\
@@ -471,11 +364,8 @@ D^{&#39;}=
 \end{bmatrix}
 D
 \]</span></p>
-<p>　　则变换后的数据 <span class="math inline">\(D^{&#39;}\)</span>
-如图8所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png" class=""></p>
-<p>　　 <span class="math inline">\(D^{&#39;}\)</span> 的协方差矩阵
-<span class="math inline">\(\Sigma^{&#39;}\)</span> 为： <span
-class="math display">\[
+<p>　　则变换后的数据 <span class="math inline">\(D^{&#39;}\)</span> 如图8所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig08.png" class=""></p>
+<p>　　 <span class="math inline">\(D^{&#39;}\)</span> 的协方差矩阵 <span class="math inline">\(\Sigma^{&#39;}\)</span> 为： <span class="math display">\[
 \Sigma^{&#39;}=
 \begin{bmatrix}
 \sigma^2_x &amp; 0 \\
@@ -486,12 +376,7 @@ class="math display">\[
 0 &amp; 1 \\
 \end{bmatrix}
 \]</span></p>
-<p>　　故 <span class="math inline">\(D^{&#39;}\)</span> 的协方差矩阵
-<span class="math inline">\(\Sigma^{&#39;}\)</span>
-，与作用在原始数据上的线性变换矩阵<span
-class="math inline">\(T\)</span>的关系为 <span
-class="math inline">\(D^{&#39;}=TD\)</span>，这里: <span
-class="math display">\[
+<p>　　故 <span class="math inline">\(D^{&#39;}\)</span> 的协方差矩阵 <span class="math inline">\(\Sigma^{&#39;}\)</span> ，与作用在原始数据上的线性变换矩阵<span class="math inline">\(T\)</span>的关系为 <span class="math inline">\(D^{&#39;}=TD\)</span>，这里: <span class="math display">\[
 \begin{equation}
 T=\sqrt{\Sigma^{&#39;}}=
 \begin{bmatrix}
@@ -501,107 +386,48 @@ T=\sqrt{\Sigma^{&#39;}}=
 \label {transformMatrix}
 \end{equation}
 \]</span></p>
-<p>　　式 <span class="math inline">\((\ref {transformMatrix})\)</span>
-在 <span class="math inline">\(x\)</span> 和 <span
-class="math inline">\(y\)</span>
-方向上进行缩放变换时成立，但该式是否可用于旋转变换？考虑一般情况下，线性变换矩阵
-<span class="math inline">\(T\)</span> 和协方差矩阵 <span
-class="math inline">\(\Sigma^{&#39;}\)</span>
-之间的关系，我们将协方差矩阵分解为旋转和缩放矩阵的乘积。</p>
-<p>　　如前所述，协方差矩阵可以用特征向量和特征值表示，式 <span
-class="math inline">\((\ref {CovMatrix})\)</span> 包括了矩阵 <span
-class="math inline">\(\Sigma\)</span>
-的每一个“特征向量-特征值”对。在二维情况下，有2个特征向量和2个特征值。矩阵可以有效的描述式
-<span class="math inline">\((\ref {CovMatrix})\)</span>
-定义的两个等式关系： <span class="math display">\[
+<p>　　式 <span class="math inline">\((\ref {transformMatrix})\)</span> 在 <span class="math inline">\(x\)</span> 和 <span class="math inline">\(y\)</span> 方向上进行缩放变换时成立，但该式是否可用于旋转变换？考虑一般情况下，线性变换矩阵 <span class="math inline">\(T\)</span> 和协方差矩阵 <span class="math inline">\(\Sigma^{&#39;}\)</span> 之间的关系，我们将协方差矩阵分解为旋转和缩放矩阵的乘积。</p>
+<p>　　如前所述，协方差矩阵可以用特征向量和特征值表示，式 <span class="math inline">\((\ref {CovMatrix})\)</span> 包括了矩阵 <span class="math inline">\(\Sigma\)</span> 的每一个“特征向量-特征值”对。在二维情况下，有2个特征向量和2个特征值。矩阵可以有效的描述式 <span class="math inline">\((\ref {CovMatrix})\)</span> 定义的两个等式关系： <span class="math display">\[
 \begin{equation}
 \Sigma V = VL
 \label {eigenvectors}
 \end{equation}
-\]</span> 　　式 <span class="math inline">\((\ref
-{eigenvectors})\)</span> 中， <span class="math inline">\(V\)</span>
-是由 <span class="math inline">\(\Sigma\)</span>
-的各特征向量构成的矩阵，<span class="math inline">\(L\)</span>
-为相应特征向量对应的非0特征值组成的对角矩阵。</p>
+\]</span> 　　式 <span class="math inline">\((\ref {eigenvectors})\)</span> 中， <span class="math inline">\(V\)</span> 是由 <span class="math inline">\(\Sigma\)</span> 的各特征向量构成的矩阵，<span class="math inline">\(L\)</span> 为相应特征向量对应的非0特征值组成的对角矩阵。</p>
 <p>　　解得协方差矩阵： <span class="math display">\[
 \begin{equation}
 \Sigma = VLV^{-1}
 \label {Eigendecomposition}
 \end{equation}
 \]</span></p>
-<p>　　式 <span class="math inline">\((\ref
-{Eigendecomposition})\)</span>
-称为协方差矩阵的特征值分解，可通过<strong><a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition">奇异值分解(SVD)</a></strong>算法求解。由于特征向量表示了最大方差的方向，特征值表示该方向上方差的值。也就是说，<span
-class="math inline">\(V\)</span> 就是旋转矩阵，而 <span
-class="math inline">\(\sqrt{L}\)</span>
-就是缩放矩阵。协方差矩阵可进一步分解为： <span class="math display">\[
+<p>　　式 <span class="math inline">\((\ref {Eigendecomposition})\)</span> 称为协方差矩阵的特征值分解，可通过<strong><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Singular_value_decomposition">奇异值分解(SVD)</a></strong>算法求解。由于特征向量表示了最大方差的方向，特征值表示该方向上方差的值。也就是说，<span class="math inline">\(V\)</span> 就是旋转矩阵，而 <span class="math inline">\(\sqrt{L}\)</span> 就是缩放矩阵。协方差矩阵可进一步分解为： <span class="math display">\[
 \begin{equation}
 \Sigma = RSSR^{-1}
 \label {cov_decompose}
 \end{equation}
-\]</span> 　　式中，<span class="math inline">\(R=V\)</span>
-为旋转矩阵，<span
-class="math inline">\(S=\sqrt{L}\)</span>为缩放矩阵。式<span
-class="math inline">\((\ref {matrixT})\)</span> 定义了线性变换 <span
-class="math inline">\(T\)</span> ( <span
-class="math inline">\(T=RS\)</span> ) 。因为 <span
-class="math inline">\(S\)</span> 为对角缩放矩阵，故 <span
-class="math inline">\(S=S^T\)</span>。另外， <span
-class="math inline">\(R\)</span> 为正交矩阵，所以 <span
-class="math inline">\(R^{-1}=R^T\)</span> 。从而，协方差矩阵可以写为：
-<span class="math display">\[
+\]</span> 　　式中，<span class="math inline">\(R=V\)</span> 为旋转矩阵，<span class="math inline">\(S=\sqrt{L}\)</span>为缩放矩阵。式<span class="math inline">\((\ref {matrixT})\)</span> 定义了线性变换 <span class="math inline">\(T\)</span> ( <span class="math inline">\(T=RS\)</span> ) 。因为 <span class="math inline">\(S\)</span> 为对角缩放矩阵，故 <span class="math inline">\(S=S^T\)</span>。另外， <span class="math inline">\(R\)</span> 为正交矩阵，所以 <span class="math inline">\(R^{-1}=R^T\)</span> 。从而，协方差矩阵可以写为： <span class="math display">\[
 \Sigma=RSSR^{-1}=(RS)(SR^{-1})=(RS)(S^{T}R^{T})=(RS)(RS)^{T}=TT^T
 \]</span></p>
-<p>　　也就是说，对图7中的原始“白”数据 <span
-class="math inline">\(D\)</span> 使用线性变换 <span
-class="math inline">\(T\)</span> ( <span
-class="math inline">\(T=RS\)</span> )，即可得到旋转和缩放后的数据 <span
-class="math inline">\(D^{&#39;}\)</span>及其协方差矩阵 <span
-class="math inline">\(\Sigma^{&#39;}\)</span> （ <span
-class="math inline">\(\Sigma^{&#39;}=TT^{T}=RSSR^{-1}\)</span>
-），如图10所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png" class=""></p>
+<p>　　也就是说，对图7中的原始“白”数据 <span class="math inline">\(D\)</span> 使用线性变换 <span class="math inline">\(T\)</span> ( <span class="math inline">\(T=RS\)</span> )，即可得到旋转和缩放后的数据 <span class="math inline">\(D^{&#39;}\)</span>及其协方差矩阵 <span class="math inline">\(\Sigma^{&#39;}\)</span> （ <span class="math inline">\(\Sigma^{&#39;}=TT^{T}=RSSR^{-1}\)</span> ），如图10所示： <img src="/2019/07/28/2019-07-28_geometric-interpretation-covariance-matrix/fig10.png" class=""></p>
 <p>　　图10中彩色箭头表示特征向量。与最大特征值对应的特征向量，总是指向数据最大方差的方向，并规定了其走向（orientation）。由旋转矩阵的正交性，次最大特征值对应的特征向量，总是与最大特征值对应的特征向量正交。</p>
 <h2 id="总结">4、总结</h2>
 <p>　　本文说明了，被观测数据的协方差矩阵，直接与针对白（非相关）数据的线性变换有关。该线性变换完全由特征向量和特征值定义。特征向量表示了矩阵的旋转，特征值对应于每个维度上缩放因子的平方。</p>
 <h2 id="补充说明">5、补充说明</h2>
 <h3 id="线性变换特征值和特征向量">线性变换、特征值和特征向量</h3>
-<p>　　<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_map">线性变换(线性映射)</a>，表征了向量在两个向量空间之间变换的一种映射关系，它保持向量加法和标量乘法的运算，向量加法对应于旋转矩阵，标量乘法对应于缩放矩阵。</p>
-<p>　　<a
-target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">特征值和特征向量</a>是一体的概念：</p>
+<p>　　<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linear_map">线性变换(线性映射)</a>，表征了向量在两个向量空间之间变换的一种映射关系，它保持向量加法和标量乘法的运算，向量加法对应于旋转矩阵，标量乘法对应于缩放矩阵。</p>
+<p>　　<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">特征值和特征向量</a>是一体的概念：</p>
 <blockquote>
-<p>对于一个给定的线性变换，其特征向量 <span
-class="math inline">\(\xi\)</span>
-经过该线性变换之后，得到的新向量仍然与原来的 <span
-class="math inline">\(\xi\)</span>
-保持在同一条直线上，但其长度可能会改变。一个特征向量的长度在该线性变换下的缩放比例，称为其特征值（本征值）。</p>
+<p>对于一个给定的线性变换，其特征向量 <span class="math inline">\(\xi\)</span> 经过该线性变换之后，得到的新向量仍然与原来的 <span class="math inline">\(\xi\)</span> 保持在同一条直线上，但其长度可能会改变。一个特征向量的长度在该线性变换下的缩放比例，称为其特征值（本征值）。</p>
 </blockquote>
 <p>　　数学描述如下： <span class="math display">\[
 A \xi=\lambda \xi
-\]</span> 　　在线性变换 <span class="math inline">\(A\)</span>
-的作用下，向量 <span class="math inline">\(\xi\)</span>
-仅仅在尺度上变为原来的 <span class="math inline">\(\lambda\)</span>
-倍。<span class="math inline">\(\lambda\)</span>称为特征值，<span
-class="math inline">\(\xi\)</span>称为线性变换<span
-class="math inline">\(A\)</span>的属于特征值<span
-class="math inline">\(\lambda\)</span>的特征向量。</p>
-<p>　　矩阵 <span class="math inline">\(A\)</span>
-的非零特征值最大数目是该矩阵的秩 <span
-class="math inline">\(rank(A)\)</span> 。对于每个特征值 <span
-class="math inline">\(\lambda_i\)</span> 均满足特征方程(Characteristic
-equation) <span class="math inline">\((A−\lambda_{i}I)\xi=0\)</span>
-。</p>
+\]</span> 　　在线性变换 <span class="math inline">\(A\)</span> 的作用下，向量 <span class="math inline">\(\xi\)</span> 仅仅在尺度上变为原来的 <span class="math inline">\(\lambda\)</span> 倍。<span class="math inline">\(\lambda\)</span>称为特征值，<span class="math inline">\(\xi\)</span>称为线性变换<span class="math inline">\(A\)</span>的属于特征值<span class="math inline">\(\lambda\)</span>的特征向量。</p>
+<p>　　矩阵 <span class="math inline">\(A\)</span> 的非零特征值最大数目是该矩阵的秩 <span class="math inline">\(rank(A)\)</span> 。对于每个特征值 <span class="math inline">\(\lambda_i\)</span> 均满足特征方程(Characteristic equation) <span class="math inline">\((A−\lambda_{i}I)\xi=0\)</span> 。</p>
 <p>　　简言之，特征向量和特征值表达了线性变换的针对的对象和大小，两者一一对应，成对出现。在物理上，特征值表明线性变换对基向量的缩放程度，特征向量表明线性变换针对的基向量方向，同时特征向量之间是线性无关的。</p>
 <h3 id="参考">参考</h3>
 <ul>
-<li><a
-target="_blank" rel="noopener" href="http://www.visiondummy.com/2014/04/geometric-interpretation-covariance-matrix/">A
-geometric interpretation of the covariance matrix</a></li>
-<li><a
-target="_blank" rel="noopener" href="http://demo.netfoucs.com/u010182633/article/details/45937051">协方差矩阵的几何解释</a></li>
-<li><a
-target="_blank" rel="noopener" href="http://blog.jqian.net/post/pca.html">特征值分解和主成份分析</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.visiondummy.com/2014/04/geometric-interpretation-covariance-matrix/">A geometric interpretation of the covariance matrix</a></li>
+<li><a target="_blank" rel="noopener" href="http://demo.netfoucs.com/u010182633/article/details/45937051">协方差矩阵的几何解释</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.jqian.net/post/pca.html">特征值分解和主成份分析</a></li>
 </ul>
 
     </div>

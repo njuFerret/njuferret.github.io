@@ -258,22 +258,16 @@
 <h2 id="使用translation">1、使用Translation：</h2>
 <ol type="1">
 <li><p>pro文件中添加： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TRANSLATIONS = $$TARGET&quot;_zh_CN.ts&quot;</span><br><span class="line"></span><br><span class="line">#注意，生成qm文件后，需要手工运行下qmake命令</span><br><span class="line">system($$shell_path(copy $$PWD/*.qm  $$OUT_PWD/))</span><br></pre></td></tr></table></figure></p></li>
-<li><p>main.cpp文件中添加： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QTranslator&gt;</span></span></span><br><span class="line"></span><br><span class="line">QString locale = QLocale::<span class="built_in">system</span>().<span class="built_in">name</span>();</span><br><span class="line">QTranslator translator;</span><br><span class="line">translator.<span class="built_in">load</span>(a.<span class="built_in">applicationName</span>() + <span class="string">&quot;_&quot;</span> + locale + <span class="string">&quot;.qm&quot;</span>);</span><br><span class="line">a.<span class="built_in">installTranslator</span>(&amp;translator);</span><br></pre></td></tr></table></figure>
-在工程目录下会生成一个“工程名_zh_CN.ts”的文件，打开后进行翻译，程序会自动载入。</p></li>
+<li><p>main.cpp文件中添加： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QTranslator&gt;</span></span></span><br><span class="line"></span><br><span class="line">QString locale = QLocale::<span class="built_in">system</span>().<span class="built_in">name</span>();</span><br><span class="line">QTranslator translator;</span><br><span class="line">translator.<span class="built_in">load</span>(a.<span class="built_in">applicationName</span>() + <span class="string">&quot;_&quot;</span> + locale + <span class="string">&quot;.qm&quot;</span>);</span><br><span class="line">a.<span class="built_in">installTranslator</span>(&amp;translator);</span><br></pre></td></tr></table></figure> 在工程目录下会生成一个“工程名_zh_CN.ts”的文件，打开后进行翻译，程序会自动载入。</p></li>
 </ol>
 <h2 id="使用资源文件">2、使用资源文件：</h2>
-<p>创建qrc资源文件，使用
-<code>rcc -binary myresource.qrc -o myresource.rcc</code>命令，将qrc文件编译为二进制文件。
-在程序中，首先包含资源头文件 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QResource&gt;</span></span></span><br></pre></td></tr></table></figure> 具体使用：</p>
+<p>创建qrc资源文件，使用 <code>rcc -binary myresource.qrc -o myresource.rcc</code>命令，将qrc文件编译为二进制文件。 在程序中，首先包含资源头文件 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QResource&gt;</span></span></span><br></pre></td></tr></table></figure> 具体使用：</p>
 <ul>
 <li>使用：<code>QResource::registerResource("./myresource.rcc");</code>，载入资源；</li>
 <li>使用：<code>QResource::unregisterResource("./myresource.rcc");</code>，卸载资源。</li>
 </ul>
-<p>qtCreator的ui编辑器里使用资源方法：
-在qtCreator里加入上述qrc文件，正常使用界面编辑器制作界面，然后在pro文件中删除该qrc资源文件，将上述编译后的myresource.rcc文件复制到exe文件同路径下，图标就可以正常的出现了。</p>
-<p>本文来自：<a
-target="_blank" rel="noopener" href="http://ferret.blog.163.com/blog/static/6442378020152278545404"
-title="Qt使用Translation及使用资源文件">Qt使用Translation及使用资源文件</a></p>
+<p>qtCreator的ui编辑器里使用资源方法： 在qtCreator里加入上述qrc文件，正常使用界面编辑器制作界面，然后在pro文件中删除该qrc资源文件，将上述编译后的myresource.rcc文件复制到exe文件同路径下，图标就可以正常的出现了。</p>
+<p>本文来自：<a target="_blank" rel="noopener" href="http://ferret.blog.163.com/blog/static/6442378020152278545404" title="Qt使用Translation及使用资源文件">Qt使用Translation及使用资源文件</a></p>
 
     </div>
 
