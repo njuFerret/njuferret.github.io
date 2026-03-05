@@ -10298,7 +10298,63 @@ pandas.read_html有一些选项，默认条件下，它会搜索、尝试解析
 <p>查看系统安装硬盘的情况，需要使用命令<code>smartcli</code>运行时的状态进行监控，如CPU、显卡或硬盘的温度等进行监控，可以使用<code>watch</code>命令。</p>
 <p>首先创建脚本<code>thermal.sh</code>，一次性运行所有监控程序：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 1. 安装</span></span><br><span class="line">sudo apt update &amp;&amp; sudo apt install smartmontools -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 读取smart信息</span></span><br><span class="line"><span class="comment"># -i: Show identity information for device</span></span><br><span class="line"><span class="comment"># -A: Show device SMART vendor-specific Attributes and values</span></span><br><span class="line">sudo smartctl -iA /dev/sda</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果扔给Gemini分析：</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>测试结果： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">=== START OF INFORMATION SECTION ===</span><br><span class="line">Model Family:     Western Digital RE Serial ATA</span><br><span class="line">Device Model:     WDC WD1600YS-18SHB1</span><br><span class="line">Serial Number:    WD-WCAP02074841</span><br><span class="line">LU WWN Device Id: 5 0014ee 155778afb</span><br><span class="line">Firmware Version: 20.06C06</span><br><span class="line">User Capacity:    160,000,000,000 bytes [160 GB]</span><br><span class="line">Sector Size:      512 bytes logical/physical</span><br><span class="line">Device is:        In smartctl database [for details use: -P show]</span><br><span class="line">ATA Version is:   ATA/ATAPI-7 (minor revision not indicated)</span><br><span class="line">Local Time is:    Fri Feb  6 14:26:21 2026 CST</span><br><span class="line">SMART support is: Available - device has SMART capability.</span><br><span class="line">SMART support is: Enabled</span><br><span class="line"></span><br><span class="line">=== START OF READ SMART DATA SECTION ===</span><br><span class="line">SMART Attributes Data Structure revision number: 16</span><br><span class="line">Vendor Specific SMART Attributes with Thresholds:</span><br><span class="line">ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE</span><br><span class="line">  1 Raw_Read_Error_Rate     0x000f   200   200   051    Pre-fail  Always       -       0</span><br><span class="line">  3 Spin_Up_Time            0x0003   182   177   021    Pre-fail  Always       -       3875</span><br><span class="line">  4 Start_Stop_Count        0x0032   100   100   000    Old_age   Always       -       491</span><br><span class="line">  5 Reallocated_Sector_Ct   0x0033   198   198   140    Pre-fail  Always       -       10</span><br><span class="line">  7 Seek_Error_Rate         0x000e   200   200   051    Old_age   Always       -       0</span><br><span class="line">  9 Power_On_Hours          0x0032   001   001   000    Old_age   Always       -       94091</span><br><span class="line"> 10 Spin_Retry_Count        0x0012   100   100   051    Old_age   Always       -       0</span><br><span class="line"> 11 Calibration_Retry_Count 0x0012   100   100   051    Old_age   Always       -       0</span><br><span class="line"> 12 Power_Cycle_Count       0x0032   100   100   000    Old_age   Always       -       475</span><br><span class="line">194 Temperature_Celsius     0x0022   121   091   000    Old_age   Always       -       26</span><br><span class="line">196 Reallocated_Event_Count 0x0032   195   195   000    Old_age   Always       -       5</span><br><span class="line">197 Current_Pending_Sector  0x0012   200   200   000    Old_age   Always       -       0</span><br><span class="line">198 Offline_Uncorrectable   0x0010   200   200   000    Old_age   Offline      -       0</span><br><span class="line">199 UDMA_CRC_Error_Count    0x003e   200   200   000    Old_age   Always       -       0</span><br><span class="line">200 Multi_Zone_Error_Rate   0x0008   200   200   051    Old_age   Offline      -       0</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure> &gt; Gemini解读 &gt; &gt; 这是一块极其经典的 Western Digital RE (RAID Edition) 系列硬盘，具体型号为 WD1600YS。 &gt; 1. 硬盘规格与定位 &gt; 系列： RE (RAID Edition)。这是西数当年的企业级产品线（相当于现在的“金盘”系列）。 &gt; &gt; 特性： 专门为 24/7 不间断运行的服务器和 RAID 阵列设计。这解释了为什么它能坚持运行 10.7 年（9.4 万小时）还没彻底挂掉。 &gt; &gt; 技术年代： 这是一块 SATA II (3.0 Gb/s) 硬盘，容量仅为 160GB。它使用的是早期的单碟片技术，物理结构非常结实。 &gt; &gt; | ID# | 属性名称 | RAW_VALUE | 现状分析 | &gt; |-----|-----------------------------|-----------|----------| &gt; | 5 | Reallocated_Sector_Ct | 10 | 已发现物理坏块。硬盘已经将 10 个损坏的扇区重定向到了备用区域。虽然数值不算大，但这证明盘片表面确实存在物理损伤。 | &gt; | 9 | Power_On_Hours | 94091 | 极其年迈。这块硬盘已经连续运行了约 10.7 年（94091 ÷ 24 ÷ 365 ≈ 10.74）。其 Value 值仅剩 1，说明已接近设计寿命的极限。 | &gt; | 196 | Reallocated_Event_Count | 5 | 发生了 5 次重映射操作。这与 ID 5 对应，说明坏道是在不同时间段零星产生的。 | &gt; | 197 | Current_Pending_Sector | 0 | 暂时安全。目前没有正在等待检查的“疑似坏块”，说明当前读取的所有数据区域暂时是稳定的。 | &gt; | 199 | UDMA_CRC_Error_Count | 0 | 数据传输电缆（SATA线）没问题，通讯正常。 | <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">## 4、解决更新时无网络授权问题(新)：</span><br><span class="line"></span><br><span class="line">在使用`sudo apt update`时，通常使用国内镜像进行加速，比如清华大学镜像站。常规方案是编辑`/etc/apt/sources.list`。</span><br><span class="line">1. 方案一：开启`windows`授时，无法直接出校的电脑，使用该`Windows`电脑授时；</span><br><span class="line">```bash</span><br><span class="line"># 待补充</span><br></pre></td></tr></table></figure> 2. 方案二：利用周期任务，定时获取时间修改系统时钟； <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">alias</span> ntpuu=<span class="string">&#x27;dateFromBing=$(curl -skI -x http://proxy:port https://cn.bing.com  | grep -i &quot;^Date&quot; | sed -e &quot;s/&lt; date: //&quot;); sudo date -s &quot;$dateFromBing&quot; &#x27;</span></span><br><span class="line"></span><br><span class="line">$ sudo crontab -e</span><br><span class="line"><span class="comment"># 添加系统自动任务, 每天 4:15/16:15执行</span></span><br><span class="line">15 4,16 * * * /bin/date -s <span class="string">&quot;<span class="subst">$(/usr/bin/curl -skI -x http://proxy:port https://cn.bing.com | grep -i &#x27;^Date:&#x27; | sed -e &#x27;s/Date: //i&#x27;)</span>&quot;</span></span><br></pre></td></tr></table></figure></p>
+<p>测试结果： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">=== START OF INFORMATION SECTION ===</span><br><span class="line">Model Family:     Western Digital RE Serial ATA</span><br><span class="line">Device Model:     WDC WD1600YS-18SHB1</span><br><span class="line">Serial Number:    WD-WCAP02074841</span><br><span class="line">LU WWN Device Id: 5 0014ee 155778afb</span><br><span class="line">Firmware Version: 20.06C06</span><br><span class="line">User Capacity:    160,000,000,000 bytes [160 GB]</span><br><span class="line">Sector Size:      512 bytes logical/physical</span><br><span class="line">Device is:        In smartctl database [for details use: -P show]</span><br><span class="line">ATA Version is:   ATA/ATAPI-7 (minor revision not indicated)</span><br><span class="line">Local Time is:    Fri Feb  6 14:26:21 2026 CST</span><br><span class="line">SMART support is: Available - device has SMART capability.</span><br><span class="line">SMART support is: Enabled</span><br><span class="line"></span><br><span class="line">=== START OF READ SMART DATA SECTION ===</span><br><span class="line">SMART Attributes Data Structure revision number: 16</span><br><span class="line">Vendor Specific SMART Attributes with Thresholds:</span><br><span class="line">ID# ATTRIBUTE_NAME          FLAG     VALUE WORST THRESH TYPE      UPDATED  WHEN_FAILED RAW_VALUE</span><br><span class="line">  1 Raw_Read_Error_Rate     0x000f   200   200   051    Pre-fail  Always       -       0</span><br><span class="line">  3 Spin_Up_Time            0x0003   182   177   021    Pre-fail  Always       -       3875</span><br><span class="line">  4 Start_Stop_Count        0x0032   100   100   000    Old_age   Always       -       491</span><br><span class="line">  5 Reallocated_Sector_Ct   0x0033   198   198   140    Pre-fail  Always       -       10</span><br><span class="line">  7 Seek_Error_Rate         0x000e   200   200   051    Old_age   Always       -       0</span><br><span class="line">  9 Power_On_Hours          0x0032   001   001   000    Old_age   Always       -       94091</span><br><span class="line"> 10 Spin_Retry_Count        0x0012   100   100   051    Old_age   Always       -       0</span><br><span class="line"> 11 Calibration_Retry_Count 0x0012   100   100   051    Old_age   Always       -       0</span><br><span class="line"> 12 Power_Cycle_Count       0x0032   100   100   000    Old_age   Always       -       475</span><br><span class="line">194 Temperature_Celsius     0x0022   121   091   000    Old_age   Always       -       26</span><br><span class="line">196 Reallocated_Event_Count 0x0032   195   195   000    Old_age   Always       -       5</span><br><span class="line">197 Current_Pending_Sector  0x0012   200   200   000    Old_age   Always       -       0</span><br><span class="line">198 Offline_Uncorrectable   0x0010   200   200   000    Old_age   Offline      -       0</span><br><span class="line">199 UDMA_CRC_Error_Count    0x003e   200   200   000    Old_age   Always       -       0</span><br><span class="line">200 Multi_Zone_Error_Rate   0x0008   200   200   051    Old_age   Offline      -       0</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Gemini解读</p>
+<p>这是一块极其经典的 Western Digital RE (RAID Edition) 系列硬盘，具体型号为 WD1600YS。 1. 硬盘规格与定位 系列： RE (RAID Edition)。这是西数当年的企业级产品线（相当于现在的“金盘”系列）。</p>
+<p>特性： 专门为 24/7 不间断运行的服务器和 RAID 阵列设计。这解释了为什么它能坚持运行 10.7 年（9.4 万小时）还没彻底挂掉。</p>
+<p>技术年代： 这是一块 SATA II (3.0 Gb/s) 硬盘，容量仅为 160GB。它使用的是早期的单碟片技术，物理结构非常结实。</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 52%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID#</th>
+<th>属性名称</th>
+<th>RAW_VALUE</th>
+<th>现状分析</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5</td>
+<td>Reallocated_Sector_Ct</td>
+<td>10</td>
+<td>已发现物理坏块。硬盘已经将 10 个损坏的扇区重定向到了备用区域。虽然数值不算大，但这证明盘片表面确实存在物理损伤。</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Power_On_Hours</td>
+<td>94091</td>
+<td>极其年迈。这块硬盘已经连续运行了约 10.7 年（94091 ÷ 24 ÷ 365 ≈ 10.74）。其 Value 值仅剩 1，说明已接近设计寿命的极限。</td>
+</tr>
+<tr class="odd">
+<td>196</td>
+<td>Reallocated_Event_Count</td>
+<td>5</td>
+<td>发生了 5 次重映射操作。这与 ID 5 对应，说明坏道是在不同时间段零星产生的。</td>
+</tr>
+<tr class="even">
+<td>197</td>
+<td>Current_Pending_Sector</td>
+<td>0</td>
+<td>暂时安全。目前没有正在等待检查的“疑似坏块”，说明当前读取的所有数据区域暂时是稳定的。</td>
+</tr>
+<tr class="odd">
+<td>199</td>
+<td>UDMA_CRC_Error_Count</td>
+<td>0</td>
+<td>数据传输电缆（SATA线）没问题，通讯正常。</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<h2 id="解决更新时无网络授权问题新">4、解决更新时无网络授权问题(新)：</h2>
+<p>在使用<code>sudo apt update</code>时，通常使用国内镜像进行加速，比如清华大学镜像站。常规方案是编辑<code>/etc/apt/sources.list</code>。 1. 方案一：开启<code>windows</code>授时，无法直接出校的电脑，使用该<code>Windows</code>电脑授时； <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 待补充</span></span><br></pre></td></tr></table></figure> 2. 方案二：利用周期任务，定时获取时间修改系统时钟； <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">alias</span> ntpuu=<span class="string">&#x27;dateFromBing=$(curl -skI -x http://proxy:port https://cn.bing.com  | grep -i &quot;^Date&quot; | sed -e &quot;s/&lt; date: //&quot;); sudo date -s &quot;$dateFromBing&quot; &#x27;</span></span><br><span class="line"></span><br><span class="line">$ sudo crontab -e</span><br><span class="line"><span class="comment"># 添加系统自动任务, 每天 4:15/16:15执行</span></span><br><span class="line">15 4,16 * * * /bin/date -s <span class="string">&quot;<span class="subst">$(/usr/bin/curl -skI -x http://proxy:port https://cn.bing.com | grep -i &#x27;^Date:&#x27; | sed -e &#x27;s/Date: //i&#x27;)</span>&quot;</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="树莓派刷写固件">5、树莓派刷写固件</h2>
 <p>　　树莓派4B，固件比较老，需要更新:</p>
 <p>　　1) 查看当前固件信息：</p>
